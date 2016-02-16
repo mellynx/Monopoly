@@ -3,19 +3,16 @@ package org.monopoly;
 public class Property {
 	
 	int buyCost, rentCost;
-	String propertyName, propertyOwner;
+	String propertyName;
+	Player propertyOwner;
 
-	public Property(String name, int buyValue, int rentValue, String playerToken) {
+	public Property(String name, int buyValue, int rentValue) {
 		propertyName = name;
 		buyCost = buyValue;
 		rentCost = rentValue;
-		propertyOwner = playerToken;
 	}
-	public void setOwner(String playerToken) {
-		propertyOwner = playerToken;
-	}
-	public void setPropertyOwner(String playerToken) {
-		propertyOwner = playerToken;
+	public void setPropertyOwner(Player playerOwner) {
+		propertyOwner = playerOwner;
 	}
 	public String getName() {
 		return propertyName;
@@ -26,7 +23,10 @@ public class Property {
 	public int getRentCost() {
 		return rentCost;
 	}
-	public String getPropertyOwner() {
+	public Player getPropertyOwner() {
 		return propertyOwner;
+	}
+	public String toString() {
+		return getName().toString();
 	}
 }

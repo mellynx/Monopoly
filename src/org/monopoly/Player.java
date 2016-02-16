@@ -18,4 +18,7 @@ public class Player {
 	public int getBalance() {
 		return balance;
 	}
+	public String toString() {
+		return getToken().toString();
+	}
 }
