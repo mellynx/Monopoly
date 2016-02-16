@@ -2,8 +2,9 @@ package org.monopoly;
 
 public class Player {
 
-	String playerToken;
+	final String playerToken;
 	int balance;
+	Property property;
 	
 	public Player(String token, int money) {
 		playerToken = token;
@@ -20,5 +21,11 @@ public class Player {
 	}
 	public String toString() {
 		return getToken().toString();
+	}
+	public void setLocation(Property currentProperty) {
+		property = currentProperty;
+	}
+	public Property getLocation() {
+		return property;
 	}
 }

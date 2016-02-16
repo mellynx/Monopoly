@@ -2,8 +2,8 @@ package org.monopoly;
 
 public class Property {
 	
-	int buyCost, rentCost;
-	String propertyName;
+	final int buyCost, rentCost;
+	final String propertyName;
 	Player propertyOwner;
 
 	public Property(String name, int buyValue, int rentValue) {
