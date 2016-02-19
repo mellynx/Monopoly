@@ -1,6 +1,6 @@
 package org.monopoly;
 
-public class Player {
+public abstract class Player {
 
 	final String playerToken;
 	int balance;
@@ -28,4 +28,6 @@ public class Player {
 	public Property getLocation() {
 		return property;
 	}
+	public abstract boolean buyProperty(); //no body for abstract
+  public abstract boolean buyHouse();
 }
