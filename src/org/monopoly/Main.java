@@ -6,9 +6,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
-
-import jdk.nashorn.internal.objects.annotations.Property;
-
 import java.util.Map;
 
 public class Main {
@@ -30,7 +27,7 @@ public class Main {
 
 	public static void main (String [] args) throws IOException {
 		
-		addProperties();	// you have to CALL add properties
+		addProperties();	// remember you have to CALL add properties
 		
 		playerOne.setLocation(properties.get(0)); // players start at the first property on the arrayList
 		playerTwo.setLocation(properties.get(0));
@@ -62,49 +59,50 @@ public class Main {
 		}
 	}
 	public static void addProperties() {
+		//String name, int buyCost, int houseCost, int numberOfHouses
 		
 		properties.add(new Property("Go", null, null, null)); // create a third type of player who owns board properties?
 		
-		properties.add(new Property("Mediterranean Ave", 60, 2, 50, 0));
-		properties.add(new Property("Baltic Ave", 60, 4, 50, 0));
-		properties.add(new Property("Reading Railroad", 200, 25, null, null)); // railroad rents depend on how many you own, and no houses are possible
+		properties.add(new Property("Mediterranean Ave", 60, 50, 0));
+		properties.add(new Property("Baltic Ave", 60, 50, 0));
+		properties.add(new Property("Reading Railroad", 200, null, null)); // railroad rents depend on how many you own, and no houses are possible
 		
-		properties.add(new Property("Oriental Ave", 100, 6, 50, 0));
-		properties.add(new Property("Vermont Ave", 100, 6, 50, 0));
-		properties.add(new Property("Connecticut Ave", 100, 6, 50, 0));
+		properties.add(new Property("Oriental Ave", 100, 50, 0));
+		properties.add(new Property("Vermont Ave", 100, 50, 0));
+		properties.add(new Property("Connecticut Ave", 100, 50, 0));
 		
-		properties.add(new Property("St. Charles Place", 140, 10, 100, 0));
-		properties.add(new Property("Electic Company", 150, null, null, null)); // rents are based on dice roll, and houses are not possible
-		properties.add(new Property("States Ave", 140, 10, 100, 0));
-		properties.add(new Property("Virgina Ave", 160, 12, 100, 0));
+		properties.add(new Property("St. Charles Place", 140, 100, 0));
+		properties.add(new Property("Electic Company", 150, null, null)); // rents are based on dice roll, and houses are not possible
+		properties.add(new Property("States Ave", 140, 100, 0));
+		properties.add(new Property("Virgina Ave", 160, 100, 0));
 		
-		properties.add(new Property("Pennsylvania Railroad", 200, 25, null, null));
-		properties.add(new Property("St. James Place", 180, 14, 100, 0));
-		properties.add(new Property("Tennessee Ave", 180, 14, 100, 0));
-		properties.add(new Property("New York Ave", 200, 16, 100, 0));
+		properties.add(new Property("Pennsylvania Railroad", 200, null, null));
+		properties.add(new Property("St. James Place", 180, 100, 0));
+		properties.add(new Property("Tennessee Ave", 180, 100, 0));
+		properties.add(new Property("New York Ave", 200, 100, 0));
 		
-		properties.add(new Property("Kentucky", 220, 18, 150, 0));
-		properties.add(new Property("Indiana", 220, 18, 150, 0));
-		properties.add(new Property("Illinois", 240, 20, 150, 0));
-		properties.add(new Property("B & O Railroad", 200, 25, null, null));
+		properties.add(new Property("Kentucky", 220, 150, 0));
+		properties.add(new Property("Indiana", 220, 150, 0));
+		properties.add(new Property("Illinois", 240, 150, 0));
+		properties.add(new Property("B & O Railroad", 200, null, null));
 		
-		properties.add(new Property("Atlantic", 260, 22, 150, 0));
-		properties.add(new Property("Ventnor", 260, 22, 150, 0));
-		properties.add(new Property("Water Works", 150, null, null, null));
-		properties.add(new Property("Marvin Gardens", 280, 24, 150, 0));
+		properties.add(new Property("Atlantic", 260, 150, 0));
+		properties.add(new Property("Ventnor", 260, 150, 0));
+		properties.add(new Property("Water Works", 150, null, null));
+		properties.add(new Property("Marvin Gardens", 280, 150, 0));
 		
-		properties.add(new Property("Pacific", 300, 26, 200, 0));
-		properties.add(new Property("North Carolina", 300, 26, 200, 0));
-		properties.add(new Property("Pennsylvania", 320, 28, 200, 0));
+		properties.add(new Property("Pacific", 300, 200, 0));
+		properties.add(new Property("North Carolina", 300, 200, 0));
+		properties.add(new Property("Pennsylvania", 320, 200, 0));
 		
-		properties.add(new Property("Short Line Railroad", 200, 25, null, null));
-		properties.add(new Property("Park", 350, 35, 200, 0));
-		properties.add(new Property("Boardwalk", 400, 50, 200, 0));	
+		properties.add(new Property("Short Line Railroad", 200, null, null));
+		properties.add(new Property("Park", 350, 200, 0));
+		properties.add(new Property("Boardwalk", 400, 200, 0));	
 		
 		Set <Property> brown = new HashSet<Property>();
-		Set <property> lightBlue = new HashSet<Property>();
-		Set <property> pink = new HashSet<Property>();
-		Set <property> orange = new HashSet<Property>();
+		Set <Property> lightBlue = new HashSet<Property>();
+		Set <Property> pink = new HashSet<Property>();
+		Set <Property> orange = new HashSet<Property>();
 		Set <Property> red = new HashSet <Property>();
 		Set <Property> yellow = new HashSet <Property>();
 		Set <Property> green = new HashSet <Property>();
@@ -112,43 +110,43 @@ public class Main {
 	    Set <Property> utilities = new HashSet <Property>();
 	    Set <Property> railroads = new HashSet <Property>();
 	    
-	    brown.add(new Property("Mediterranean Ave", 60, 2, 50, 0));
-	    brown.add(new Property("Baltic Ave", 60, 4, 50, 0));
+	    brown.add(new Property("Mediterranean Ave", 60, 50, 0));
+	    brown.add(new Property("Baltic Ave", 60, 50, 0));
 	    
-		lightBlue.add(new Property("Oriental Ave", 100, 6, 50, 0));
-		lightBlue.add(new Property("Vermont Ave", 100, 6, 50, 0));
-		lightBlue.add(new Property("Connecticut Ave", 100, 6, 50, 0));
+		lightBlue.add(new Property("Oriental Ave", 100, 50, 0));
+		lightBlue.add(new Property("Vermont Ave", 100, 50, 0));
+		lightBlue.add(new Property("Connecticut Ave", 100, 50, 0));
 		
-		pink.add(new Property("St. Charles Place", 140, 10, 100, 0));
-		pink.add(new Property("States Ave", 140, 10, 100, 0));
-		pink.add(new Property("Virgina Ave", 160, 12, 100, 0));
+		pink.add(new Property("St. Charles Place", 140, 100, 0));
+		pink.add(new Property("States Ave", 140, 100, 0));
+		pink.add(new Property("Virgina Ave", 160, 100, 0));
 		
-		orange.add(new Property("St. James Place", 180, 14, 100, 0));
-		orange.add(new Property("Tennessee Ave", 180, 14, 100, 0));
-		orange.add(new Property("New York Ave", 200, 16, 100, 0));
+		orange.add(new Property("St. James Place", 180, 100, 0));
+		orange.add(new Property("Tennessee Ave", 180, 100, 0));
+		orange.add(new Property("New York Ave", 200, 100, 0));
 	    
-	    red.add(new Property ("Illinois", 240, 20, 150, 0));
-	    red.add(new Property ("Indiana", 220, 18, 150, 0));
-	    red.add(new Property ("Kentucky", 220, 18, 150, 0));
+	    red.add(new Property ("Illinois", 240, 150, 0));
+	    red.add(new Property ("Indiana", 220, 150, 0));
+	    red.add(new Property ("Kentucky", 220, 150, 0));
 	    
-	    yellow.add(new Property ("Marvin Gardens", 280, 24, 150, 0));
-	    yellow.add(new Property ("Ventnor", 260, 22, 150, 0));
-	    yellow.add(new Property ("Atlantic", 260, 22, 150, 0));
+	    yellow.add(new Property ("Marvin Gardens", 280, 150, 0));
+	    yellow.add(new Property ("Ventnor", 260, 150, 0));
+	    yellow.add(new Property ("Atlantic", 260, 150, 0));
 	    
-	    green.add(new Property ("Pennsylvania", 320, 28, 200, 0));
-	    green.add(new Property ("North Carolina", 300, 26, 200, 0));
-	    green.add(new Property ("Pacific", 300,26, 20, 0));
+	    green.add(new Property ("Pennsylvania", 320, 200, 0));
+	    green.add(new Property ("North Carolina", 300, 200, 0));
+	    green.add(new Property ("Pacific", 300, 20, 0));
 	    
-	    blue.add(new Property ("Park", 350, 35, 200, 0));
-	    blue.add(new Property ("Boardwalk", 400, 50, 200, 0));
+	    blue.add(new Property ("Park", 350, 200, 0));
+	    blue.add(new Property ("Boardwalk", 400, 200, 0));
 	    
-	    utilities.add(new Property ("Electic Company", 150, null, null, null));
-	    utilities.add(new Property("Water Works", 150, null, null, null));
+	    utilities.add(new Property ("Electic Company", 150, null, null));
+	    utilities.add(new Property("Water Works", 150, null, null));
 	    
-	    railroads.add(new Property("Reading Railroad", 200, 25, null, null));
-	    railroads.add(new Property("Pennsylvania Railroad", 200, 25, null, null));
-	    railroads.add(new Property("B & O Railroad", 200, 25, null, null));
-	    railroads.add(new Property("Short Line Railroad", 200, 25, null, null));
+	    railroads.add(new Property("Reading Railroad", 200, null, null));
+	    railroads.add(new Property("Pennsylvania Railroad", 200, null, null));
+	    railroads.add(new Property("B & O Railroad", 200, null, null));
+	    railroads.add(new Property("Short Line Railroad", 200, null, null));
 	    
 	    for(Property a: brown) {
 	    	map.put(a, brown);
@@ -191,7 +189,8 @@ public class Main {
 	      	properties.add(a);
 	    } 
 	}
-	public static int rollDice() {
+	public static int rollDice(Random random, int low, int high) {
+		return random.nextInt(high) + low;
 	}
 	public static Property moveSpace(Player player, int roll) {
 		
@@ -217,10 +216,10 @@ public class Main {
 				
 				// check if this newly purchased property allows players to buy houses
 				// if yes, put this set into an array of hotel-able properties, then (later) keep checking this array to see if they can buy more houses
-				if (canPlayerBuyAHouse(player, landedProperty) == true) {
+				if (canPlayerBuyAHouse(player, landedProperty)) {
 					Set<Property> color  = map.get(landedProperty);
 					for (Property a: color) {
-						player.addPropertiesToPossibleHouseList(a);
+						player.addToPossibleHouseList(a);
 					}
 				}
 			}
@@ -242,17 +241,27 @@ public class Main {
 		// at the end of every turn, loop through the list of properties a player is eligible to buy houses for, and ask if they want to buy a house there
 		// in real monopoly houses must be built evenly 
 		if (player.getPossibleHouseList() != null) {
-			for (int i = 0; i < player.getPossibleHouseList().size; i++) {
-				Property potentialHouse = player.getPossibleHouseList(i);
-				
-				//while they have enough money, keep asking them if they want to buy houses
-				if (buyHouse(potentialHouse) == true) {
-					potentialHouse.addOneHouse();
+			
+			//while they have enough money (to afford any house in this list), keep asking them if they want to buy houses
+			// for either the console or random player, how do we control 
+			// 1) buying a house on B but not A or C
+			// 2) buying houses on ABC and looping around to buy second houses on each (houses must be built evenly)
+			// 3) stopping when player is out of money or there's already a hotel on there
+			while (player.getBalance() > player.getPossibleHouseList().get(0).getBuyCost()) {
+		
+				for (int i = 0; i < player.getPossibleHouseList().size(); i++) {
+					Property potentialHouse = player.getPossibleHouseList().get(i);
+			
+					if (player.buyHouse(potentialHouse)) {
+						potentialHouse.addOneHouse();
+						player.setBalance(player.getBalance() - potentialHouse.getHouseCost());
+					}
 				}
 			}
 		}
 	}
 	public static boolean canPlayerBuyAHouse(Player player, Property landedProperty) {
+		// strictly about whether they meet board requirements, not whether they have enough money
 		Set<Property> color  = map.get(landedProperty);
 		
 	    for (Property a: color) {
@@ -262,9 +271,6 @@ public class Main {
 	    }
 	    	return true;
 		}
-	public static int buyHouses(Player player) {
-		return 5; // rewrite
-	}
 	public static boolean checkBalance(Player player, Player otherPlayer) {
 		if (player.getBalance() < 0) {
 			System.out.println(otherPlayer.getToken() + " has won the game!");

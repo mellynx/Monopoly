@@ -2,15 +2,14 @@ package org.monopoly;
 
 public class Property {
 	
-	final int buyCost, rentCost, houseCost;
+	final int buyCost, houseCost;
 	final String name;
 	Player owner;
 	int numberOfHouses;
 
-	public Property(String name, int buyCost, int rentCost, int houseCost, int numberOfHouses) {
+	public Property(String name, int buyCost, int houseCost, int numberOfHouses) {
 		this.name = name;
 		this.buyCost = buyCost;
-		this.rentCost = rentCost;
 		this.houseCost = houseCost;
 		this.numberOfHouses = numberOfHouses;
 	}
@@ -27,7 +26,8 @@ public class Property {
 		return buyCost;
 	}
 	public int getRentCost() {
-		return rentCost;
+		return buyCost;	// **just a placeholder
+		// calculation based on number of houses property has
 	}
 	public Player getPropertyOwner() {
 		return owner;

@@ -3,6 +3,7 @@ package org.monopoly;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 
 public class ConsolePlayer extends Player {
   
@@ -11,8 +12,8 @@ public class ConsolePlayer extends Player {
   
 	String input;
 
-	public ConsolePlayer(String token, int money) {
-		super(token, money, null);
+	public ConsolePlayer(String playerToken, int balance, ArrayList<Property> possibleHouses) {
+		super(playerToken, balance, possibleHouses);
 	}
 	public boolean buyProperty() {
     
@@ -24,7 +25,7 @@ public class ConsolePlayer extends Player {
 			throw new RuntimeException(e);
 		}
 		
-		if (input == "y") {
+		if (input.equals("y")) {
 			return true;
 		}
 		return false;

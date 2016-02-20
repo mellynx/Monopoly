@@ -1,7 +1,6 @@
 package org.monopoly;
 
 import java.util.ArrayList;
-import jdk.nashorn.internal.objects.annotations.Property;
 
 public abstract class Player {
 
@@ -21,7 +20,7 @@ public abstract class Player {
 	public void setLocation(Property currentProperty) {
 		property = currentProperty;
 	}
-	public void addPropertiesToPossibleHouseList (Property property) {
+	public void addToPossibleHouseList (Property property) { // the list of properties on which a player is eligible to build a house
 		possibleHouses.add(property);
 	}
 	public String getToken() {
