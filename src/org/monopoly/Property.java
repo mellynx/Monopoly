@@ -7,11 +7,12 @@ public class Property {
 	Player owner;
 	int numberOfHouses;
 
-	public Property(String name, int buyCost, int houseCost, int numberOfHouses) {
+	public Property(String name, int buyCost, int houseCost) {
 		this.name = name;
 		this.buyCost = buyCost;
 		this.houseCost = houseCost;
-		this.numberOfHouses = numberOfHouses;
+		this.numberOfHouses = 0;
+		// you can initialize stuff in a constructor without taking it as a parameters. number of houses starts at 0 for all properties
 	}
 	public void setPropertyOwner(Player owner) {
 		this.owner = owner;	// using this in setters and getters

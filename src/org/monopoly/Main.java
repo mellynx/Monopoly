@@ -63,41 +63,41 @@ public class Main {
 		
 		properties.add(new Property("Go", null, null, null)); // create a third type of player who owns board properties?
 		
-		properties.add(new Property("Mediterranean Ave", 60, 50, 0));
-		properties.add(new Property("Baltic Ave", 60, 50, 0));
-		properties.add(new Property("Reading Railroad", 200, null, null)); // railroad rents depend on how many you own, and no houses are possible
+		properties.add(new Property("Mediterranean Ave", 60, 50));
+		properties.add(new Property("Baltic Ave", 60, 50));
+		properties.add(new Property("Reading Railroad", 200, null)); // railroad rents depend on how many you own, and no houses are possible
 		
-		properties.add(new Property("Oriental Ave", 100, 50, 0));
-		properties.add(new Property("Vermont Ave", 100, 50, 0));
-		properties.add(new Property("Connecticut Ave", 100, 50, 0));
+		properties.add(new Property("Oriental Ave", 100, 50));
+		properties.add(new Property("Vermont Ave", 100, 50));
+		properties.add(new Property("Connecticut Ave", 100, 50));
 		
-		properties.add(new Property("St. Charles Place", 140, 100, 0));
-		properties.add(new Property("Electic Company", 150, null, null)); // rents are based on dice roll, and houses are not possible
-		properties.add(new Property("States Ave", 140, 100, 0));
-		properties.add(new Property("Virgina Ave", 160, 100, 0));
+		properties.add(new Property("St. Charles Place", 140, 100));
+		properties.add(new Property("Electic Company", 150, null)); // rents are based on dice roll, and houses are not possible
+		properties.add(new Property("States Ave", 140, 100));
+		properties.add(new Property("Virgina Ave", 160, 100));
 		
-		properties.add(new Property("Pennsylvania Railroad", 200, null, null));
-		properties.add(new Property("St. James Place", 180, 100, 0));
-		properties.add(new Property("Tennessee Ave", 180, 100, 0));
-		properties.add(new Property("New York Ave", 200, 100, 0));
+		properties.add(new Property("Pennsylvania Railroad", 200, null);
+		properties.add(new Property("St. James Place", 180, 100);
+		properties.add(new Property("Tennessee Ave", 180, 100);
+		properties.add(new Property("New York Ave", 200, 100);
 		
-		properties.add(new Property("Kentucky", 220, 150, 0));
-		properties.add(new Property("Indiana", 220, 150, 0));
-		properties.add(new Property("Illinois", 240, 150, 0));
-		properties.add(new Property("B & O Railroad", 200, null, null));
+		properties.add(new Property("Kentucky", 220, 150);
+		properties.add(new Property("Indiana", 220, 150);
+		properties.add(new Property("Illinois", 240, 150);
+		properties.add(new Property("B & O Railroad", 200, null);
 		
-		properties.add(new Property("Atlantic", 260, 150, 0));
-		properties.add(new Property("Ventnor", 260, 150, 0));
-		properties.add(new Property("Water Works", 150, null, null));
-		properties.add(new Property("Marvin Gardens", 280, 150, 0));
+		properties.add(new Property("Atlantic", 260, 150);
+		properties.add(new Property("Ventnor", 260, 150);
+		properties.add(new Property("Water Works", 150, null);
+		properties.add(new Property("Marvin Gardens", 280, 150);
 		
-		properties.add(new Property("Pacific", 300, 200, 0));
-		properties.add(new Property("North Carolina", 300, 200, 0));
-		properties.add(new Property("Pennsylvania", 320, 200, 0));
+		properties.add(new Property("Pacific", 300, 200);
+		properties.add(new Property("North Carolina", 300, 200);
+		properties.add(new Property("Pennsylvania", 320, 200);
 		
-		properties.add(new Property("Short Line Railroad", 200, null, null));
-		properties.add(new Property("Park", 350, 200, 0));
-		properties.add(new Property("Boardwalk", 400, 200, 0));	
+		properties.add(new Property("Short Line Railroad", 200, null);
+		properties.add(new Property("Park", 350, 200);
+		properties.add(new Property("Boardwalk", 400, 200);	
 		
 		Set <Property> brown = new HashSet<Property>();
 		Set <Property> lightBlue = new HashSet<Property>();
@@ -110,43 +110,43 @@ public class Main {
 	    Set <Property> utilities = new HashSet <Property>();
 	    Set <Property> railroads = new HashSet <Property>();
 	    
-	    brown.add(new Property("Mediterranean Ave", 60, 50, 0));
-	    brown.add(new Property("Baltic Ave", 60, 50, 0));
+	    brown.add(new Property("Mediterranean Ave", 60, 50));
+	    brown.add(new Property("Baltic Ave", 60, 50));
 	    
-		lightBlue.add(new Property("Oriental Ave", 100, 50, 0));
-		lightBlue.add(new Property("Vermont Ave", 100, 50, 0));
-		lightBlue.add(new Property("Connecticut Ave", 100, 50, 0));
+		lightBlue.add(new Property("Oriental Ave", 100, 50));
+		lightBlue.add(new Property("Vermont Ave", 100, 50));
+		lightBlue.add(new Property("Connecticut Ave", 100, 50));
 		
-		pink.add(new Property("St. Charles Place", 140, 100, 0));
-		pink.add(new Property("States Ave", 140, 100, 0));
-		pink.add(new Property("Virgina Ave", 160, 100, 0));
+		pink.add(new Property("St. Charles Place", 140, 100));
+		pink.add(new Property("States Ave", 140, 100));
+		pink.add(new Property("Virgina Ave", 160, 100));
 		
-		orange.add(new Property("St. James Place", 180, 100, 0));
-		orange.add(new Property("Tennessee Ave", 180, 100, 0));
-		orange.add(new Property("New York Ave", 200, 100, 0));
+		orange.add(new Property("St. James Place", 180, 100));
+		orange.add(new Property("Tennessee Ave", 180, 100));
+		orange.add(new Property("New York Ave", 200, 100));
 	    
-	    red.add(new Property ("Illinois", 240, 150, 0));
-	    red.add(new Property ("Indiana", 220, 150, 0));
-	    red.add(new Property ("Kentucky", 220, 150, 0));
+	    red.add(new Property ("Illinois", 240, 150));
+	    red.add(new Property ("Indiana", 220, 150));
+	    red.add(new Property ("Kentucky", 220, 150));
 	    
-	    yellow.add(new Property ("Marvin Gardens", 280, 150, 0));
-	    yellow.add(new Property ("Ventnor", 260, 150, 0));
-	    yellow.add(new Property ("Atlantic", 260, 150, 0));
+	    yellow.add(new Property ("Marvin Gardens", 280, 150));
+	    yellow.add(new Property ("Ventnor", 260, 150));
+	    yellow.add(new Property ("Atlantic", 260, 150));
 	    
-	    green.add(new Property ("Pennsylvania", 320, 200, 0));
-	    green.add(new Property ("North Carolina", 300, 200, 0));
-	    green.add(new Property ("Pacific", 300, 20, 0));
+	    green.add(new Property ("Pennsylvania", 320, 200));
+	    green.add(new Property ("North Carolina", 300, 200));
+	    green.add(new Property ("Pacific", 300, 20));
 	    
-	    blue.add(new Property ("Park", 350, 200, 0));
-	    blue.add(new Property ("Boardwalk", 400, 200, 0));
+	    blue.add(new Property ("Park", 350, 200));
+	    blue.add(new Property ("Boardwalk", 400, 200));
 	    
-	    utilities.add(new Property ("Electic Company", 150, null, null));
-	    utilities.add(new Property("Water Works", 150, null, null));
+	    utilities.add(new Property ("Electic Company", 150, null));
+	    utilities.add(new Property("Water Works", 150, null));
 	    
-	    railroads.add(new Property("Reading Railroad", 200, null, null));
-	    railroads.add(new Property("Pennsylvania Railroad", 200, null, null));
-	    railroads.add(new Property("B & O Railroad", 200, null, null));
-	    railroads.add(new Property("Short Line Railroad", 200, null, null));
+	    railroads.add(new Property("Reading Railroad", 200, null));
+	    railroads.add(new Property("Pennsylvania Railroad", 200, null));
+	    railroads.add(new Property("B & O Railroad", 200, null));
+	    railroads.add(new Property("Short Line Railroad", 200, null));
 	    
 	    for(Property a: brown) {
 	    	map.put(a, brown);
