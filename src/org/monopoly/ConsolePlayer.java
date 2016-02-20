@@ -6,39 +6,42 @@ import java.io.InputStreamReader;
 
 public class ConsolePlayer extends Player {
   
-  InputStreamReader reader = new InputStreamReader(System.in);
-  BufferedReader keyboard = new BufferedReader(reader);
+	InputStreamReader reader = new InputStreamReader(System.in);
+	BufferedReader keyboard = new BufferedReader(reader);
   
-  String input;
+	String input;
 
-  public ConsolePlayer(String token, int money) {
-    super(token, money);
-  }
-  public boolean buyProperty() {
+	public ConsolePlayer(String token, int money) {
+		super(token, money, null);
+	}
+	public boolean buyProperty() {
     
-    System.out.println("Do you want to buy this property? (y/n)"); 
-    try {
-      input = keyboard.readLine();
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
-    if (input == "y") {
-      return true;
-    }
-    return false;
-  } 
-  public boolean buyHouse(){
+		System.out.println("Do you want to buy this property? (y/n)"); 
+		
+		try {
+			input = keyboard.readLine();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+		
+		if (input == "y") {
+			return true;
+		}
+		return false;
+	} 
+	public boolean buyHouse(Property property) {
     
-    System.out.println("Do you want to buy a house? (y/n)"); 
-    try {
-      input = keyboard.readLine();
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
+		System.out.println("Do you want to buy a house? at " + property + "(y/n)"); 
+   
+		try {
+			input = keyboard.readLine();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}	
     
-    if (input == "y") {
-      return true;
-    }
+		if (input == "y") {
+			return true;
+		}
     return false;
   }
 }

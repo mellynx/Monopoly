@@ -3,20 +3,25 @@ package org.monopoly;
 public class Property {
 	
 	final int buyCost, rentCost, houseCost;
-	final String propertyName;
-	Player propertyOwner;
+	final String name;
+	Player owner;
+	int numberOfHouses;
 
-	public Property(String name, int buyValue, int rentValue, int houseValue) {
-		propertyName = name;
-		buyCost = buyValue;
-		rentCost = rentValue;
-		houseCost = houseValue;
+	public Property(String name, int buyCost, int rentCost, int houseCost, int numberOfHouses) {
+		this.name = name;
+		this.buyCost = buyCost;
+		this.rentCost = rentCost;
+		this.houseCost = houseCost;
+		this.numberOfHouses = numberOfHouses;
 	}
-	public void setPropertyOwner(Player playerOwner) {
-		propertyOwner = playerOwner;
+	public void setPropertyOwner(Player owner) {
+		this.owner = owner;	// using this in setters and getters
+	}
+	public void addOneHouse() {
+		numberOfHouses++;
 	}
 	public String getName() {
-		return propertyName;
+		return name;
 	}
 	public int getBuyCost() {
 		return buyCost;
@@ -25,9 +30,16 @@ public class Property {
 		return rentCost;
 	}
 	public Player getPropertyOwner() {
-		return propertyOwner;
+		return owner;
 	}
 	public String toString() {
-		return getName().toString();
+		return getName();
+	}
+	public int getHouseCost() {
+		return houseCost;
+	}
+	public int getNumberOfHouses() {
+		return numberOfHouses;
 	}
 }
+
