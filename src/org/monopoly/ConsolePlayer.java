@@ -3,7 +3,6 @@ package org.monopoly;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 
 public class ConsolePlayer extends Player {
   
@@ -12,8 +11,8 @@ public class ConsolePlayer extends Player {
   
 	String input;
 
-	public ConsolePlayer(String playerToken, int balance, ArrayList<Property> possibleHouses) {
-		super(playerToken, balance, possibleHouses);
+	public ConsolePlayer(String playerToken) {
+		super(playerToken);
 	}
 	public boolean buyProperty() {
     
@@ -45,4 +44,7 @@ public class ConsolePlayer extends Player {
 		}
     return false;
   }
+	public void purchaseAHouse() {
+	  
+	}
 }

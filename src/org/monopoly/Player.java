@@ -9,10 +9,10 @@ public abstract class Player {
 	Property property;
 	ArrayList<Property> possibleHouses;
 	
-	public Player(String playerToken, int balance, ArrayList<Property> possibleHouses) {
+	public Player(String playerToken) {
 		this.playerToken = playerToken;
-		this.balance = balance;
-		this.possibleHouses = possibleHouses;	// the list of places a player can buy houses at, which starts at empty
+		this.balance = 1000;
+		possibleHouses = new ArrayList<>();	// the list of places a player can buy houses at, which starts at empty. Here we're setting the class variable
 	}
 	public void setBalance(int money) {
 		balance = money;
@@ -40,4 +40,5 @@ public abstract class Player {
 	}
 	public abstract boolean buyProperty(); //no body for abstract methods
 	public abstract boolean buyHouse(Property property);
+	public abstract void purchaseAHouse();
 }
