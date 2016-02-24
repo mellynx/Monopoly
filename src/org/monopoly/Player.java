@@ -1,13 +1,14 @@
 package org.monopoly;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 public abstract class Player {
 
 	final String playerToken;
 	int balance;
 	Property property;
-	ArrayList<Property> possibleHouses;
+	ArrayList<Set<Property>> possibleHouses;
 	
 	public Player(String playerToken) {
 		this.playerToken = playerToken;
@@ -20,8 +21,8 @@ public abstract class Player {
 	public void setLocation(Property currentProperty) {
 		property = currentProperty;
 	}
-	public void addToPossibleHouseList (Property property) { // the list of properties on which a player is eligible to build a house
-		possibleHouses.add(property);
+	public void addToPossibleHouseList (Set<Property> a) { // the list of properties on which a player is eligible to build a house
+		possibleHouses.add(a);
 	}
 	public String getToken() {
 		return playerToken;
@@ -35,10 +36,9 @@ public abstract class Player {
 	public Property getLocation() {
 		return property;
 	}
-	public ArrayList<Property> getPossibleHouseList() {
+	public ArrayList<Set<Property>> getPossibleHouseList() {
 		return possibleHouses;
 	}
 	public abstract boolean buyProperty(); //no body for abstract methods
-	public abstract boolean buyHouse(Property property);
-	public abstract void purchaseAHouse();
+	public abstract boolean buyHouse(ArrayList<Property> listOfPropertiesWhereYouCanCurrentlyBuyAHouse);
 }

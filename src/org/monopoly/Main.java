@@ -2,6 +2,7 @@ package org.monopoly;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Random;
@@ -75,13 +76,43 @@ public class Main {
     Set<Property> blue = new HashSet<Property>();
     Set<Property> utilities = new HashSet<Property>();
     Set<Property> railroads = new HashSet<Property>();
+    
+    RentSchedule mediterraneanRS = new RentSchedule(10, 30, 90, 160, 250);
+	RentSchedule balticRS = new RentSchedule(20, 60, 180, 320, 450);
+	
+	RentSchedule orientalRS = new RentSchedule(30, 90, 270, 400, 550);
+	RentSchedule vermontRS = new RentSchedule(30, 90, 270, 500, 550);
+	RentSchedule connecticutRS = new RentSchedule(40, 100, 300, 450, 600);
+	
+	RentSchedule stcharlesRS = new RentSchedule(50, 150, 450, 625, 750);
+	RentSchedule statesRS = new RentSchedule(50, 150, 450, 625, 750);
+	RentSchedule virginiaRS = new RentSchedule(60, 180, 500, 700, 900);
+	
+	RentSchedule stjamesRS = new RentSchedule(70, 200, 550, 750, 950);
+	RentSchedule tennesseeRS = new RentSchedule(70, 200, 550, 750, 950);
+	RentSchedule newyorkRS = new RentSchedule(80, 220, 600, 800, 1000);
+	
+	RentSchedule kentuckyRS = new RentSchedule(90, 250, 750, 875, 1050);
+	RentSchedule indianaRS = new RentSchedule(90, 250, 700, 875, 1050);
+	RentSchedule illinoisRS = new RentSchedule(100, 300, 750, 925, 1100);
+	
+	RentSchedule atlanticRS = new RentSchedule(110, 330, 800, 975, 1150);
+	RentSchedule ventnorRS = new RentSchedule(110, 330, 800, 975, 1150);
+	RentSchedule marvingardensRS = new RentSchedule(120, 360, 850, 1025, 1200);
+	
+	RentSchedule pacificRS = new RentSchedule(130, 390, 900, 1100, 1275);
+	RentSchedule northcarolinaRS = new RentSchedule(130, 390, 900, 1100, 1275);
+	RentSchedule pennsylvaniaRS = new RentSchedule(150, 450, 1000, 1200, 1400);
+	
+	RentSchedule parkRS = new RentSchedule(175, 500, 1100, 1300, 1500);
+	RentSchedule boardwalkRS = new RentSchedule(200, 600, 1400, 1700, 2000);
 
     boardProperties.add(new Property("Go"));
 
-    Property mediterranean = new Property("Mediterranean Ave", 60, 50);
+    Property mediterranean = new Property("Mediterranean Ave", 60, 50, mediterraneanRS);
     boardProperties.add(mediterranean);
     brown.add(mediterranean);
-    Property baltic = new Property("Baltic Ave", 60, 50);
+    Property baltic = new Property("Baltic Ave", 60, 50, balticRS);
     boardProperties.add(baltic);
     brown.add(baltic);
     
@@ -89,28 +120,28 @@ public class Main {
     boardProperties.add(readingrr);
     railroads.add(readingrr);
 
-    Property oriental = new Property("Oriental Ave", 100, 50);
+    Property oriental = new Property("Oriental Ave", 100, 50, orientalRS);
     boardProperties.add(oriental);
     lightBlue.add(oriental);
-    Property vermont = new Property("Vermont Ave", 100, 50);
+    Property vermont = new Property("Vermont Ave", 100, 50, vermontRS);
     boardProperties.add(vermont);
     lightBlue.add(vermont);
-    Property connecticut = new Property("Connecticut Ave", 100, 50);
+    Property connecticut = new Property("Connecticut Ave", 100, 50, connecticutRS);
     boardProperties.add(connecticut);
     lightBlue.add(connecticut);
 
     boardProperties.add(new Property("Jail"));
 
-    Property stcharles = new Property("St. Charles Place", 140, 100);
+    Property stcharles = new Property("St. Charles Place", 140, 100, stcharlesRS);
     boardProperties.add(stcharles);
     pink.add(stcharles);
     Property electriccompany = new Property("Electic Company", 150, RentType.UTILITY);
     boardProperties.add(electriccompany);
     utilities.add(electriccompany);
-    Property states = new Property("States Ave", 140, 100);
+    Property states = new Property("States Ave", 140, 100, statesRS);
     boardProperties.add(states);
     pink.add(states);
-    Property virginia = new Property("Virgina Ave", 160, 100);
+    Property virginia = new Property("Virgina Ave", 160, 100, virginiaRS);
     boardProperties.add(virginia);
     pink.add(virginia);
 
@@ -118,25 +149,25 @@ public class Main {
     boardProperties.add(pennsylvaniarr);
     railroads.add(pennsylvaniarr);
 
-    Property stjames = new Property("St. James Place", 180, 100);
+    Property stjames = new Property("St. James Place", 180, 100, stjamesRS);
     boardProperties.add(stjames);
     orange.add(stjames);
-    Property tennessee = new Property("Tennessee Ave", 180, 100);
+    Property tennessee = new Property("Tennessee Ave", 180, 100, tennesseeRS);
     boardProperties.add(tennessee);
     orange.add(tennessee);
-    Property newyork = new Property("New York Ave", 200, 100);
+    Property newyork = new Property("New York Ave", 200, 100, newyorkRS);
     boardProperties.add(newyork);
     orange.add(newyork);
 
     boardProperties.add(new Property("Free Parking"));
 
-    Property illinois = new Property("Illinois", 240, 150);
+    Property illinois = new Property("Illinois", 240, 150, illinoisRS);
     boardProperties.add(illinois);
     red.add(illinois);
-    Property indiana = new Property("Indiana", 220, 150);
+    Property indiana = new Property("Indiana", 220, 150, indianaRS);
     boardProperties.add(indiana);
     red.add(indiana);
-    Property kentucky = new Property("Kentucky", 220, 150);
+    Property kentucky = new Property("Kentucky", 220, 150, kentuckyRS);
     boardProperties.add(kentucky);
     red.add(kentucky);
 
@@ -144,28 +175,28 @@ public class Main {
     boardProperties.add(borr);
     railroads.add(borr);
 
-    Property marvingardens = new Property("Marvin Gardens", 280, 150);
+    Property marvingardens = new Property("Marvin Gardens", 280, 150, marvingardensRS);
     boardProperties.add(marvingardens);
     yellow.add(marvingardens);
-    Property ventnor = new Property("Ventnor", 260, 150);
+    Property ventnor = new Property("Ventnor", 260, 150, ventnorRS);
     boardProperties.add(ventnor);
     yellow.add(ventnor);
     Property waterworks = new Property("Water Works", 150, RentType.UTILITY);
     boardProperties.add(waterworks);
     utilities.add(waterworks);
-    Property atlantic = new Property("Atlantic", 260, 150);
+    Property atlantic = new Property("Atlantic", 260, 150, atlanticRS);
     boardProperties.add(atlantic);
     yellow.add(atlantic);
 
     boardProperties.add(new Property("Go To Jail"));
 
-    Property pennsylvania = new Property("Pennsylvania", 320, 200);
+    Property pennsylvania = new Property("Pennsylvania", 320, 200, pennsylvaniaRS);
     boardProperties.add(pennsylvania);
     green.add(pennsylvania);
-    Property northcarolina = new Property("North Carolina", 300, 200);
+    Property northcarolina = new Property("North Carolina", 300, 200, northcarolinaRS);
     boardProperties.add(northcarolina);
     green.add(northcarolina);
-    Property pacific = new Property("Pacific", 300, 20);
+    Property pacific = new Property("Pacific", 300, 20, pacificRS);
     boardProperties.add(pacific);
     green.add(pacific);
 
@@ -173,10 +204,10 @@ public class Main {
     boardProperties.add(shortlinerr);
     railroads.add(shortlinerr);
 
-    Property park = new Property("Park", 350, 200);
+    Property park = new Property("Park", 350, 200, parkRS);
     boardProperties.add(park);
     blue.add(park);
-    Property boardwalk = new Property("Boardwalk", 400, 200);
+    Property boardwalk = new Property("Boardwalk", 400, 200, boardwalkRS);
     boardProperties.add(boardwalk);
     blue.add(boardwalk);
   }
@@ -206,12 +237,12 @@ public class Main {
 				landedProperty.setPropertyOwner(player);
 				
 				// check if this newly purchased property allows players to buy houses
-				// if yes, put this set into an array of hotel-able properties, then (later) keep checking this array to see if they can buy more houses
+				// if yes, check the color of that new property and PUT THAT COLOR into a list containing property sets, ie colors that players can buy houses on
+				// later, keep checking this list to see when the player actually wants to buy these houses
 				if (canPlayerBuyAHouse(player, landedProperty)) {
+					System.out.println("You've achieved a monopoly for " + map.get(landedProperty));
 					Set<Property> color  = map.get(landedProperty);
-					for (Property a: color) {
-						player.addToPossibleHouseList(a);
-					}
+						player.addToPossibleHouseList(color);
 				}
 			}
 			else {
@@ -229,10 +260,10 @@ public class Main {
 			String phrase = phrases[(int) (Math.random() * phrases.length)];
 			System.out.println(phrase);
 		}
-		// at the end of every turn, loop through the list of properties a player is eligible to buy houses for, and ask if they want to buy a house there
-		// in real monopoly houses must be built evenly 
+		// at the end of every turn, go back to the list that tells us if a player is eligible to buy houses
+		// if they are, let's revisit
 		if (player.getPossibleHouseList().size() > 0) {
-		  buyAHouse(player, player.getPossibleHouseList());
+		  considerHouseList(player, player.getPossibleHouseList());
 		}
 	}
 	
@@ -250,40 +281,42 @@ public class Main {
 	    }
 	    	return true;
 		}
-	public static void buyAHouse(Player player, ArrayList <Property> monopoliesOwned) {
-	  int houseCount = 0; // currently allowed number of houses per property, in order to keep number of houses on properties even
-	  
-	  for (int i = 0; i < monopoliesOwned.size(); i++) {
-	    while (player.getBalance() > monopoliesOwned.get(i).getHouseCost() && monopoliesOwned.get(i).getNumberOfHouses() <= houseCount ) {
-	      player.purchaseAHouse();
-	    }
-	  }
-	  
-	  // check the sets, for each green, spit out the properties that are housable based on evenness
-	  
-	  //build the choices, then pass it to player., which is an abstract method. evenness and money in here
-	  
-	  // loop through possibleHouses, present the whole set to player (plus null), and have them return what they want to buy, until they say null
-	  // still gotta check for money and house even-ness
-	  
-	  // here, we know that the possibleHouses list is not empty, AKA player has ability to buy houses
-	  //while they have enough money (to afford any house in this list), keep asking them if they want to buy houses
-    // for either the console or random player, how do we control 
-    // 1) buying a house on B but not A or C
-    // 2) buying houses on ABC and looping around to buy second houses on each (houses must be built evenly)
-    // 3) stopping when player is out of money or there's already a hotel on there
-	  
-    while (player.getBalance() > player.getPossibleHouseList().get(0).getBuyCost()) {
-  
-      for (int i = 0; i < player.getPossibleHouseList().size(); i++) {
-        Property potentialHouse = player.getPossibleHouseList().get(i);
-    
-        if (player.buyHouse(potentialHouse)) {
-          potentialHouse.addOneHouse();
-          player.setBalance(player.getBalance() - potentialHouse.getHouseCost());
-        }
-      }
-    }
+	public static void considerHouseList(Player player, ArrayList <Set<Property>> monopoliesOwned) {
+		
+		outer: while (true) {
+			for (int i = 0; i < monopoliesOwned.size(); i++) { // for every set in the list of housable sets
+				
+				// put this here because these variables are different per set
+				int minHouseCountPerSet = 100;
+				ArrayList<Property> propertiesWhereYouCanCurrentlyBuyAHouse = null;
+				
+				  Set<Property> propertySet = monopoliesOwned.get(i);
+				  
+				  // looping through each property in a set, to find what the minimum amount of houses in that set is
+				  for (Property housableProperty: propertySet) {
+					  if (housableProperty.getNumberOfHouses() < minHouseCountPerSet) { 
+						  minHouseCountPerSet = housableProperty.getNumberOfHouses();
+					  };
+				  }
+				 
+				// looping through every property in a set
+				  for (Property housableProperty: propertySet) { 
+					  // for each property, IF the player can afford a house on that property
+					  // and the number of houses on that property doesn't exceed the current min houseCount
+					  // the 5th house is effectively the hotel
+					  if (player.getBalance() > housableProperty.getHouseCost() && housableProperty.getNumberOfHouses() == minHouseCountPerSet && housableProperty.getNumberOfHouses() <= 5) {
+						  // present that property in a list of things player can buy a house on, then loop. or break if the player wants to exit
+						  propertiesWhereYouCanCurrentlyBuyAHouse.add(housableProperty);
+					  }
+				  }
+				  if (player.buyHouse(propertiesWhereYouCanCurrentlyBuyAHouse)) {
+					  continue;
+				  }
+				  else {
+					  break outer;
+				  }
+			  }				
+		}
 	}
 	
 	public static boolean checkBalance(Player player, Player otherPlayer) {

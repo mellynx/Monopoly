@@ -6,6 +6,7 @@ public class Property {
 	final String name;
 	Player owner;
 	int numberOfHouses;
+	RentSchedule rentSchedule;
 	boolean buyable = true;
 	RentType rentType; // below, enum only tells us what the possible categories for enum are. Here, we must declare the class and variable
 	
@@ -14,11 +15,12 @@ public class Property {
 	 }
 	
 	// constructor for the main properties
-	public Property(String name, int buyCost, int houseCost) { 
+	public Property(String name, int buyCost, int houseCost, RentSchedule rentSchedule) { 
 		this.name = name;
 		this.buyCost = buyCost;
 		this.houseCost = houseCost;
 		this.numberOfHouses = 0;
+		this.rentSchedule = rentSchedule;
 		rentType = RentType.REGULAR;  // this is weird format. yeah get used to it. You have to put RentType. in all the parameters passed
 		// you can initialize stuff in a constructor without taking it as a parameters. number of houses starts at 0 for all properties
 	}
@@ -52,8 +54,19 @@ public class Property {
 		return buyCost;
 	}
 	public int getRentCost() {
-		return buyCost;	// **just a placeholder
-		// calculation based on number of houses property has
+		if (getNumberOfHouses() == 1) {
+			return getRentSchedule().getHouseOne();
+		}
+		else if (getNumberOfHouses() == 2) {
+			return getRentSchedule().getHouseTwo();
+		}
+		else if (getNumberOfHouses() == 3) {
+			return getRentSchedule().getHouseThree();
+		}
+		else if (getNumberOfHouses() == 4) {
+			return getRentSchedule().getHouseFour();
+		}
+		return getRentSchedule().getHotel();
 	}
 	public Player getPropertyOwner() {
 		return owner;
@@ -66,6 +79,9 @@ public class Property {
 	}
 	public int getNumberOfHouses() {
 		return numberOfHouses;
+	}
+	public RentSchedule getRentSchedule() {
+		return rentSchedule;
 	}
 }
 
