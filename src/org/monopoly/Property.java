@@ -54,19 +54,23 @@ public class Property {
 		return buyCost;
 	}
 	public int getRentCost() {
-		if (getNumberOfHouses() == 1) {
-			return getRentSchedule().getHouseOne();
+		if (rentType == rentType.REGULAR) {
+			if (getNumberOfHouses() == 1) {
+				return getRentSchedule().getHouseOne();
+			}
+			else if (getNumberOfHouses() == 2) {
+				return getRentSchedule().getHouseTwo();
+			}
+			else if (getNumberOfHouses() == 3) {
+				return getRentSchedule().getHouseThree();
+			}
+			else if (getNumberOfHouses() == 4) {
+				return getRentSchedule().getHouseFour();
+			}
+			return getRentSchedule().getHotel();
 		}
-		else if (getNumberOfHouses() == 2) {
-			return getRentSchedule().getHouseTwo();
+		else if (rentType == rentType.RAILROAD) {
 		}
-		else if (getNumberOfHouses() == 3) {
-			return getRentSchedule().getHouseThree();
-		}
-		else if (getNumberOfHouses() == 4) {
-			return getRentSchedule().getHouseFour();
-		}
-		return getRentSchedule().getHotel();
 	}
 	public Player getPropertyOwner() {
 		return owner;

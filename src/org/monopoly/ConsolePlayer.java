@@ -48,7 +48,7 @@ public class ConsolePlayer extends Player {
 		
 		if (c != 0) {
 			Property t = listOfPropertiesWhereYouCanCurrentlyBuyAHouse.get(c - 1);
-		    System.out.println("Chosen: " + t);
+		    System.out.println("Bought a house: " + t);
 		    
 			t.addOneHouse();	
 			int money = getBalance() - t.getHouseCost();

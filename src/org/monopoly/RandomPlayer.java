@@ -12,13 +12,20 @@ public class RandomPlayer extends Player {
   	}
   	public boolean buyProperty () {
   		return true;
-  		
-  		// the correct machine strategy is probs to buy every property. below is the code for a coin-flip strategy
+  		// because usually you try to buy every property. below is the code for a coin-flip strategy
   		// limit the scope of variables as much as possible. return true if it's zero
   		// return rand.nextInt(2) == 0; 
   	}
+  	// I think this heuristic means that the player will keep buying the first house in the list that's available to buy
+  	// which should rotate through the set evenly?
   	public boolean buyHouse (ArrayList<Property> listOfPropertiesWhereYouCanCurrentlyBuyAHouse) {
-    	return rand.nextInt(2) == 0;
-    	// needs heuristic for when to buy a house
-  }
+    	if (listOfPropertiesWhereYouCanCurrentlyBuyAHouse.get(0).getBuyCost() * 10 < getBalance()) {
+    		System.out.println("Bought a house: " + listOfPropertiesWhereYouCanCurrentlyBuyAHouse.get(0));
+    		listOfPropertiesWhereYouCanCurrentlyBuyAHouse.get(0).addOneHouse();
+    		int money = getBalance() - listOfPropertiesWhereYouCanCurrentlyBuyAHouse.get(0).getHouseCost();
+			setBalance(money);
+			return true;
+    	}
+    	return false;
+  	}
 }
