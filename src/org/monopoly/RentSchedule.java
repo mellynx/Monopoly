@@ -11,13 +11,12 @@ public class RentSchedule {
 		this.house4 = house4;
 		this.hotel = hotel;
 	}
-	// for railroads
-	public RentSchedule() {
-		
-	}
-	// for utilities 
-	public RentSchedule() {
-		
+	// for railroads. utilities don't need rent schedules
+	public RentSchedule(int house1, int house2, int house3, int house4) {
+		this.house1 = house1;
+		this.house2 = house2;
+		this.house3 = house3;
+		this.house4 = house4;
 	}
 	public int getHouseOne() {
 		return house1;

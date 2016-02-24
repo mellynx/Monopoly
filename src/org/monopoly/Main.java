@@ -44,7 +44,7 @@ public class Main {
 			System.out.println("Player " + playerOne.getToken() + " has rolled a " + dice);
 			landed = moveSpace(playerOne, dice);
 			System.out.println("Player " + playerOne.getToken() + " has landed on " + landed);	
-			afterLanding(playerOne, landed);
+			afterLanding(playerOne, landed, dice);
 			if (checkBalance(playerOne, playerTwo)) {
 				return;
 			}
@@ -55,7 +55,7 @@ public class Main {
 			System.out.println("Player " + playerTwo.getToken() + " has rolled a " + dice);
 			landed = moveSpace(playerTwo, dice);
 			System.out.println("Player " + playerTwo.getToken() + " has landed on " + landed);	
-			afterLanding(playerTwo, landed);
+			afterLanding(playerTwo, landed, dice);
 			if (checkBalance(playerTwo, playerOne)) {
 				return;
 			}
@@ -106,6 +106,11 @@ public class Main {
 	
 	RentSchedule parkRS = new RentSchedule(175, 500, 1100, 1300, 1500);
 	RentSchedule boardwalkRS = new RentSchedule(200, 600, 1400, 1700, 2000);
+	
+	RentSchedule readingrrRS = new RentSchedule(25, 50, 100, 200);
+	RentSchedule pennsylvaniarrRS = new RentSchedule(25, 50, 100, 200);
+	RentSchedule borrRS = new RentSchedule(25, 50, 100, 200);
+	RentSchedule shortlinerrRS = new RentSchedule(25, 50, 100, 200);
 
     boardProperties.add(new Property("Go"));
 
@@ -116,7 +121,7 @@ public class Main {
     boardProperties.add(baltic);
     brown.add(baltic);
     
-    Property readingrr = new Property("Reading Railroad", 200, RentType.RAILROAD);
+    Property readingrr = new Property("Reading Railroad", 200, RentType.RAILROAD, readingrrRS);
     boardProperties.add(readingrr);
     railroads.add(readingrr);
 
@@ -145,7 +150,7 @@ public class Main {
     boardProperties.add(virginia);
     pink.add(virginia);
 
-    Property pennsylvaniarr = new Property("Pennsylvania Railroad", 200, RentType.RAILROAD);
+    Property pennsylvaniarr = new Property("Pennsylvania Railroad", 200, RentType.RAILROAD, pennsylvaniarrRS);
     boardProperties.add(pennsylvaniarr);
     railroads.add(pennsylvaniarr);
 
@@ -171,7 +176,7 @@ public class Main {
     boardProperties.add(kentucky);
     red.add(kentucky);
 
-    Property borr = new Property("B & O Railroad", 200, RentType.RAILROAD);
+    Property borr = new Property("B & O Railroad", 200, RentType.RAILROAD, borrRS);
     boardProperties.add(borr);
     railroads.add(borr);
 
@@ -200,7 +205,7 @@ public class Main {
     boardProperties.add(pacific);
     green.add(pacific);
 
-    Property shortlinerr = new Property("Short Line Railroad", 200, RentType.RAILROAD);
+    Property shortlinerr = new Property("Short Line Railroad", 200, RentType.RAILROAD, shortlinerrRS);
     boardProperties.add(shortlinerr);
     railroads.add(shortlinerr);
 
@@ -227,14 +232,16 @@ public class Main {
 		
 		return boardProperties.get(locationIndex);
 	}
-	public static void afterLanding(Player player, Property landedProperty) {
+	public static void afterLanding(Player player, Property landedProperty, int diceRoll) {
 		
 	  // if the property does not belong to anyone; if the player has enough money to buy the property and chooses to
+	  // deduct the cost of the property from balance, set owner for that property, add that property to list of player's owned properties
 		if (landedProperty.getPropertyOwner() == null) {
 			if (player.getBalance() >= landedProperty.getBuyCost() && player.buyProperty()) {
 				System.out.println(player + " has bought " + landedProperty + " for $" + landedProperty.getBuyCost());
 				player.setBalance(player.getBalance() - landedProperty.getBuyCost());
 				landedProperty.setPropertyOwner(player);
+				player.addToPropertiesOwnedList(landedProperty);
 				
 				// check if this newly purchased property allows players to buy houses
 				// if yes, check the color of that new property and PUT THAT COLOR into a list containing property sets, ie colors that players can buy houses on
@@ -251,9 +258,9 @@ public class Main {
 		}
 		// if the player lands on someone else's property, they pay the rent
 		else if (!landedProperty.getPropertyOwner().equals(player)) {
-			System.out.println(player + " has paid $" + landedProperty.getRentCost() + " for landing on " + landedProperty);
-			player.setBalance(player.getBalance() - landedProperty.getRentCost());
-			landedProperty.getPropertyOwner().setBalance(landedProperty.getPropertyOwner().getBalance() + landedProperty.getRentCost());
+			System.out.println(player + " has paid $" + landedProperty.getRentCost(diceRoll) + " for landing on " + landedProperty);
+			player.setBalance(player.getBalance() - landedProperty.getRentCost(diceRoll));
+			landedProperty.getPropertyOwner().setBalance(landedProperty.getPropertyOwner().getBalance() + landedProperty.getRentCost(diceRoll));
 		}
 		// if the player lands on their own property, nothing happens
 		else {

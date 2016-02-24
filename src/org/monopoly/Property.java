@@ -24,13 +24,22 @@ public class Property {
 		rentType = RentType.REGULAR;  // this is weird format. yeah get used to it. You have to put RentType. in all the parameters passed
 		// you can initialize stuff in a constructor without taking it as a parameters. number of houses starts at 0 for all properties
 	}
-	// constructor for railroads and utilities 
-	public Property(String name, int buyCost, RentType rentType) {
+	// constructor for railroads
+	public Property(String name, int buyCost, RentType rentType, RentSchedule rentSchedule) {
 	  this.name = name;
 	  this.buyCost = buyCost;
 	  this.rentType = rentType;
+	  this.rentSchedule = rentSchedule;
 	  houseCost = 0;
 	}
+	// constructor for utilities
+	public Property(String name, int buyCost, RentType rentType) {
+		this.name = name;
+		this.buyCost = buyCost;
+		this.rentType = rentType;
+		houseCost = 0;
+	}
+	
 	// constructor for board properties (like "Go")
 	// buyable is now default true for all properties except board properties
 	// houseCost and buyCost must be initialized because they are final, which means they can only be set once. AKA they must be set here
@@ -53,7 +62,7 @@ public class Property {
 	public int getBuyCost() {
 		return buyCost;
 	}
-	public int getRentCost() {
+	public int getRentCost(int dice) {
 		if (rentType == rentType.REGULAR) {
 			if (getNumberOfHouses() == 1) {
 				return getRentSchedule().getHouseOne();
@@ -70,6 +79,42 @@ public class Property {
 			return getRentSchedule().getHotel();
 		}
 		else if (rentType == rentType.RAILROAD) {
+			int railroadCount = 0;
+			Player owner = getPropertyOwner();
+			
+			for (int i = 0; i < owner.getPropertiesOwned().size(); i++) {
+				if (owner.getPropertiesOwned().get(i).getRentType() == rentType.RAILROAD) {
+					railroadCount++;
+				}
+			}
+			if (railroadCount == 1) {
+				return getRentSchedule().getHouseOne();
+			}
+			else if (railroadCount == 2) {
+				return getRentSchedule().getHouseTwo();
+			}
+			else if (railroadCount == 3) {
+				return getRentSchedule().getHouseThree();
+			}
+			else {
+				return getRentSchedule().getHouseFour();
+			}
+		}
+		else {
+			int utilityCount = 0;
+			Player owner = getPropertyOwner();
+			
+			for (int j = 0; j< owner.getPropertiesOwned().size(); j++) {
+				if (owner.getPropertiesOwned().get(j).getRentType() == rentType.UTILITY) {
+					utilityCount++;
+				}
+			}
+			if (utilityCount == 1) {
+				return dice * 4;
+			}
+			else {
+				return dice * 10;
+			}
 		}
 	}
 	public Player getPropertyOwner() {
@@ -86,6 +131,9 @@ public class Property {
 	}
 	public RentSchedule getRentSchedule() {
 		return rentSchedule;
+	}
+	public RentType getRentType() {
+		return rentType;
 	}
 }
 
