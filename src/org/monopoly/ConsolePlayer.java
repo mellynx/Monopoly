@@ -57,4 +57,10 @@ public class ConsolePlayer extends Player {
 		}
 		return false; 
 	}
+	public boolean mortgageProperties (ArrayList<Property> propertiesOwned, ArrayList<Property> mortgagedProperties) {
+		return true;
+	}
+	public boolean checkMortgageBuying () {
+  		return true; // needs work
+  	}
 }

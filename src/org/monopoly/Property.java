@@ -1,13 +1,16 @@
 package org.monopoly;
 
+import java.util.ArrayList;
+
 public class Property {
 	
-	final int buyCost, houseCost;
+	final int buyCost, houseCost, mortgageCost;
 	final String name;
 	Player owner;
 	int numberOfHouses;
 	RentSchedule rentSchedule;
 	boolean buyable = true;
+	boolean mortgageStatus = false;
 	RentType rentType; // below, enum only tells us what the possible categories for enum are. Here, we must declare the class and variable
 	
 	enum RentType {
@@ -15,19 +18,21 @@ public class Property {
 	 }
 	
 	// constructor for the main properties
-	public Property(String name, int buyCost, int houseCost, RentSchedule rentSchedule) { 
+	public Property(String name, int buyCost, int houseCost, int mortgageCost, RentSchedule rentSchedule) { 
 		this.name = name;
 		this.buyCost = buyCost;
 		this.houseCost = houseCost;
+		this.mortgageCost = mortgageCost;
 		this.numberOfHouses = 0;
 		this.rentSchedule = rentSchedule;
 		rentType = RentType.REGULAR;  // this is weird format. yeah get used to it. You have to put RentType. in all the parameters passed
 		// you can initialize stuff in a constructor without taking it as a parameters. number of houses starts at 0 for all properties
 	}
 	// constructor for railroads
-	public Property(String name, int buyCost, RentType rentType, RentSchedule rentSchedule) {
+	public Property(String name, int buyCost, int mortgageCost, RentType rentType, RentSchedule rentSchedule) {
 	  this.name = name;
 	  this.buyCost = buyCost;
+	  this.mortgageCost = mortgageCost;
 	  this.rentType = rentType;
 	  this.rentSchedule = rentSchedule;
 	  houseCost = 0;
@@ -37,9 +42,9 @@ public class Property {
 		this.name = name;
 		this.buyCost = buyCost;
 		this.rentType = rentType;
+		mortgageCost = 0;
 		houseCost = 0;
 	}
-	
 	// constructor for board properties (like "Go")
 	// buyable is now default true for all properties except board properties
 	// houseCost and buyCost must be initialized because they are final, which means they can only be set once. AKA they must be set here
@@ -48,6 +53,7 @@ public class Property {
 	  buyable = false;
 	  houseCost = 0;
 	  buyCost = 0;
+	  mortgageCost = 0;
 	  rentType = RentType.NONE;
 	}
 	public void setPropertyOwner(Player owner) {
@@ -55,6 +61,14 @@ public class Property {
 	}
 	public void addOneHouse() {
 		numberOfHouses++;
+	}
+	public void changeMortgageStatus() {
+		if (getMortgageStatus()) {
+			mortgageStatus = false;
+		}
+		else {
+			mortgageStatus = true;
+		}
 	}
 	public String getName() {
 		return name;
@@ -64,7 +78,10 @@ public class Property {
 	}
 	public int getRentCost(int dice) {
 		if (rentType == rentType.REGULAR) {
-			if (getNumberOfHouses() == 1) {
+			if (getNumberOfHouses() == 0) {
+				return getRentSchedule().getRent();
+			}
+			else if (getNumberOfHouses() == 1) {
 				return getRentSchedule().getHouseOne();
 			}
 			else if (getNumberOfHouses() == 2) {
@@ -134,6 +151,26 @@ public class Property {
 	}
 	public RentType getRentType() {
 		return rentType;
+	}
+	public boolean getBuyableStatus() {
+		return buyable;
+	}
+	public int getLocationIndex(ArrayList<Property> boardOfProperties) {
+		// below, access the current property by using 'this'
+		int locationIndex = 0;
+		
+		for (int i = 0; i < boardOfProperties.size(); i++) {
+			if (this == boardOfProperties.get(i)) {
+				locationIndex = i;
+			}
+		}
+		return locationIndex;
+	}
+	public boolean getMortgageStatus() {
+		return mortgageStatus;
+	}
+	public int getMortgageCost() {
+		return mortgageCost;
 	}
 }
 

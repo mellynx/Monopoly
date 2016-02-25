@@ -28,4 +28,10 @@ public class RandomPlayer extends Player {
     	}
     	return false;
   	}
+  	public boolean mortgageProperties (ArrayList<Property> propertiesOwned, ArrayList<Property> mortgagedProperties) {
+  		return true; // needs work
+  	}
+  	public boolean checkMortgageBuying () {
+  		return true; // needs work
+  	}
 }
