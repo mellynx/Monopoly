@@ -58,9 +58,46 @@ public class ConsolePlayer extends Player {
 		return false; 
 	}
 	public boolean mortgageProperties (ArrayList<Property> propertiesOwned, ArrayList<Property> mortgagedProperties) {
-		return true;
+		System.out.println("Select the number of the property that you'd like to mortgage, or 0 to stop mortgaging properties.");
+
+		for (int i = 0; i < propertiesOwned.size(); i++) {
+			System.out.println((i + 1) + ". " + propertiesOwned.get(i));
+		}
+
+		try {
+			input = keyboard.readLine();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}	
+
+		int c = Integer.parseInt(input);
+
+		if (c != 0) {
+				Property t = propertiesOwned.get(c - 1);
+			    System.out.println("Mortgaged: " + t);
+			    
+				mortgagedProperties.add(t);
+				propertiesOwned.remove(t);
+				t.changeMortgageStatus();
+				int money = getBalance() + t.getMortgageCost();
+				setBalance(money);
+				return true;
+		}
+		return false;
 	}
-	public boolean checkMortgageBuying () {
-  		return true; // needs work
-  	}
+	public boolean checkIfYourWantToMortgageProperties (String prompt) {
+		System.out.println(prompt);
+
+		try {
+			input = keyboard.readLine();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		if (input.equals("y")) {
+			return true;
+		}
+		return false;
+	}
 }

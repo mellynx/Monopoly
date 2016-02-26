@@ -29,9 +29,18 @@ public class RandomPlayer extends Player {
     	return false;
   	}
   	public boolean mortgageProperties (ArrayList<Property> propertiesOwned, ArrayList<Property> mortgagedProperties) {
-  		return true; // needs work
-  	}
-  	public boolean checkMortgageBuying () {
-  		return true; // needs work
+  	// the random player will attempt to mortgage everything
+  		
+  		for (int i = 0; i < propertiesOwned.size(); i++) {
+  			mortgagedProperties.add(propertiesOwned.get(i));
+  			propertiesOwned.remove(propertiesOwned.get(i));
+  			propertiesOwned.get(i).changeMortgageStatus();
+  			int money = getBalance() + propertiesOwned.get(i).getMortgageCost();
+  			setBalance(money);
+  		}
+  		return false;
+  	}	
+  	public boolean checkIfYourWantToMortgageProperties (String prompt) {
+  		return true;
   	}
 }

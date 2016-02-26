@@ -77,52 +77,26 @@ public class Property {
 		return buyCost;
 	}
 	public int getRentCost(int dice) {
-		if (rentType == rentType.REGULAR) {
-			if (getNumberOfHouses() == 0) {
-				return getRentSchedule().getRent();
-			}
-			else if (getNumberOfHouses() == 1) {
-				return getRentSchedule().getHouseOne();
-			}
-			else if (getNumberOfHouses() == 2) {
-				return getRentSchedule().getHouseTwo();
-			}
-			else if (getNumberOfHouses() == 3) {
-				return getRentSchedule().getHouseThree();
-			}
-			else if (getNumberOfHouses() == 4) {
-				return getRentSchedule().getHouseFour();
-			}
-			return getRentSchedule().getHotel();
+		if (rentType == RentType.REGULAR) {
+			return rentSchedule.getRent(getNumberOfHouses());
 		}
-		else if (rentType == rentType.RAILROAD) {
+		else if (rentType == RentType.RAILROAD) {
 			int railroadCount = 0;
 			Player owner = getPropertyOwner();
 			
 			for (int i = 0; i < owner.getPropertiesOwned().size(); i++) {
-				if (owner.getPropertiesOwned().get(i).getRentType() == rentType.RAILROAD) {
+				if (owner.getPropertiesOwned().get(i).getRentType() == RentType.RAILROAD) {
 					railroadCount++;
 				}
 			}
-			if (railroadCount == 1) {
-				return getRentSchedule().getHouseOne();
-			}
-			else if (railroadCount == 2) {
-				return getRentSchedule().getHouseTwo();
-			}
-			else if (railroadCount == 3) {
-				return getRentSchedule().getHouseThree();
-			}
-			else {
-				return getRentSchedule().getHouseFour();
-			}
+			return rentSchedule.getRent(railroadCount);
 		}
 		else {
 			int utilityCount = 0;
 			Player owner = getPropertyOwner();
 			
 			for (int j = 0; j< owner.getPropertiesOwned().size(); j++) {
-				if (owner.getPropertiesOwned().get(j).getRentType() == rentType.UTILITY) {
+				if (owner.getPropertiesOwned().get(j).getRentType() == RentType.UTILITY) {
 					utilityCount++;
 				}
 			}

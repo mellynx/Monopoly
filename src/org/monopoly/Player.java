@@ -57,5 +57,5 @@ public abstract class Player {
 	public abstract boolean buyProperty(); //no body for abstract methods
 	public abstract boolean buyHouse(ArrayList<Property> listOfPropertiesWhereYouCanCurrentlyBuyAHouse);
 	public abstract boolean mortgageProperties (ArrayList<Property> propertiesOwned, ArrayList<Property> mortgagedProperties);
-	public abstract boolean checkMortgageBuying ();
+	public abstract boolean checkIfYourWantToMortgageProperties (String prompt);
 }
