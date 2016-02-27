@@ -7,7 +7,7 @@ import java.util.Set;
 import org.monopoly.Property.RentType;
 
 public class RentSchedule {
-	int rent, house1, house2, house3, house4, hotel;
+	int rent, house1, house2, house3, house4, hotel, railroad1, railroad2, railroad3, railroad4;
 	
 	//static means it is the same thing across instances of the class
 	// not static means there is one for each instance of the class
@@ -15,7 +15,7 @@ public class RentSchedule {
 	
 	// for regular properties
 	
-	//in the constructor you should popuylate the map using the arguments from the constructort
+	//in the constructor you should populate the map using the arguments from the constructor
 	// and in get rent just lookup in the map using that enuym
 	public RentSchedule(int rent, int house1, int house2, int house3, int house4, int hotel) {
 		map.put(0, rent);
@@ -26,11 +26,11 @@ public class RentSchedule {
 		map.put(5, hotel);
 	}
 	// for railroads. utilities don't need rent schedules
-	public RentSchedule(int house1, int house2, int house3, int house4) {
-		map.put(0, house1);
-		map.put(1, house2);
-		map.put(2, house3);
-		map.put(3, house4);
+	public RentSchedule(int railroad1, int railroad2, int railroad3, int railroad4) {
+		map.put(0, railroad1);
+		map.put(1, railroad2);
+		map.put(2, railroad3);
+		map.put(3, railroad4);
 	}
 	// never put code outside of a method
 	public int getRent(int house) {

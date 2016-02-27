@@ -7,10 +7,10 @@ public abstract class Player {
 
 	final String playerToken;
 	int balance;
-	Property property;
+	Property position;
 	ArrayList<Set<Property>> possibleHouses;
 	ArrayList<Property> propertiesOwned;
-	ArrayList<Property> mortgagedProperties;
+	ArrayList<Property> mortgagedProperties = new ArrayList<>();
 	
 	public Player(String playerToken) {
 		this.playerToken = playerToken;
@@ -22,7 +22,7 @@ public abstract class Player {
 		balance = money;
 	}
 	public void setLocation(Property currentProperty) {
-		property = currentProperty;
+		position = currentProperty;
 	}
 	public void addToPossibleHouseList (Set<Property> a) { // the list of properties on which a player is eligible to build a house
 		possibleHouses.add(a);
@@ -33,6 +33,12 @@ public abstract class Player {
 	public void addToMortgagedProperties (Property property) {
 		mortgagedProperties.add(property);
 	}
+	public void removeFromPropertiesOwnedList (Property property) {
+    propertiesOwned.remove(property);
+  }
+  public void removeFromMortgagedProperties (Property property) {
+    mortgagedProperties.remove(property);
+  }
 	public String getToken() {
 		return playerToken;
 	}
@@ -40,7 +46,7 @@ public abstract class Player {
 		return balance;
 	}
 	public Property getLocation() {
-		return property;
+		return position;
 	}
 	public ArrayList<Set<Property>> getPossibleHouseList() {
 		return possibleHouses;
@@ -54,8 +60,24 @@ public abstract class Player {
 	public String toString() {
 		return getToken().toString();
 	}
+	public void whatHappensWhenYouBuyHouse(Property property) {
+	  property.addOneHouse();
+	  int money = getBalance() - property.getHouseCost();
+	  setBalance(money);
+	  System.out.println("Player has $" + getBalance() + " left.");
+	}
+	public void whatHappensWhenYouMortgage(Property property) {
+	  System.out.println("Mortgaged: " + property);
+	  addToMortgagedProperties(property); // use the add method, don't add directly to the list  
+	  removeFromPropertiesOwnedList(property);
+	  property.changeMortgageStatus();
+	  int money = getBalance() + property.getMortgageCost();
+	  setBalance(money);
+	  System.out.println("Player now has $" + getBalance());
+	}
 	public abstract boolean buyProperty(); //no body for abstract methods
-	public abstract boolean buyHouse(ArrayList<Property> listOfPropertiesWhereYouCanCurrentlyBuyAHouse);
-	public abstract boolean mortgageProperties (ArrayList<Property> propertiesOwned, ArrayList<Property> mortgagedProperties);
+	public abstract Property buyHouse(ArrayList<Property> currentHousableProperties);
+	public abstract Property mortgageProperties (ArrayList<Property> propertiesOwned);
 	public abstract boolean checkIfYourWantToMortgageProperties (String prompt);
 }
+

@@ -18,27 +18,20 @@ public class RandomPlayer extends Player {
   	}
   	// I think this heuristic means that the player will keep buying the first house in the list that's available to buy
   	// which should rotate through the set evenly?
-  	public boolean buyHouse (ArrayList<Property> listOfPropertiesWhereYouCanCurrentlyBuyAHouse) {
-    	if (listOfPropertiesWhereYouCanCurrentlyBuyAHouse.get(0).getBuyCost() * 10 < getBalance()) {
-    		System.out.println("Bought a house: " + listOfPropertiesWhereYouCanCurrentlyBuyAHouse.get(0));
-    		listOfPropertiesWhereYouCanCurrentlyBuyAHouse.get(0).addOneHouse();
-    		int money = getBalance() - listOfPropertiesWhereYouCanCurrentlyBuyAHouse.get(0).getHouseCost();
-			setBalance(money);
-			return true;
+  	public Property buyHouse (ArrayList<Property> propsWhereYouCanBuyHouse) {
+    	if (propsWhereYouCanBuyHouse.get(0).getBuyCost() * 10 < getBalance()) {
+    		System.out.println("Bought a house: " + propsWhereYouCanBuyHouse.get(0));
+    		return propsWhereYouCanBuyHouse.get(0);
     	}
-    	return false;
+    	return null;
   	}
-  	public boolean mortgageProperties (ArrayList<Property> propertiesOwned, ArrayList<Property> mortgagedProperties) {
+  	public Property mortgageProperties (ArrayList<Property> propertiesOwned) {
   	// the random player will attempt to mortgage everything
   		
   		for (int i = 0; i < propertiesOwned.size(); i++) {
-  			mortgagedProperties.add(propertiesOwned.get(i));
-  			propertiesOwned.remove(propertiesOwned.get(i));
-  			propertiesOwned.get(i).changeMortgageStatus();
-  			int money = getBalance() + propertiesOwned.get(i).getMortgageCost();
-  			setBalance(money);
+  		  return propertiesOwned.get(i);
   		}
-  		return false;
+  		return null;
   	}	
   	public boolean checkIfYourWantToMortgageProperties (String prompt) {
   		return true;

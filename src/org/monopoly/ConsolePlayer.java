@@ -7,15 +7,15 @@ import java.util.ArrayList;
 
 public class ConsolePlayer extends Player {
   
-	InputStreamReader reader = new InputStreamReader(System.in);
-	BufferedReader keyboard = new BufferedReader(reader);
-  
-	String input;
+  // note the combination of buffered and input stream reader
+  BufferedReader keyboard = new BufferedReader(new InputStreamReader(System.in));
 
 	public ConsolePlayer(String playerToken) {
 		super(playerToken);
 	}
 	public boolean buyProperty() {
+	  
+	  String input;
     
 		System.out.println("Do you want to buy this property? (y/n)"); 
 		
@@ -30,12 +30,15 @@ public class ConsolePlayer extends Player {
 		}
 		return false;
 	} 
-	public boolean buyHouse(ArrayList<Property> listOfPropertiesWhereYouCanCurrentlyBuyAHouse) {
+	public Property buyHouse(ArrayList<Property> propsWhereYouCanBuyHouse) {
+	  // input is not constant throughout the game, so we want to have it as local variables even though we'll have to declare it four times
+	  // helps with bugs!
+	  String input;
     
 		System.out.println("Press the number of the property where you'd like to buy a house, or 0 to stop buying houses.");
 		
-		for (int i = 0; i < listOfPropertiesWhereYouCanCurrentlyBuyAHouse.size(); i++) {
-			System.out.println((i + 1) + ". " + listOfPropertiesWhereYouCanCurrentlyBuyAHouse.get(i));
+		for (int i = 0; i < propsWhereYouCanBuyHouse.size(); i++) {
+			System.out.println((i + 1) + ". " + propsWhereYouCanBuyHouse.get(i));
 		}
    
 		try {
@@ -47,17 +50,15 @@ public class ConsolePlayer extends Player {
 		int c = Integer.parseInt(input);
 		
 		if (c != 0) {
-			Property t = listOfPropertiesWhereYouCanCurrentlyBuyAHouse.get(c - 1);
+			Property t = propsWhereYouCanBuyHouse.get(c - 1);
 		    System.out.println("Bought a house: " + t);
-		    
-			t.addOneHouse();	
-			int money = getBalance() - t.getHouseCost();
-			setBalance(money);
-			return true;
+		    return t;
 		}
-		return false; 
+		return null;
 	}
-	public boolean mortgageProperties (ArrayList<Property> propertiesOwned, ArrayList<Property> mortgagedProperties) {
+	public Property mortgageProperties (ArrayList<Property> propertiesOwned) {
+	  String input;
+	  
 		System.out.println("Select the number of the property that you'd like to mortgage, or 0 to stop mortgaging properties.");
 
 		for (int i = 0; i < propertiesOwned.size(); i++) {
@@ -74,18 +75,13 @@ public class ConsolePlayer extends Player {
 
 		if (c != 0) {
 				Property t = propertiesOwned.get(c - 1);
-			    System.out.println("Mortgaged: " + t);
-			    
-				mortgagedProperties.add(t);
-				propertiesOwned.remove(t);
-				t.changeMortgageStatus();
-				int money = getBalance() + t.getMortgageCost();
-				setBalance(money);
-				return true;
+				return t;
 		}
-		return false;
+		return null;
 	}
 	public boolean checkIfYourWantToMortgageProperties (String prompt) {
+	  String input = null;
+	  
 		System.out.println(prompt);
 
 		try {
