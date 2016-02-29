@@ -19,10 +19,13 @@ public class RandomPlayer extends Player {
   	// I think this heuristic means that the player will keep buying the first house in the list that's available to buy
   	// which should rotate through the set evenly?
   	public Property buyHouse (ArrayList<Property> propsWhereYouCanBuyHouse) {
-    	if (propsWhereYouCanBuyHouse.get(0).getBuyCost() * 10 < getBalance()) {
-    		System.out.println("Bought a house: " + propsWhereYouCanBuyHouse.get(0));
-    		return propsWhereYouCanBuyHouse.get(0);
-    	}
+  	  // if there are properties in the housable list, and player has (house*10) amount of money, buy the house
+  	  if (propsWhereYouCanBuyHouse.size() > 0) {
+  	    if (propsWhereYouCanBuyHouse.get(0).getBuyCost() * 10 < getBalance()) { 
+          System.out.println("Bought a house: " + propsWhereYouCanBuyHouse.get(0));
+          return propsWhereYouCanBuyHouse.get(0);
+        }
+  	  }
     	return null;
   	}
   	public Property mortgageProperties (ArrayList<Property> propertiesOwned) {

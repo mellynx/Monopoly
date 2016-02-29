@@ -17,7 +17,7 @@ public class Game {
   //the list of all properties on the board
   ArrayList<Property> boardProperties = new ArrayList<Property>();
   
-    //maps each property to what set (color) of properties it belongs to
+  //maps each property to what set (color) of properties it belongs to
   Map<Property, Set <Property>> map = new HashMap<>();
   
   Player playerOne = new RandomPlayer ("Dog");
@@ -38,30 +38,8 @@ public class Game {
     
     while(true) {
       
-      int dice = rollDice();
-      Property landed;
-      
-      System.out.println("Player " + playerOne.getToken() + " has rolled a " + dice);
-      landed = moveSpace(playerOne, dice);
-      playerOne.setLocation(landed);
-      System.out.println("Player " + playerOne.getToken() + " has landed on " + landed);  
-      afterLanding(playerOne, landed, dice);
-      if (checkBalance(playerOne, playerTwo)) {
-        return;
-      }
-      System.out.println("---------------------");
-      
-      dice = rollDice();
-      
-      System.out.println("Player " + playerTwo.getToken() + " has rolled a " + dice);
-      landed = moveSpace(playerTwo, dice);
-      playerTwo.setLocation(landed);
-      System.out.println("Player " + playerTwo.getToken() + " has landed on " + landed);  
-      afterLanding(playerTwo, landed, dice);
-      if (checkBalance(playerTwo, playerOne)) {
-        return;
-      }
-      System.out.println("---------------------");
+      twoPlayerGame(playerOne, playerTwo);
+      twoPlayerGame(playerTwo, playerOne);
     }
   }
 
@@ -171,7 +149,26 @@ public class Game {
     boardProperties.add(new Property("Luxury Tax"));
     addSingleProperty(new Property("Boardwalk", 400, 200, 200, boardwalkRS), blue);
   }
-  
+  private void addSingleProperty(Property property, Set<Property> set) {
+    boardProperties.add(property);
+      set.add(property);
+      map.put(property, set);
+  }
+  private void twoPlayerGame (Player thisPlayer, Player otherPlayer) {
+    
+    int dice = rollDice();
+    Property landed;
+    
+    System.out.println("Player " + thisPlayer.getToken() + " has rolled a " + dice);
+    landed = moveSpace(thisPlayer, dice);
+    thisPlayer.setLocation(landed);
+    System.out.println("Player " + thisPlayer.getToken() + " has landed on " + landed);  
+    afterLanding(thisPlayer, landed, dice);
+    if (checkBalance(thisPlayer, otherPlayer)) {
+      return;
+    }
+    System.out.println("---------------------");  
+  }
   public int rollDice() {
     return (random.nextInt(6) + 1 + random.nextInt(6) + 1);
   }
@@ -191,84 +188,119 @@ public class Game {
     return boardProperties.get(index);
   }
   public void afterLanding(Player player, Property landedProperty, int diceRoll) throws IOException {
+    /*
+     * if player lands on unowned property (and property is buyable)
+     *    
+     *    if player chooses to buy -- if they do buy and this property leads to a monopoly, add this to housable list
+       *    if player has money
+       *    if player does not have money
+       *      player does not have properties to mortgage
+       *      player does have properties to mortgage
+       *        player wants to mortgage
+       *        player does not want to mortgage
+       *  if player chooses to not buy
+     * 
+     * if property is not buyable
+     * if player IS the owner, nothing happens
+     * if player is not the owner, pay rent
+     * 
+     * check housable list
+     */
     
-    // if the property does not belong to anyone; if the player has enough money to buy the property and chooses to
-    // deduct the cost of the property from balance, set owner for that property, add that property to list of player's owned properties
-    if (landedProperty.getPropertyOwner() == null && landedProperty.getBuyableStatus()) {
-    	if (player.getBalance() >= landedProperty.getBuyCost() && player.buyProperty()) {
-	        System.out.println(player + " has bought " + landedProperty + " for $" + landedProperty.getBuyCost());
-	        player.setBalance(player.getBalance() - landedProperty.getBuyCost());
-	        System.out.println("Player has $" + player.getBalance() + " left.");
-	        landedProperty.setPropertyOwner(player);
-	        player.addToPropertiesOwnedList(landedProperty);
-        
+    
+
+    // if the property does not belong to anyone; if the player has enough money
+    // to buy the property and chooses to
+    // deduct the cost of the property from balance, set owner for that
+    // property, add that property to list of player's owned properties
+    if (landedProperty.getPropertyOwner() == null && landedProperty.getBuyableStatus()) {  // TODO: since this is a really big if, consider moving the inside stuff to a method
+      if (player.getBalance() >= landedProperty.getBuyCost() && player.buyProperty()) {  // TODO combine this and next if make buyProperty an inner if)
+        System.out.println(player + " has bought " + landedProperty + " for $" + landedProperty.getBuyCost());
+        player.setBalance(player.getBalance() - landedProperty.getBuyCost());
+        System.out.println("Player has $" + player.getBalance() + " left.");
+        landedProperty.setPropertyOwner(player);
+        player.addToPropertiesOwnedList(landedProperty);
+
         // check if this newly purchased property allows players to buy houses
-        // if yes, check the color of that new property and PUT THAT COLOR into a list containing property sets, ie colors that players can buy houses on
-        // later, keep checking this list to see when the player actually wants to buy these houses
+        // if yes, check the color of that new property and PUT THAT COLOR into
+        // a list containing property sets, ie colors that players can buy
+        // houses on
+        // later, keep checking this list to see when the player actually wants
+        // to buy these houses
         if (canPlayerBuyAHouse(player, landedProperty)) {
-        	System.out.println("You've achieved a monopoly for " + map.get(landedProperty));
-        	Set<Property> color  = map.get(landedProperty);
-            player.addToPossibleHouseList(color);
+          System.out.println("You've achieved a monopoly for " + map.get(landedProperty));
+          Set<Property> color = map.get(landedProperty);
+          player.addToPossibleHouseList(color);
         }
       }
-    // if the player has the money but chooses not to buy this property
-    else if (player.getBalance() >= landedProperty.getBuyCost() && !player.buyProperty()) {
+      // if the player has the money but chooses not to buy this property
+      else if (player.getBalance() >= landedProperty.getBuyCost() && !player.buyProperty()) {
         System.out.println("Player has chosen not to buy this property.");
-    }
-    // if the player does not have the money but does have properties to mortgage
-    else if (player.getBalance() < landedProperty.getBuyCost() && player.getPropertiesOwned().size() > 0) {
-          
+      }
+      // if the player does not have the money but does have properties to
+      // mortgage
+      else if (player.getBalance() < landedProperty.getBuyCost() && player.getPropertiesOwned().size() > 0) {  // TODO combine this and next else if in similar manner
+
         String prompt = "You do not have enough money to buy this property. Would you like to mortgage any properties? (y/n)";
 
         if (player.checkIfYourWantToMortgageProperties(prompt)) {
-        	
-          // keep letting them mortgage properties unless they return false  
-          Property toMortgage = player.mortgageProperties(player.getPropertiesOwned());
-          if(toMortgage != null) {
-          
+
+          // keep letting them mortgage properties unless they return false
+          Property toMortgage = player.mortgageProperties(player.getPropertiesOwned()); // TODO add a loop here while (toMortagage!= null) instead of recursing
+          if (toMortgage != null) {
+
             player.whatHappensWhenYouMortgage(toMortgage);
-          
+
             // then try to throw them back up to the method?
-            afterLanding(player, landedProperty, diceRoll);
+            afterLanding(player, landedProperty, diceRoll);  // TODO after the while loop finishes, then check balance and willingness (buyProperty())
           }
-       }
-       else {
-    	  System.out.println("Player cannot afford to buy this property.");
+        } else {
+          System.out.println("Player cannot afford to buy this property.");
+        }
       }
-   }
-   // if the player does not have money and does not have properties to mortgage
-   else if (player.getBalance() < landedProperty.getBuyCost() && player.getPropertiesOwned().size() == 0) {
+      // if the player does not have money and does not have properties to
+      // mortgage
+      else if (player.getBalance() < landedProperty.getBuyCost() && player.getPropertiesOwned().size() == 0) {
         System.out.println("Player cannot afford to buy this property.");
       }
-   }
-   // if the player lands on a board property, nothing happens
-   else if (!landedProperty.getBuyableStatus()) {
-	   	System.out.println("The player landed on " + landedProperty + " and nothing happens.");
-   }
-    
+    }
+    // if the player lands on a board property, nothing happens
+    else if (!landedProperty.getBuyableStatus()) {
+      System.out.println("The player landed on " + landedProperty + " and nothing happens.");
+    }
+
     // if the player lands on someone else's property, they pay the rent
     // property must NOT be mortgaged to collect rent, aka boolean = false
-   else if (!landedProperty.getPropertyOwner().equals(player) && !landedProperty.getMortgageStatus()) {
-	   System.out.println(player + " has paid $" + landedProperty.getRentCost(diceRoll) + " for landing on " + landedProperty);
-	   player.setBalance(player.getBalance() - landedProperty.getRentCost(diceRoll));
-	   System.out.println("Player has $" + player.getBalance() + " left.");
-	   landedProperty.getPropertyOwner().setBalance(landedProperty.getPropertyOwner().getBalance() + landedProperty.getRentCost(diceRoll));
-   }
-   // if the property belongs to someone else but is mortgaged
-   else if (!landedProperty.getPropertyOwner().equals(player) && landedProperty.getMortgageStatus()) {
-	   System.out.println("This property is mortgaged and no rent must be paid.");
-   }
-   // if the player lands on their own property, nothing happens
-   else {
-	   String phrase = phrases[(int) (Math.random() * phrases.length)];
-	   System.out.println(phrase);
-   }
-   // at the end of every turn, go back to the list that tells us if a player is eligible to buy houses
-   // if they are, let's revisit
-   if (player.getPossibleHouseList().size() > 0) {
-      considerHouseList(player, player.getPossibleHouseList());
-   }
- }
+    else if (!landedProperty.getPropertyOwner().equals(player) && !landedProperty.getMortgageStatus()) {
+      System.out
+          .println(player + " has paid $" + landedProperty.getRentCost(diceRoll) + " for landing on " + landedProperty);
+      player.setBalance(player.getBalance() - landedProperty.getRentCost(diceRoll));
+      System.out.println("Player has $" + player.getBalance() + " left.");
+      landedProperty.getPropertyOwner()
+          .setBalance(landedProperty.getPropertyOwner().getBalance() + landedProperty.getRentCost(diceRoll));
+    }
+    // if the property belongs to someone else but is mortgaged
+    else if (!landedProperty.getPropertyOwner().equals(player) && landedProperty.getMortgageStatus()) {
+      System.out.println("This property is mortgaged and no rent must be paid.");
+    }
+    // if the player lands on their own property, nothing happens
+    else {
+      String phrase = phrases[(int) (Math.random() * phrases.length)];
+      System.out.println(phrase);
+    }
+    // at the end of every turn, go back to the list that tells us if a player
+    // is eligible to buy houses
+    // if they are, let's revisit
+    if (player.getPossibleHouseList().size() > 0) {
+      String prompt = "You are eligible to buy houses. Would you like to buy any?";
+      if (player.checkIfYourWantToMortgageProperties(prompt)) {// TODO this is
+                                                               // about buying
+                                                               // houses not
+                                                               // mortgaging
+        considerHouseList(player, player.getPossibleHouseList());
+      }
+    }
+  }
   /**
    * javadoc documentation. note the two stars above
    * the method below is strictly about whether a player meets the board requirements to buy houses, not whether they have the money to
@@ -285,7 +317,6 @@ public class Game {
     }
     return true;
   }
-  
   public void considerHouseList(Player player, ArrayList <Set<Property>> monopoliesOwned) throws IOException {
     boolean leave = true;
     
@@ -309,20 +340,30 @@ public class Game {
 			}
      
 			// looping through every property in a set
-			for (Property housableProperty: propertySet) { 
+			for (Property housableProperty : propertySet) { 
 				// for each property, IF the player can afford a house on that property
 				// and the number of houses on that property doesn't exceed the current min houseCount
 				// the 5th house is effectively the hotel
-				if (player.getBalance() > housableProperty.getHouseCost() && housableProperty.getNumberOfHouses() == minHouseCountPerSet && housableProperty.getNumberOfHouses() < 5) {
+			  
+			  //TODO move latter two conditions to outer loop, and the first to an inner loop. the else if becomes the else to the outer loop
+			  // ask to mortgage properties first, build list of all houses they can buy from all properties (make separate method), put that in the list, 
+			  // while that list.size > 0. loop keeps getting that list and passing it to player as long as they want to keep buying houses and there's stuff in the list
+			  
+				if (player.getBalance() > housableProperty.getHouseCost() && housableProperty.getNumberOfHouses() == minHouseCountPerSet 
+				    && housableProperty.getNumberOfHouses() < 5) {
 					// present that property in a list of things player can buy a house on, then loop. or break if the player wants to exit
 					passToPlayerToBuyHouse.add(housableProperty);
 				}
+			}
+			//TODO close the for loop with the housable list before we let people buy any of those houses
+			
 				else if (player.getBalance() < housableProperty.getHouseCost() && player.getPropertiesOwned().size() > 0) {
 					String prompt = "You do not have enough money to buy houses. Would you like to mortgage any properties? (y/n)";
-
+					 
+					// check if they want to mortgage properties
 					if (player.checkIfYourWantToMortgageProperties(prompt)) {
+					  
 						// keep letting them mortgage properties unless they return false  
-						
 						while (player.getBalance() < housableProperty.getHouseCost()) {
 							Property toMortgage = player.mortgageProperties(player.getPropertiesOwned());
     						if (toMortgage != null){
@@ -331,6 +372,9 @@ public class Game {
     						}
 						}
 					}
+					//AFTER MORTGAGING, CHECK IF THEY HAVE ENOUGH MONEY 
+					
+					// if player doesn't have money to buy houses and doesn't have properties to mortgage
 					else if (player.getBalance() < housableProperty.getHouseCost() && player.getPropertiesOwned().size() == 0) {
 						System.out.println("Player cannot buy this house.");
 					}
@@ -339,6 +383,7 @@ public class Game {
 				
 				if (housed == null) {
 					leave = false;
+					break; // leave the while loop AND break the for loop
 				}
 				else {
 					player.whatHappensWhenYouBuyHouse(housed);
@@ -357,7 +402,7 @@ public class Game {
 			System.out.println("Player has no more money and needs to mortgage some properties.");
 			// keep doing this while the below method returns true
 
-			while (player.getBalance() < 0) {
+			while (player.getBalance() < 0) {  // TODO i think this will infinite loop if they dont' have enough properties to mortgage, add (&& getPropertiesOwned > 0) to the while loop
 				Property toMortgage = player.mortgageProperties(player.getPropertiesOwned());
 				if (toMortgage != null) {
 
@@ -372,11 +417,8 @@ public class Game {
 	}
 	return false;
 }
-  private void addSingleProperty(Property property, Set<Property> set) {
-      boardProperties.add(property);
-      set.add(property);
-      map.put(property, set);
-  }
+  
+  
 }
 
 
