@@ -29,7 +29,7 @@ public class RandomPlayer extends Player {
   	// the random player will attempt to mortgage everything
   		
   		for (int i = 0; i < propertiesOwned.size(); i++) {
-  		  return propertiesOwned.get(i);
+  			return propertiesOwned.get(i);
   		}
   		return null;
   	}	

@@ -80,55 +80,54 @@ public class Game {
     Set<Property> railroads = new HashSet<Property>();
     
     RentSchedule mediterraneanRS = new RentSchedule(2, 10, 30, 90, 160, 250);
-  RentSchedule balticRS = new RentSchedule(4, 20, 60, 180, 320, 450);
+    RentSchedule balticRS = new RentSchedule(4, 20, 60, 180, 320, 450);
   
-  RentSchedule orientalRS = new RentSchedule(6, 30, 90, 270, 400, 550);
-  RentSchedule vermontRS = new RentSchedule(6, 30, 90, 270, 500, 550);
-  RentSchedule connecticutRS = new RentSchedule(8, 40, 100, 300, 450, 600);
+    RentSchedule orientalRS = new RentSchedule(6, 30, 90, 270, 400, 550);
+    RentSchedule vermontRS = new RentSchedule(6, 30, 90, 270, 500, 550);
+    RentSchedule connecticutRS = new RentSchedule(8, 40, 100, 300, 450, 600);
   
-  RentSchedule stcharlesRS = new RentSchedule(10, 50, 150, 450, 625, 750);
-  RentSchedule statesRS = new RentSchedule(10, 50, 150, 450, 625, 750);
-  RentSchedule virginiaRS = new RentSchedule(12, 60, 180, 500, 700, 900);
+    RentSchedule stcharlesRS = new RentSchedule(10, 50, 150, 450, 625, 750);
+    RentSchedule statesRS = new RentSchedule(10, 50, 150, 450, 625, 750);
+    RentSchedule virginiaRS = new RentSchedule(12, 60, 180, 500, 700, 900);
   
-  RentSchedule stjamesRS = new RentSchedule(14, 70, 200, 550, 750, 950);
-  RentSchedule tennesseeRS = new RentSchedule(14, 70, 200, 550, 750, 950);
-  RentSchedule newyorkRS = new RentSchedule(16, 80, 220, 600, 800, 1000);
+    RentSchedule stjamesRS = new RentSchedule(14, 70, 200, 550, 750, 950);
+    RentSchedule tennesseeRS = new RentSchedule(14, 70, 200, 550, 750, 950);
+    RentSchedule newyorkRS = new RentSchedule(16, 80, 220, 600, 800, 1000);
   
-  RentSchedule kentuckyRS = new RentSchedule(18, 90, 250, 750, 875, 1050);
-  RentSchedule indianaRS = new RentSchedule(18, 90, 250, 700, 875, 1050);
-  RentSchedule illinoisRS = new RentSchedule(20, 100, 300, 750, 925, 1100);
+    RentSchedule kentuckyRS = new RentSchedule(18, 90, 250, 750, 875, 1050);
+    RentSchedule indianaRS = new RentSchedule(18, 90, 250, 700, 875, 1050);
+    RentSchedule illinoisRS = new RentSchedule(20, 100, 300, 750, 925, 1100);
   
-  RentSchedule atlanticRS = new RentSchedule(22, 110, 330, 800, 975, 1150);
-  RentSchedule ventnorRS = new RentSchedule(22, 110, 330, 800, 975, 1150);
-  RentSchedule marvingardensRS = new RentSchedule(24, 120, 360, 850, 1025, 1200);
+    RentSchedule atlanticRS = new RentSchedule(22, 110, 330, 800, 975, 1150);
+    RentSchedule ventnorRS = new RentSchedule(22, 110, 330, 800, 975, 1150);
+    RentSchedule marvingardensRS = new RentSchedule(24, 120, 360, 850, 1025, 1200);
   
-  RentSchedule pacificRS = new RentSchedule(26, 130, 390, 900, 1100, 1275);
-  RentSchedule northcarolinaRS = new RentSchedule(26, 130, 390, 900, 1100, 1275);
-  RentSchedule pennsylvaniaRS = new RentSchedule(28, 150, 450, 1000, 1200, 1400);
+    RentSchedule pacificRS = new RentSchedule(26, 130, 390, 900, 1100, 1275);
+    RentSchedule northcarolinaRS = new RentSchedule(26, 130, 390, 900, 1100, 1275);
+    RentSchedule pennsylvaniaRS = new RentSchedule(28, 150, 450, 1000, 1200, 1400);
   
-  RentSchedule parkRS = new RentSchedule(35, 175, 500, 1100, 1300, 1500);
-  RentSchedule boardwalkRS = new RentSchedule(50, 200, 600, 1400, 1700, 2000);
+    RentSchedule parkRS = new RentSchedule(35, 175, 500, 1100, 1300, 1500);
+    RentSchedule boardwalkRS = new RentSchedule(50, 200, 600, 1400, 1700, 2000);
   
-  RentSchedule readingrrRS = new RentSchedule(25, 50, 100, 200);
-  RentSchedule pennsylvaniarrRS = new RentSchedule(25, 50, 100, 200);
-  RentSchedule borrRS = new RentSchedule(25, 50, 100, 200);
-  RentSchedule shortlinerrRS = new RentSchedule(25, 50, 100, 200);
+    RentSchedule readingrrRS = new RentSchedule(25, 50, 100, 200);
+    RentSchedule pennsylvaniarrRS = new RentSchedule(25, 50, 100, 200);
+    RentSchedule borrRS = new RentSchedule(25, 50, 100, 200);
+    RentSchedule shortlinerrRS = new RentSchedule(25, 50, 100, 200);
   
+    boardProperties.add(new Property("Go"));
   
-  boardProperties.add(new Property("Go"));
+    // buy cost, house cost
+    addSingleProperty(new Property("Mediterranean Ave", 60, 50, 30, mediterraneanRS), brown);
+    boardProperties.add(new Property("Community Chest"));
+    addSingleProperty(new Property("Baltic Ave", 60, 50, 30, balticRS), brown);
+    boardProperties.add(new Property("Income Tax"));
   
-  // buy cost, house cost
-  addSingleProperty(new Property("Mediterranean Ave", 60, 50, 30, mediterraneanRS), brown);
-  boardProperties.add(new Property("Community Chest"));
-  addSingleProperty(new Property("Baltic Ave", 60, 50, 30, balticRS), brown);
-  boardProperties.add(new Property("Income Tax"));
+    addSingleProperty(new Property("Reading Railroad", 200, 100, RentType.RAILROAD, readingrrRS), railroads);
   
-  addSingleProperty(new Property("Reading Railroad", 200, 100, RentType.RAILROAD, readingrrRS), railroads);
-  
-  addSingleProperty(new Property("Oriental Ave", 100, 50, 50, orientalRS), lightBlue);
-  boardProperties.add(new Property("Chance"));
-  addSingleProperty(new Property("Vermont Ave", 100, 50, 50, vermontRS), lightBlue);
-  addSingleProperty(new Property("Connecticut Ave", 100, 50, 60, connecticutRS), lightBlue);
+    addSingleProperty(new Property("Oriental Ave", 100, 50, 50, orientalRS), lightBlue);
+    boardProperties.add(new Property("Chance"));
+    addSingleProperty(new Property("Vermont Ave", 100, 50, 50, vermontRS), lightBlue);
+    addSingleProperty(new Property("Connecticut Ave", 100, 50, 60, connecticutRS), lightBlue);
   
     boardProperties.add(new Property("Jail"));
     
@@ -172,6 +171,7 @@ public class Game {
     boardProperties.add(new Property("Luxury Tax"));
     addSingleProperty(new Property("Boardwalk", 400, 200, 200, boardwalkRS), blue);
   }
+  
   public int rollDice() {
     return (random.nextInt(6) + 1 + random.nextInt(6) + 1);
   }
@@ -195,73 +195,80 @@ public class Game {
     // if the property does not belong to anyone; if the player has enough money to buy the property and chooses to
     // deduct the cost of the property from balance, set owner for that property, add that property to list of player's owned properties
     if (landedProperty.getPropertyOwner() == null && landedProperty.getBuyableStatus()) {
-      if (player.getBalance() >= landedProperty.getBuyCost() && player.buyProperty()) {
-        System.out.println(player + " has bought " + landedProperty + " for $" + landedProperty.getBuyCost());
-        player.setBalance(player.getBalance() - landedProperty.getBuyCost());
-        System.out.println("Player has $" + player.getBalance() + " left.");
-        landedProperty.setPropertyOwner(player);
-        player.addToPropertiesOwnedList(landedProperty);
+    	if (player.getBalance() >= landedProperty.getBuyCost() && player.buyProperty()) {
+	        System.out.println(player + " has bought " + landedProperty + " for $" + landedProperty.getBuyCost());
+	        player.setBalance(player.getBalance() - landedProperty.getBuyCost());
+	        System.out.println("Player has $" + player.getBalance() + " left.");
+	        landedProperty.setPropertyOwner(player);
+	        player.addToPropertiesOwnedList(landedProperty);
         
         // check if this newly purchased property allows players to buy houses
         // if yes, check the color of that new property and PUT THAT COLOR into a list containing property sets, ie colors that players can buy houses on
         // later, keep checking this list to see when the player actually wants to buy these houses
         if (canPlayerBuyAHouse(player, landedProperty)) {
-          System.out.println("You've achieved a monopoly for " + map.get(landedProperty));
-          Set<Property> color  = map.get(landedProperty);
+        	System.out.println("You've achieved a monopoly for " + map.get(landedProperty));
+        	Set<Property> color  = map.get(landedProperty);
             player.addToPossibleHouseList(color);
         }
       }
-      else if (player.getBalance() >= landedProperty.getBuyCost() && !player.buyProperty()) {
+    // if the player has the money but chooses not to buy this property
+    else if (player.getBalance() >= landedProperty.getBuyCost() && !player.buyProperty()) {
         System.out.println("Player has chosen not to buy this property.");
-      }
-      else if (player.getBalance() < landedProperty.getBuyCost() && player.getPropertiesOwned().size() > 0) {
+    }
+    // if the player does not have the money but does have properties to mortgage
+    else if (player.getBalance() < landedProperty.getBuyCost() && player.getPropertiesOwned().size() > 0) {
           
         String prompt = "You do not have enough money to buy this property. Would you like to mortgage any properties? (y/n)";
 
         if (player.checkIfYourWantToMortgageProperties(prompt)) {
+        	
           // keep letting them mortgage properties unless they return false  
-          
           Property toMortgage = player.mortgageProperties(player.getPropertiesOwned());
-          while(toMortgage != null){
+          if(toMortgage != null) {
           
             player.whatHappensWhenYouMortgage(toMortgage);
           
             // then try to throw them back up to the method?
             afterLanding(player, landedProperty, diceRoll);
-        }
+          }
+       }
+       else {
+    	  System.out.println("Player cannot afford to buy this property.");
       }
-      else if (player.getBalance() < landedProperty.getBuyCost() && player.getPropertiesOwned().size() == 0) {
+   }
+   // if the player does not have money and does not have properties to mortgage
+   else if (player.getBalance() < landedProperty.getBuyCost() && player.getPropertiesOwned().size() == 0) {
         System.out.println("Player cannot afford to buy this property.");
       }
-    }
-    // if the player lands on a board property, nothing happens
-    else if (!landedProperty.getBuyableStatus()) {
-      System.out.println("The player landed on " + landedProperty + " and nothing happens.");
-    }
+   }
+   // if the player lands on a board property, nothing happens
+   else if (!landedProperty.getBuyableStatus()) {
+	   	System.out.println("The player landed on " + landedProperty + " and nothing happens.");
+   }
     
     // if the player lands on someone else's property, they pay the rent
     // property must NOT be mortgaged to collect rent, aka boolean = false
-    else if (!landedProperty.getPropertyOwner().equals(player) && !landedProperty.getMortgageStatus()) {
-      System.out.println(player + " has paid $" + landedProperty.getRentCost(diceRoll) + " for landing on " + landedProperty);
-      player.setBalance(player.getBalance() - landedProperty.getRentCost(diceRoll));
-      System.out.println("Player has $" + player.getBalance() + " left.");
-      landedProperty.getPropertyOwner().setBalance(landedProperty.getPropertyOwner().getBalance() + landedProperty.getRentCost(diceRoll));
-    }
-    else if (!landedProperty.getPropertyOwner().equals(player) && landedProperty.getMortgageStatus()) {
-      System.out.println("This property is mortgaged and no rent must be paid.");
-    }
-    // if the player lands on their own property, nothing happens
-    else {
-      String phrase = phrases[(int) (Math.random() * phrases.length)];
-      System.out.println(phrase);
-    }
-    // at the end of every turn, go back to the list that tells us if a player is eligible to buy houses
-    // if they are, let's revisit
-    if (player.getPossibleHouseList().size() > 0) {
+   else if (!landedProperty.getPropertyOwner().equals(player) && !landedProperty.getMortgageStatus()) {
+	   System.out.println(player + " has paid $" + landedProperty.getRentCost(diceRoll) + " for landing on " + landedProperty);
+	   player.setBalance(player.getBalance() - landedProperty.getRentCost(diceRoll));
+	   System.out.println("Player has $" + player.getBalance() + " left.");
+	   landedProperty.getPropertyOwner().setBalance(landedProperty.getPropertyOwner().getBalance() + landedProperty.getRentCost(diceRoll));
+   }
+   // if the property belongs to someone else but is mortgaged
+   else if (!landedProperty.getPropertyOwner().equals(player) && landedProperty.getMortgageStatus()) {
+	   System.out.println("This property is mortgaged and no rent must be paid.");
+   }
+   // if the player lands on their own property, nothing happens
+   else {
+	   String phrase = phrases[(int) (Math.random() * phrases.length)];
+	   System.out.println(phrase);
+   }
+   // at the end of every turn, go back to the list that tells us if a player is eligible to buy houses
+   // if they are, let's revisit
+   if (player.getPossibleHouseList().size() > 0) {
       considerHouseList(player, player.getPossibleHouseList());
-    }
-  }
-  }
+   }
+ }
   /**
    * javadoc documentation. note the two stars above
    * the method below is strictly about whether a player meets the board requirements to buy houses, not whether they have the money to
@@ -271,107 +278,104 @@ public class Game {
     
     // cannot call a method on a null object
     // ensure that utilities and railroads aren't eligible for monopolies
-      for (Property a: color) {
+    for (Property a: color) {
         if (a.getPropertyOwner() != player || landedProperty.getRentType() == RentType.UTILITY || landedProperty.getRentType() == RentType.RAILROAD) {
-          return false;
+        	return false;
         }
-      }
-      return true;
+    }
+    return true;
   }
   
   public void considerHouseList(Player player, ArrayList <Set<Property>> monopoliesOwned) throws IOException {
     boolean leave = true;
     
-    while (true) {
-      if (leave) { // do this instead of breaking labels, even though labels are awesome
+    while (leave) {// do this instead of breaking labels, even though labels are awesome
         
-      for (int i = 0; i < monopoliesOwned.size(); i++) { // for every set in the list of housable sets
-        
-        // put this here because these variables are different per set
-        int minHouseCountPerSet = 100;
-        // the thing that you're actually passing to players to ask if they want to buy
-        // remember to initialize lists like this one
-        ArrayList<Property> passToPlayerToBuyHouse = new ArrayList<>();
-        
-          Set<Property> propertySet = monopoliesOwned.get(i);
-          
-          // looping through each property in a set, to find what the minimum amount of houses in that set is
-          for (Property housableProperty: propertySet) {
-            if (housableProperty.getNumberOfHouses() < minHouseCountPerSet) { 
-              minHouseCountPerSet = housableProperty.getNumberOfHouses();
-            }
-          }
-         
-        // looping through every property in a set
-          for (Property housableProperty: propertySet) { 
-            // for each property, IF the player can afford a house on that property
-            // and the number of houses on that property doesn't exceed the current min houseCount
-            // the 5th house is effectively the hotel
-            if (player.getBalance() > housableProperty.getHouseCost() && housableProperty.getNumberOfHouses() == minHouseCountPerSet && housableProperty.getNumberOfHouses() < 5) {
-              // present that property in a list of things player can buy a house on, then loop. or break if the player wants to exit
-              passToPlayerToBuyHouse.add(housableProperty);
-            }
-            else if (player.getBalance() < housableProperty.getHouseCost() && player.getPropertiesOwned().size() > 0) {
-              String prompt = "You do not have enough money to buy houses. Would you like to mortgage any properties? (y/n)";
+		for (int i = 0; i < monopoliesOwned.size(); i++) { // for every set in the list of housable sets
+    
+			// put this here because these variables are different per set
+			int minHouseCountPerSet = 100;
+			// the thing that you're actually passing to players to ask if they want to buy
+			// remember to initialize lists like this one
+			ArrayList<Property> passToPlayerToBuyHouse = new ArrayList<>();
+    
+			Set<Property> propertySet = monopoliesOwned.get(i);
+      
+			// looping through each property in a set, to find what the minimum amount of houses in that set is
+			for (Property housableProperty: propertySet) {
+				if (housableProperty.getNumberOfHouses() < minHouseCountPerSet) { 
+					minHouseCountPerSet = housableProperty.getNumberOfHouses();
+				}
+			}
+     
+			// looping through every property in a set
+			for (Property housableProperty: propertySet) { 
+				// for each property, IF the player can afford a house on that property
+				// and the number of houses on that property doesn't exceed the current min houseCount
+				// the 5th house is effectively the hotel
+				if (player.getBalance() > housableProperty.getHouseCost() && housableProperty.getNumberOfHouses() == minHouseCountPerSet && housableProperty.getNumberOfHouses() < 5) {
+					// present that property in a list of things player can buy a house on, then loop. or break if the player wants to exit
+					passToPlayerToBuyHouse.add(housableProperty);
+				}
+				else if (player.getBalance() < housableProperty.getHouseCost() && player.getPropertiesOwned().size() > 0) {
+					String prompt = "You do not have enough money to buy houses. Would you like to mortgage any properties? (y/n)";
 
-              if (player.checkIfYourWantToMortgageProperties(prompt)) {
-                // keep letting them mortgage properties unless they return false  
+					if (player.checkIfYourWantToMortgageProperties(prompt)) {
+						// keep letting them mortgage properties unless they return false  
+						
+						while (player.getBalance() < housableProperty.getHouseCost()) {
+							Property toMortgage = player.mortgageProperties(player.getPropertiesOwned());
+    						if (toMortgage != null){
                 
-                Property toMortgage = player.mortgageProperties(player.getPropertiesOwned());
-                while(toMortgage != null){
-                
-                  player.whatHappensWhenYouMortgage(toMortgage);
-                  // then try to throw them back up to the method?
-                  considerHouseList(player, monopoliesOwned);
-              }
-            }
-            else if (player.getBalance() < housableProperty.getHouseCost() && player.getPropertiesOwned().size() == 0) {
-              System.out.println("Player cannot buy this house.");
-            }
-          }
-          Property housed = player.buyHouse(passToPlayerToBuyHouse);
-          player.whatHappensWhenYouBuyHouse(housed);
-          if (housed == null) {
-            leave = false;
-          }
-          else {
-            continue;
-          }
-        }      
-      }
-    }
-  }
+    							player.whatHappensWhenYouMortgage(toMortgage);
+    						}
+						}
+					}
+					else if (player.getBalance() < housableProperty.getHouseCost() && player.getPropertiesOwned().size() == 0) {
+						System.out.println("Player cannot buy this house.");
+					}
+				}
+				Property housed = player.buyHouse(passToPlayerToBuyHouse);
+				
+				if (housed == null) {
+					leave = false;
+				}
+				else {
+					player.whatHappensWhenYouBuyHouse(housed);
+					continue;
+				}
+			}      
+		}
+	 }
   }
   public boolean checkBalance(Player player, Player otherPlayer) {
-    if (player.getBalance() < 0) {
-      
-      // as long as player has properties, they should mortgage them to save the game. otherwise, they lose the game.
-      if (player.getPropertiesOwned().size() > 0) {
-        System.out.println("Player has no more money and needs to mortgage some properties.");
-        // keep doing this while the below method returns true
-        
-        Property toMortgage = player.mortgageProperties(player.getPropertiesOwned());
-        while(toMortgage != null){
-        
-          player.whatHappensWhenYouMortgage(toMortgage);
-        
-          checkBalance(player, otherPlayer);
-        }
-      }
-      else {
-        System.out.println(otherPlayer.getToken() + " has won the game!");
-        return true;
-      }
-    }
-    return false;
-  }
+	if (player.getBalance() < 0) {
+
+		// as long as player has properties, they should mortgage them to
+		// save the game. otherwise, they lose the game.
+		if (player.getPropertiesOwned().size() > 0) {
+			System.out.println("Player has no more money and needs to mortgage some properties.");
+			// keep doing this while the below method returns true
+
+			while (player.getBalance() < 0) {
+				Property toMortgage = player.mortgageProperties(player.getPropertiesOwned());
+				if (toMortgage != null) {
+
+					player.whatHappensWhenYouMortgage(toMortgage);
+				}
+			}
+		} 
+		else {
+			System.out.println(otherPlayer.getToken() + " has won the game!");
+			return true;
+		}
+	}
+	return false;
+}
   private void addSingleProperty(Property property, Set<Property> set) {
       boardProperties.add(property);
       set.add(property);
       map.put(property, set);
-  }
-  public void askToMortgage() {
-    
   }
 }
 

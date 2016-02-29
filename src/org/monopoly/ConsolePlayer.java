@@ -87,7 +87,6 @@ public class ConsolePlayer extends Player {
 		try {
 			input = keyboard.readLine();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
