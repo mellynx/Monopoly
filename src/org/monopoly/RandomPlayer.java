@@ -10,24 +10,24 @@ public class RandomPlayer extends Player {
   	public RandomPlayer(String playerToken) {
   		super(playerToken);
   	}
-  	public boolean buyProperty () {
+  	
+  	public boolean doYouWantToDoThis(String prompt) {
+  		System.out.println(prompt); 
   		return true;
-  		// because usually you try to buy every property. below is the code for a coin-flip strategy
-  		// limit the scope of variables as much as possible. return true if it's zero
-  		// return rand.nextInt(2) == 0; 
   	}
-  	// I think this heuristic means that the player will keep buying the first house in the list that's available to buy
-  	// which should rotate through the set evenly?
+  	
   	public Property buyHouse (ArrayList<Property> propsWhereYouCanBuyHouse) {
-  	  // if there are properties in the housable list, and player has (house*10) amount of money, buy the house
+  	  // if there are properties in the housable list, and player has (house*2) amount of money, buy the house
   	  if (propsWhereYouCanBuyHouse.size() > 0) {
-  	    if (propsWhereYouCanBuyHouse.get(0).getBuyCost() * 10 < getBalance()) { 
+  	    if (propsWhereYouCanBuyHouse.get(0).getBuyCost() * 2 < getBalance()) { 
           System.out.println("Bought a house: " + propsWhereYouCanBuyHouse.get(0));
           return propsWhereYouCanBuyHouse.get(0);
         }
   	  }
-    	return null;
+  	System.out.println("Player has chosen not to buy any houses.");
+    return null;
   	}
+  	
   	public Property mortgageProperties (ArrayList<Property> propertiesOwned) {
   	// the random player will attempt to mortgage everything
   		
@@ -36,7 +36,4 @@ public class RandomPlayer extends Player {
   		}
   		return null;
   	}	
-  	public boolean checkIfYourWantToMortgageProperties (String prompt) {
-  		return true;
-  	}
 }

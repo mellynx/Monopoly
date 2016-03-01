@@ -56,25 +56,50 @@ public class Property {
 	  mortgageCost = 0;
 	  rentType = RentType.NONE;
 	}
+	
+	
 	public void setPropertyOwner(Player owner) {
 		this.owner = owner;	// using this in setters and getters
 	}
-	public void addOneHouse() {
-		numberOfHouses++;
-	}
-	public void changeMortgageStatus() {
-		if (getMortgageStatus()) {
-			mortgageStatus = false;
-		}
-		else {
-			mortgageStatus = true;
-		}
-	}
+	
+	
 	public String getName() {
 		return name;
 	}
 	public int getBuyCost() {
 		return buyCost;
+	}
+	public Player getPropertyOwner() {
+		return owner;
+	}
+	public int getHouseCost() {
+		return houseCost;
+	}
+	public int getNumberOfHouses() {
+		return numberOfHouses;
+	}
+	public RentType getRentType() { // figure out if a property is regular, utility, railroad, etc
+		return rentType;
+	}
+	public boolean getBuyableStatus() { // separates board properties from all other properties
+		return buyable;
+	}
+	public boolean getMortgageStatus() {
+		return mortgageStatus;
+	}
+	public int getMortgageCost() {
+		return mortgageCost;
+	}
+	public int getLocationIndex(ArrayList<Property> boardOfProperties) {
+		// below, access the current property by using 'this'
+		int locationIndex = 0;
+		
+		for (int i = 0; i < boardOfProperties.size(); i++) {
+			if (this == boardOfProperties.get(i)) {
+				locationIndex = i;
+			}
+		}
+		return locationIndex;
 	}
 	public int getRentCost(int dice) {
 		if (rentType == RentType.REGULAR) {
@@ -108,43 +133,22 @@ public class Property {
 			}
 		}
 	}
-	public Player getPropertyOwner() {
-		return owner;
+	
+	
+	public void addOneHouse() {
+		numberOfHouses++;
+	}
+	public void changeMortgageStatus() {
+		if (getMortgageStatus()) {
+			mortgageStatus = false;
+		}
+		else {
+			mortgageStatus = true;
+		}
 	}
 	public String toString() {
 		return getName();
 	}
-	public int getHouseCost() {
-		return houseCost;
-	}
-	public int getNumberOfHouses() {
-		return numberOfHouses;
-	}
-	public RentSchedule getRentSchedule() {
-		return rentSchedule;
-	}
-	public RentType getRentType() {
-		return rentType;
-	}
-	public boolean getBuyableStatus() {
-		return buyable;
-	}
-	public int getLocationIndex(ArrayList<Property> boardOfProperties) {
-		// below, access the current property by using 'this'
-		int locationIndex = 0;
-		
-		for (int i = 0; i < boardOfProperties.size(); i++) {
-			if (this == boardOfProperties.get(i)) {
-				locationIndex = i;
-			}
-		}
-		return locationIndex;
-	}
-	public boolean getMortgageStatus() {
-		return mortgageStatus;
-	}
-	public int getMortgageCost() {
-		return mortgageCost;
-	}
+	
 }
 
