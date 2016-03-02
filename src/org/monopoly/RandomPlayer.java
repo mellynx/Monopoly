@@ -32,21 +32,23 @@ public class RandomPlayer extends Player {
   	// player will try to mortgage random properties
   	// we need a stop condition (balance), otherwise RandomPlayer will mortgage everything until he hits null
   		Random random = new Random();
-  	
-  		int houseNumber = random.nextInt(propertiesOwned.size());
   		
-  		if (propertiesOwned.size() > mortgagedProperties.size() && this.getBalance() < 500) {
-  			if (!propertiesOwned.get(houseNumber).getMortgageStatus()) {
-  				System.out.println("Mortgaged: " + propertiesOwned.get(houseNumber));
-  	  			return propertiesOwned.get(houseNumber);
-  	  		}
-  	  		else {
-  	  			for (int i = 0; i < propertiesOwned.size(); i++) {
-  	  				if (!propertiesOwned.get(i).getMortgageStatus()) {
-  	  					System.out.println("Mortgaged: " + propertiesOwned.get(i));
-  	  					return propertiesOwned.get(i);
-  	  				}
-  	  			}
+  		if (propertiesOwned.size() > 0) {
+  			int houseNumber = random.nextInt(propertiesOwned.size());
+  	  		
+  	  		if (propertiesOwned.size() > mortgagedProperties.size() && this.getBalance() < 500) {
+  	  			if (!propertiesOwned.get(houseNumber).getMortgageStatus()) {
+  	  				System.out.println("Mortgaged: " + propertiesOwned.get(houseNumber));
+  	  	  			return propertiesOwned.get(houseNumber);
+  	  	  		}
+  	  	  		else {
+  	  	  			for (int i = 0; i < propertiesOwned.size(); i++) {
+  	  	  				if (!propertiesOwned.get(i).getMortgageStatus()) {
+  	  	  					System.out.println("Mortgaged: " + propertiesOwned.get(i));
+  	  	  					return propertiesOwned.get(i);
+  	  	  				}
+  	  	  			}
+  	  	  		}
   	  		}
   		}
   		System.out.println(this + " does not want to mortgage any more properties.");
