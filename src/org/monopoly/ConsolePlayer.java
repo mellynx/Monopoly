@@ -32,54 +32,57 @@ public class ConsolePlayer extends Player {
 		return false;
 	} 
 	
-	public Property buyHouse(ArrayList<Property> propsWhereYouCanBuyHouse) {
+	public Property buyHouseB(ArrayList<Property> propsWhereYouCanBuyHouse) {
+		
+		String promptA = "Press the number of the property where you'd like to buy a house, or 0 to stop buying houses.";
+		String promptB = "Bought a house: ";
+		
+		Property buyHouseResult = selectingFromList(propsWhereYouCanBuyHouse, promptA, promptB);
+		return buyHouseResult;
+	}
+	
+	public Property mortgagePropertiesB(ArrayList<Property> propertiesOwned) {
+		
+		String promptA = "Select the number of the property that you'd like to mortgage, or 0 to stop mortgaging properties.";
+		String promptB = "Mortgaged: ";
+		
+		Property mortgagePropertiesResult = selectingFromList(propertiesOwned, promptA, promptB);
+		return mortgagePropertiesResult;
+	}	
+	public Property unmortgageB (ArrayList<Property> mortgagedProperties) {
+		
+		String promptA = "Select the number of the property that you'd like to unmortgage, or 0 to stop unmortgaging properties.";
+		String promptB = "Unmortgaged: ";
+
+		Property unmortgagedResult = selectingFromList(mortgagedProperties, promptA, promptB);
+		return unmortgagedResult;
+	}
+	
+	
+	public Property selectingFromList(ArrayList<Property> arrayListProperties, String prompt, String promptTwo) {
 		
 		// input is not constant throughout the game, so we want to have it as local variables even though we'll have to declare it four times. helps with bugs!
 		String input;
-    
-		System.out.println("Press the number of the property where you'd like to buy a house, or 0 to stop buying houses.");
 		
-		for (int i = 0; i < propsWhereYouCanBuyHouse.size(); i++) {
-			System.out.println((i + 1) + ". " + propsWhereYouCanBuyHouse.get(i));
+		System.out.println(prompt);
+		
+		for (int i = 0; i < arrayListProperties.size(); i++) {
+			System.out.println((i + 1) + ". " + arrayListProperties.get(i));
 		}
-	   
+		
 		try {
 			input = keyboard.readLine();
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}	
-			
+
 		int c = Integer.parseInt(input);
-			
+		
 		if (c != 0) {
-			Property t = propsWhereYouCanBuyHouse.get(c - 1);
-			System.out.println("Bought a house: " + t);
+			Property t = arrayListProperties.get(c - 1);
+			System.out.println(promptTwo + t);
 			return t;
 		}
 		return null;
 	}
-	
-	public Property mortgageProperties(ArrayList<Property> propertiesOwned) {
-	  String input;
-	  
-		System.out.println("Select the number of the property that you'd like to mortgage, or 0 to stop mortgaging properties.");
-
-		for (int i = 0; i < propertiesOwned.size(); i++) {
-			System.out.println((i + 1) + ". " + propertiesOwned.get(i));
-		}
-
-		try {
-			input = keyboard.readLine();
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}	
-
-		int c = Integer.parseInt(input);
-
-		if (c != 0) {
-				Property t = propertiesOwned.get(c - 1);
-				return t;
-		}
-		return null;
-	}	
 }

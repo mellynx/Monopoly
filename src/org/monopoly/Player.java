@@ -3,8 +3,6 @@ package org.monopoly;
 import java.util.ArrayList;
 import java.util.Set;
 
-import org.monopoly.Property.RentType;
-
 public abstract class Player {
 
 	final String playerToken;
@@ -73,27 +71,34 @@ public abstract class Player {
 		return getToken().toString();
 	}
 	public void whatHappensWhenYouBuyHouse(Property property) {
-	  property.addOneHouse();
-	  int money = getBalance() - property.getHouseCost();
-	  setBalance(money);
-	  System.out.println("Player has $" + getBalance() + " left.");
+		property.addOneHouse();
+		int money = getBalance() - property.getHouseCost();
+		setBalance(money);
+		System.out.println(property + " now has " + property.getNumberOfHouses() + " houses.");
+		System.out.println(this + " has $" + getBalance() + " left.");
 	}
 	public void whatHappensWhenYouMortgage(Property property) {
-	  System.out.println("Mortgaged: " + property);
-	  addToMortgagedProperties(property); // use the add method, don't add directly to the list  
-	  removeFromPropertiesOwnedList(property);
-	  property.changeMortgageStatus();
-	  int money = getBalance() + property.getMortgageCost();
-	  setBalance(money);
-	  System.out.println("Player now has $" + getBalance());
+		addToMortgagedProperties(property); // use the add method, don't add directly to the list  
+		property.changeMortgageStatus();
+		int money = getBalance() + property.getMortgageCost();
+		setBalance(money);
+		System.out.println(this + " now has $" + getBalance());
+	}
+	public void whatHappensWhenYouUnmortgage(Property property) {
+		removeFromMortgagedProperties(property);
+		property.changeMortgageStatus();
+		int money = getBalance() - property.getMortgageCost();
+		setBalance(money);
+		System.out.println(this + " has $" + getBalance() + " left.");
 	}
 	
 	//use this same prompt as a check for buying properties, houses, AND mortgaging properties
 	public abstract boolean doYouWantToDoThis(String prompt); //no body for abstract methods
 
-	public abstract Property buyHouse(ArrayList<Property> currentHousableProperties);
+	public abstract Property buyHouseB(ArrayList<Property> currentHousableProperties);
 	
-	public abstract Property mortgageProperties (ArrayList<Property> propertiesOwned);
+	public abstract Property mortgagePropertiesB (ArrayList<Property> propertiesOwned);
 	
+	public abstract Property unmortgageB (ArrayList<Property> mortgagedProperties);
 }
 
