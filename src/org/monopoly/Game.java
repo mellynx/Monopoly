@@ -255,23 +255,29 @@ public class Game {
 	 // at the end of the turn, check if a player has monopolies they want to buy houses on 
 	 if (player.getHousableSetList().size() > 0) {
 		 // TODO needs mortgaging here
-		 // TODO needs to check maximum houses
-		 String prompt = "You have completed a monopoly and are eligible to buy houses. Would you like to buy any? (y/n)";
-	     if (player.doYouWantToDoThis(prompt)) {
-	    	
-	    	Property houseBought;
-	    	do {
-	    		houseBought = player.buyHouse(generatingListOfPropsWherePlayerCanBuyHouse(player, player.getHousableSetList()));
-	    		
-	    		if (houseBought != null) {
-	    			player.whatHappensWhenYouBuyHouse(houseBought);
-	    		}
-	    	}
-	        while (houseBought != null);
-	     }
-	     else {
-	    	 System.out.println("Player has chosen not to buy any houses.");
-	     }
+		 
+		 // make sure we stop asking if player wants to buy houses if the house count has reached 5 and the list has been nulled out
+		 if (generatingListOfPropsWherePlayerCanBuyHouse(player, player.getHousableSetList()).size() > 0) {
+			 
+			 String prompt = "You have completed a monopoly and are eligible to buy houses. Would you like to buy any? (y/n)";
+		     if (player.doYouWantToDoThis(prompt)) {
+		    	
+		    	Property houseBought;
+		    	do {
+		    		houseBought = player.buyHouse(generatingListOfPropsWherePlayerCanBuyHouse(player, player.getHousableSetList()));
+		    		
+		    		if (houseBought != null) {
+		    			player.whatHappensWhenYouBuyHouse(houseBought);
+		    		}
+		    	}
+		        while (houseBought != null);
+		     }
+		     else {
+		    	 System.out.println("Player has chosen not to buy any houses.");
+		     }
+		 }
+		 else {
+		 }
 	 }
   }
   
@@ -349,7 +355,7 @@ public class Game {
 	  }
 	  return minHouseCountPerSet;
   }     
-
+  
   
   public boolean checkBalance(Player player, Player otherPlayer) {
 	if (player.getBalance() < 0) {
