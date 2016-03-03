@@ -74,6 +74,7 @@ public abstract class Player {
 		property.addOneHouse();
 		int money = getBalance() - property.getHouseCost();
 		setBalance(money);
+		System.out.println(this + " bought a house on " + property);
 		System.out.println(property + " now has " + property.getNumberOfHouses() + " houses.");
 		System.out.println(this + " has $" + getBalance() + " left.");
 	}
@@ -82,6 +83,7 @@ public abstract class Player {
 		property.changeMortgageStatus();
 		int money = getBalance() + property.getMortgageCost();
 		setBalance(money);
+		System.out.println(this + " has mortgaged " + property);
 		System.out.println(this + " now has $" + getBalance());
 	}
 	public void whatHappensWhenYouUnmortgage(Property property) {
@@ -89,6 +91,7 @@ public abstract class Player {
 		property.changeMortgageStatus();
 		int money = getBalance() - property.getMortgageCost();
 		setBalance(money);
+		System.out.println(this + " has unmortgaged " + property);
 		System.out.println(this + " has $" + getBalance() + " left.");
 	}
 	

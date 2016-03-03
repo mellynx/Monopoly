@@ -19,8 +19,7 @@ public class RandomPlayer extends Player {
   	public Property buyHouseB (ArrayList<Property> propsWhereYouCanBuyHouse) {
   	  // if there are properties in the housable list, and player has (house*2) amount of money, buy the house
   	  if (propsWhereYouCanBuyHouse.size() > 0) {
-  	    if (propsWhereYouCanBuyHouse.get(0).getBuyCost() * 2 < getBalance()) { 
-          System.out.println("Bought a house: " + propsWhereYouCanBuyHouse.get(0));
+  	    if (propsWhereYouCanBuyHouse.get(0).getBuyCost() * 2 < getBalance()) {
           return propsWhereYouCanBuyHouse.get(0);
         }
   	  }
@@ -38,13 +37,11 @@ public class RandomPlayer extends Player {
   	  		
   	  		if (propertiesOwned.size() > mortgagedProperties.size() && this.getBalance() < 500) {
   	  			if (!propertiesOwned.get(houseNumber).getMortgageStatus()) {
-  	  				System.out.println("Mortgaged: " + propertiesOwned.get(houseNumber));
   	  	  			return propertiesOwned.get(houseNumber);
   	  	  		}
   	  	  		else {
   	  	  			for (int i = 0; i < propertiesOwned.size(); i++) {
   	  	  				if (!propertiesOwned.get(i).getMortgageStatus()) {
-  	  	  					System.out.println("Mortgaged: " + propertiesOwned.get(i));
   	  	  					return propertiesOwned.get(i);
   	  	  				}
   	  	  			}
@@ -58,7 +55,6 @@ public class RandomPlayer extends Player {
   	public Property unmortgageB (ArrayList<Property> mortgagedProperties) {
 
   		if (this.getBalance() > 800 && mortgagedProperties.size() > 0) {
-  			System.out.println("Unmortgaged: " + mortgagedProperties.get(0));
   			return mortgagedProperties.get(0);
   		}
   		System.out.println(this + " does not want to unmortgage any more properties.");

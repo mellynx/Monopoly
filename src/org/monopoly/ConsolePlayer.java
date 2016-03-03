@@ -34,32 +34,29 @@ public class ConsolePlayer extends Player {
 	
 	public Property buyHouseB(ArrayList<Property> propsWhereYouCanBuyHouse) {
 		
-		String promptA = "Press the number of the property where you'd like to buy a house, or 0 to stop buying houses.";
-		String promptB = "Bought a house: ";
+		String prompt = "Press the number of the property where you'd like to buy a house, or 0 to stop buying houses.";
 		
-		Property buyHouseResult = selectingFromList(propsWhereYouCanBuyHouse, promptA, promptB);
+		Property buyHouseResult = selectingFromList(propsWhereYouCanBuyHouse, prompt);
 		return buyHouseResult;
 	}
 	
 	public Property mortgagePropertiesB(ArrayList<Property> propertiesOwned) {
 		
-		String promptA = "Select the number of the property that you'd like to mortgage, or 0 to stop mortgaging properties.";
-		String promptB = "Mortgaged: ";
+		String prompt = "Select the number of the property that you'd like to mortgage, or 0 to stop mortgaging properties.";
 		
-		Property mortgagePropertiesResult = selectingFromList(propertiesOwned, promptA, promptB);
+		Property mortgagePropertiesResult = selectingFromList(propertiesOwned, prompt);
 		return mortgagePropertiesResult;
 	}	
 	public Property unmortgageB (ArrayList<Property> mortgagedProperties) {
 		
-		String promptA = "Select the number of the property that you'd like to unmortgage, or 0 to stop unmortgaging properties.";
-		String promptB = "Unmortgaged: ";
+		String prompt = "Select the number of the property that you'd like to unmortgage, or 0 to stop unmortgaging properties.";
 
-		Property unmortgagedResult = selectingFromList(mortgagedProperties, promptA, promptB);
+		Property unmortgagedResult = selectingFromList(mortgagedProperties, prompt);
 		return unmortgagedResult;
 	}
 	
 	
-	public Property selectingFromList(ArrayList<Property> arrayListProperties, String prompt, String promptTwo) {
+	public Property selectingFromList(ArrayList<Property> arrayListProperties, String prompt) {
 		
 		// input is not constant throughout the game, so we want to have it as local variables even though we'll have to declare it four times. helps with bugs!
 		String input;
@@ -80,7 +77,6 @@ public class ConsolePlayer extends Player {
 		
 		if (c != 0) {
 			Property t = arrayListProperties.get(c - 1);
-			System.out.println(promptTwo + t);
 			return t;
 		}
 		return null;
