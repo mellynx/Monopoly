@@ -225,7 +225,6 @@ public class Game {
 	 if (landedProperty.getPropertyOwner() == null) {
 		 // if the property is a board property, nothing happens
 		 if (!landedProperty.getBuyableStatus()) {
-			   System.out.println(player + " landed on " + landedProperty);
 			   specialProperties(player, landedProperty);
 			   System.out.println(player + " has $" + player.getBalance());
 		 }
@@ -486,10 +485,13 @@ public class Game {
 	  switch(locationIndex) {
 	  	case 0: //Go -- collecting $200 cannot be done here because you collect that every time you PASS go
 	  		System.out.print("");
+	  		break;
 	  	case 10: //Jail 
 	  		System.out.println("Passing through jail! Enjoy visiting!");
+	  		break;
 	  	case 20: //Free Parking 
 	  		System.out.println("Chill on Free Parking. Nothing happens.");
+	  		break;
 	  		
 	  	case 4: //Income Tax (pay $200 or 10%)
 	  		if ((player.getBalance() * 10) < 200) {
@@ -498,14 +500,16 @@ public class Game {
 	  		else {
 	  			subtractMoney(player, 200);
 	  		}
-	  		
+	  		break;
 	  	case 38: //Luxury Tax
 	  		subtractMoney(player, 75);
+	  		break;
 	  	
 	  	case 30: //Go To Jail
 	  		System.out.println("Oh no! " + player + " is going to jail.");
 	  		player.setLocation(boardProperties.get(10));
 	  		addJailTime(player); 
+	  		break;
 	  	
 	  	/*
 	  	 * case 2: //Community Chest	
@@ -553,19 +557,24 @@ public class Game {
 
 		  // if player has get out of jail free card, use it, get out jail, do not move until next turn 
 		  if (player.getOutOfJailFreeCard) {
+			  System.out.println(player + " has used a get-out-of-jail-free card.");
 			  player.setGetOutOfJailFreeCard(false);
 			  player.setJailTime(-1);
+			  System.out.println("----------------");
 		  }
 		  else {
 			  String prompt = "Do you want to pay $50 to get out of jail? (y/n)";
 			  if (player.doYouWantToDoThis(prompt)) {
+				  System.out.println(player + " has paid $50 to get out jail.");
 				  subtractMoney(player, 50);
 				  player.setJailTime(-1);
+				  System.out.println("----------------");
 			  }
 		  }
 		  if (player.getJailTime() == 3) {
 			  System.out.println("Player has rolled 3 times and now must pay $50 to get out of jail.");
 			  subtractMoney(player, 50);
+			  System.out.println("----------------");
 			  checkBalance(player, otherPlayer);
 		  }
 	  }
