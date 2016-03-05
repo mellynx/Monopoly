@@ -35,10 +35,10 @@ public class Game {
     
     while(true) {
       
-      if (twoPlayerGame(playerOne, playerTwo)) {
+      if (twoPlayerGamePtOne(playerOne, playerTwo)) {
     	  break;
       }
-      if (twoPlayerGame(playerTwo, playerOne)) {
+      if (twoPlayerGamePtOne(playerTwo, playerOne)) {
     	  break;
       }
     }
@@ -157,32 +157,47 @@ public class Game {
       map.put(property, set);
   }
   
-  private boolean twoPlayerGame (Player thisPlayer, Player otherPlayer) throws IOException {
+  private boolean twoPlayerGamePtOne (Player thisPlayer, Player otherPlayer) throws IOException {
     
-    int dice = rollDice();
-    Property landed;
-    
-    System.out.println("Player " + thisPlayer.getToken() + " has rolled a " + dice);
-    landed = moveSpace(thisPlayer, dice);
-    thisPlayer.setLocation(landed);
-    System.out.println("Player " + thisPlayer.getToken() + " has landed on " + landed);  
-    afterLanding(thisPlayer, landed, dice);
-    
-    if (thisPlayer.getHousableSetList().size() > 0) {
-    	checkMonopolies(thisPlayer);
+	int dice = rollDice();
+	boolean status = false;
+	  
+    //if player starts turn in jail 
+    if (thisPlayer.getLocation() == boardProperties.get(10) && thisPlayer.getJailTime() >= 0) {
+    	beingInJail(thisPlayer, otherPlayer);
     }
-    
-    if (thisPlayer.getMortgagedProperties().size() > 0) {
-    	unmortgageA(thisPlayer);
+    else {	
+        System.out.println("Player " + thisPlayer.getToken() + " has rolled a " + dice);
+        status = twoPlayerGamePtTwo(thisPlayer, otherPlayer, dice);
     }
-    
-    if (checkBalance(thisPlayer, otherPlayer)) {
-    	// return void means to exit out of the method at that statement, without running the following statements.
-    	return true;
-    }
-    System.out.println("---------------------");  
+    return status;
+  }
+  private boolean twoPlayerGamePtTwo (Player thisPlayer, Player otherPlayer, int dice) throws IOException {  
+	  
+	  Property landed;
+	    
+        landed = moveSpace(thisPlayer, dice);
+        thisPlayer.setLocation(landed);
+        System.out.println("Player " + thisPlayer.getToken() + " has landed on " + landed);  
+        afterLanding(thisPlayer, landed, dice);
+        
+        if (thisPlayer.getHousableSetList().size() > 0) {
+        	checkMonopolies(thisPlayer);
+        }
+        
+        if (thisPlayer.getMortgagedProperties().size() > 0) {
+        	unmortgageA(thisPlayer);
+        }
+        
+        if (checkBalance(thisPlayer, otherPlayer)) {
+        	// return void means to exit out of the method at that statement, without running the following statements.
+        	return true;
+        }
+        System.out.println("---------------------");  
+
     return false;
   }
+  
   
   public int rollDice() {
     return (random.nextInt(6) + 1 + random.nextInt(6) + 1);
@@ -205,13 +220,14 @@ public class Game {
   }
   
   public void afterLanding(Player player, Property landedProperty, int diceRoll) throws IOException {
-	 
+	  
 	 // if property is not owned by anyone
 	 if (landedProperty.getPropertyOwner() == null) {
 		 // if the property is a board property, nothing happens
 		 if (!landedProperty.getBuyableStatus()) {
-			 System.out.println(player + " landed on " + landedProperty + " and nothing happens.");
-			 System.out.println(player + " has $" + player.getBalance());
+			   System.out.println(player + " landed on " + landedProperty);
+			   specialProperties(player, landedProperty);
+			   System.out.println(player + " has $" + player.getBalance());
 		 }
 		 // if property is not a board property, ask player if they want to buy the property
 		 else {
@@ -307,7 +323,7 @@ public class Game {
   
   
   public void checkMonopolies (Player player) {
-	// stop asking the below prompt if the "generate" list is null (either because houses hae been maxed out or player does not have enough money
+	// stop asking the below prompt if the "generate" list is null (either because houses have been maxed out or player does not have enough money
 	 if (generatingListOfPropsWherePlayerCanBuyHouse(player, player.getHousableSetList()).size() > 0) {
 		 
 		 String prompt = "Player has completed a monopoly and are eligible to buy houses. Would you like to buy any? (y/n)";
@@ -461,6 +477,96 @@ public class Game {
 	}
 	return false;
   } 
+  
+  
+  public void specialProperties (Player player, Property property) {
+	 
+	  int locationIndex = property.getLocationIndex(boardProperties);
+	  
+	  switch(locationIndex) {
+	  	case 0: //Go -- collecting $200 cannot be done here because you collect that every time you PASS go
+	  		System.out.print("");
+	  	case 10: //Jail 
+	  		System.out.println("Passing through jail! Enjoy visiting!");
+	  	case 20: //Free Parking 
+	  		System.out.println("Chill on Free Parking. Nothing happens.");
+	  		
+	  	case 4: //Income Tax (pay $200 or 10%)
+	  		if ((player.getBalance() * 10) < 200) {
+	  			subtractMoney(player, (player.getBalance() * 10));
+	  		}
+	  		else {
+	  			subtractMoney(player, 200);
+	  		}
+	  	case 38: //Luxury Tax
+	  		subtractMoney(player, 75);
+	  	
+	  	case 30: //Go To Jail
+	  		player.setLocation(boardProperties.get(10));
+	  		addJailTime(player); 
+	  	
+	  	/*
+	  	 * case 2: //Community Chest	
+	  	case 17: 	
+	  	case 33: 	
+	  		
+	  	case 7: //Chance
+	  	case 22: 
+	  	case 36:
+	  	 */ 	
+	  }
+  }
+  public void addMoney(Player player, int money) {
+	  player.setBalance(player.getBalance() + money);
+  }
+  public void subtractMoney(Player player, int money) {
+	  player.setBalance(player.getBalance() - money);
+  }
+  public void addJailTime(Player player) {
+	  player.setJailTime(player.getJailTime() + 1);
+  }
+  public void beingInJail(Player player, Player otherPlayer) throws IOException {
+	  
+	  /**
+	   * In JAIL, player status JailTime = -1 if player is not in jail (or has just gotten out of jail)
+	   * 0 if player has just landed in jail 
+	   * and 0-1 for the subsequent rolls player tries to make to get out of jail 
+	   */
+
+	  // attempt to roll doubles
+	  int diceOne = random.nextInt(6) + 1;
+	  int diceTwo = random.nextInt(6) + 1;
+	  
+	  System.out.println("Player rolls a " + diceOne + " and a " + diceTwo);
+	  
+	  if (diceOne == diceTwo) {
+		  System.out.println("Player has rolled out of jail!");
+		  player.setJailTime(-1);
+		  twoPlayerGamePtTwo(player, otherPlayer, diceOne + diceTwo);
+	  }
+	  else {
+		  addJailTime(player);
+		  System.out.println("Player is still in jail and has rolled " + player.getJailTime() + " time.");
+	  }
+
+	  // if player has get out of jail free card, use it, get out jail, do not move until next turn 
+	  if (player.getOutOfJailFreeCard) {
+		  player.setGetOutOfJailFreeCard(false);
+		  player.setJailTime(-1);
+	  }
+	  else {
+		  String prompt = "Do you want to pay $50 to get out of jail? (y/n)";
+		  if (player.doYouWantToDoThis(prompt)) {
+			  subtractMoney(player, 50);
+			  player.setJailTime(-1);
+		  }
+	  }
+	  if (player.getJailTime() == 3) {
+		  System.out.println("Player has rolled 3 times and now must pay $50 to get out of jail.");
+		  subtractMoney(player, 50);
+		  checkBalance(player, otherPlayer);
+	  }
+  }
 }
 
 

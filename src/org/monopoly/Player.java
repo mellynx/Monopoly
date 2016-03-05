@@ -6,7 +6,8 @@ import java.util.Set;
 public abstract class Player {
 
 	final String playerToken;
-	int balance;
+	int balance, jailTime;
+	boolean getOutOfJailFreeCard;
 	Property position;
 	ArrayList<Set<Property>> housableSets; //A
 	ArrayList<Property> propertiesOwned;
@@ -15,6 +16,8 @@ public abstract class Player {
 	public Player(String playerToken) {
 		this.playerToken = playerToken;
 		this.balance = 1500;
+		this.jailTime = -2;
+		this.getOutOfJailFreeCard = false;
 		housableSets = new ArrayList<>();	// (A) the list of sets a player can buy houses at, which starts at empty. Here we're setting the class variable
 		propertiesOwned = new ArrayList<>();
 	}
@@ -23,6 +26,12 @@ public abstract class Player {
 	}
 	public void setLocation(Property currentProperty) {
 		position = currentProperty;
+	}
+	public void setJailTime(int jailCount) {
+		jailTime = jailCount;
+	}
+	public void setGetOutOfJailFreeCard(boolean trueOrFalse) {
+		getOutOfJailFreeCard = trueOrFalse;
 	}
 	
 	
@@ -55,6 +64,12 @@ public abstract class Player {
 	}
 	public Property getLocation() {
 		return position;
+	}
+	public int getJailTime() {
+		return jailTime;
+	}
+	public boolean getGetOutOfJailFreeCard() {
+		return getOutOfJailFreeCard;
 	}
 	public ArrayList<Set<Property>> getHousableSetList() {
 		return housableSets;
