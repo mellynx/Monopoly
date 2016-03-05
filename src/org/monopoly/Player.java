@@ -16,7 +16,7 @@ public abstract class Player {
 	public Player(String playerToken) {
 		this.playerToken = playerToken;
 		this.balance = 1500;
-		this.jailTime = -2;
+		this.jailTime = -1;
 		this.getOutOfJailFreeCard = false;
 		housableSets = new ArrayList<>();	// (A) the list of sets a player can buy houses at, which starts at empty. Here we're setting the class variable
 		propertiesOwned = new ArrayList<>();

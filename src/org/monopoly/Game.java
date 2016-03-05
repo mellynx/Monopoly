@@ -498,10 +498,12 @@ public class Game {
 	  		else {
 	  			subtractMoney(player, 200);
 	  		}
+	  		
 	  	case 38: //Luxury Tax
 	  		subtractMoney(player, 75);
 	  	
 	  	case 30: //Go To Jail
+	  		System.out.println("Oh no! " + player + " is going to jail.");
 	  		player.setLocation(boardProperties.get(10));
 	  		addJailTime(player); 
 	  	
@@ -537,7 +539,7 @@ public class Game {
 	  int diceOne = random.nextInt(6) + 1;
 	  int diceTwo = random.nextInt(6) + 1;
 	  
-	  System.out.println("Player rolls a " + diceOne + " and a " + diceTwo);
+	  System.out.println(player + " rolls a " + diceOne + " and a " + diceTwo);
 	  
 	  if (diceOne == diceTwo) {
 		  System.out.println("Player has rolled out of jail!");
@@ -547,24 +549,25 @@ public class Game {
 	  else {
 		  addJailTime(player);
 		  System.out.println("Player is still in jail and has rolled " + player.getJailTime() + " time.");
-	  }
+	  
 
-	  // if player has get out of jail free card, use it, get out jail, do not move until next turn 
-	  if (player.getOutOfJailFreeCard) {
-		  player.setGetOutOfJailFreeCard(false);
-		  player.setJailTime(-1);
-	  }
-	  else {
-		  String prompt = "Do you want to pay $50 to get out of jail? (y/n)";
-		  if (player.doYouWantToDoThis(prompt)) {
-			  subtractMoney(player, 50);
+		  // if player has get out of jail free card, use it, get out jail, do not move until next turn 
+		  if (player.getOutOfJailFreeCard) {
+			  player.setGetOutOfJailFreeCard(false);
 			  player.setJailTime(-1);
 		  }
-	  }
-	  if (player.getJailTime() == 3) {
-		  System.out.println("Player has rolled 3 times and now must pay $50 to get out of jail.");
-		  subtractMoney(player, 50);
-		  checkBalance(player, otherPlayer);
+		  else {
+			  String prompt = "Do you want to pay $50 to get out of jail? (y/n)";
+			  if (player.doYouWantToDoThis(prompt)) {
+				  subtractMoney(player, 50);
+				  player.setJailTime(-1);
+			  }
+		  }
+		  if (player.getJailTime() == 3) {
+			  System.out.println("Player has rolled 3 times and now must pay $50 to get out of jail.");
+			  subtractMoney(player, 50);
+			  checkBalance(player, otherPlayer);
+		  }
 	  }
   }
 }
