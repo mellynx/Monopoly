@@ -179,7 +179,7 @@ public class Game {
         landed = moveSpace(thisPlayer, dice);
         thisPlayer.setLocation(landed);
         System.out.println("Player " + thisPlayer.getToken() + " has landed on " + landed);  
-        afterLanding(thisPlayer, landed, dice);
+        afterLanding(thisPlayer, otherPlayer, landed, dice);
         
         if (thisPlayer.getHousableSetList().size() > 0) {
         	checkMonopolies(thisPlayer);
@@ -219,13 +219,13 @@ public class Game {
     return boardProperties.get(index);
   }
   
-  public void afterLanding(Player player, Property landedProperty, int diceRoll) throws IOException {
+  public void afterLanding(Player player, Player otherPlayer, Property landedProperty, int diceRoll) throws IOException {
 	  
 	 // if property is not owned by anyone
 	 if (landedProperty.getPropertyOwner() == null) {
 		 // if the property is a board property, nothing happens
 		 if (!landedProperty.getBuyableStatus()) {
-			   specialProperties(player, landedProperty);
+			   specialProperties(player, otherPlayer, landedProperty);
 			   System.out.println(player + " has $" + player.getBalance());
 		 }
 		 // if property is not a board property, ask player if they want to buy the property
@@ -478,7 +478,7 @@ public class Game {
   } 
   
   
-  public void specialProperties (Player player, Property property) {
+  public void specialProperties (Player player, Player otherPlayer, Property property) {
 	 
 	  int locationIndex = property.getLocationIndex(boardProperties);
 	  
@@ -511,23 +511,27 @@ public class Game {
 	  		addJailTime(player); 
 	  		break;
 	  	
-	  	/*
-	  	 * case 2: //Community Chest	
+	  	case 2: //Community Chest	
 	  	case 17: 	
 	  	case 33: 	
+	  		communityChest(player, otherPlayer);
+	  		break;
 	  		
 	  	case 7: //Chance
 	  	case 22: 
 	  	case 36:
-	  	 */ 	
+	  		chance(player, otherPlayer);
+	  		break;
 	  }
   }
-  public void addMoney(Player player, int money) {
-	  player.setBalance(player.getBalance() + money);
+  public void communityChest(Player player, Player otherPlayer) {
+	  int rand = random.nextInt(6) + 1;
   }
-  public void subtractMoney(Player player, int money) {
-	  player.setBalance(player.getBalance() - money);
+  public void chance(Player player, Player otherPlayer) {
+	  int rand = random.nextInt(6) + 1;
   }
+  
+  
   public void addJailTime(Player player) {
 	  player.setJailTime(player.getJailTime() + 1);
   }
@@ -583,6 +587,14 @@ public class Game {
 			  }
 		  } 
 	  }
+  }
+  
+  
+  public void addMoney(Player player, int money) {
+	  player.setBalance(player.getBalance() + money);
+  }
+  public void subtractMoney(Player player, int money) {
+	  player.setBalance(player.getBalance() - money);
   }
 }
 
