@@ -314,7 +314,7 @@ public class Game {
   }
   public void payRent(Player player, Property landedProperty, int diceRoll) {
 	  // prints statement of what's happening; deducts rent from player's balance; prints out his new balance; adds rent to other player's balance 
-	  System.out.println(player + " has paid $" + landedProperty.getRentCost(diceRoll) + " for landing on " + landedProperty);
+	  System.out.println(player + " has paid $" + landedProperty.getRentCost(diceRoll) + " in rent to " + landedProperty.getPropertyOwner() + " for landing on " + landedProperty);
 	  player.setBalance(player.getBalance() - landedProperty.getRentCost(diceRoll));
 	  System.out.println(player + " has $" + player.getBalance() + " left.");
 	  landedProperty.getPropertyOwner().setBalance(landedProperty.getPropertyOwner().getBalance() + landedProperty.getRentCost(diceRoll));
@@ -325,7 +325,7 @@ public class Game {
 	// stop asking the below prompt if the "generate" list is null (either because houses have been maxed out or player does not have enough money
 	 if (generatingListOfPropsWherePlayerCanBuyHouse(player, player.getHousableSetList()).size() > 0) {
 		 
-		 String prompt = "Player has completed a monopoly and are eligible to buy houses. Would you like to buy any? (y/n)";
+		 String prompt = "Player has completed a monopoly and is eligible to buy houses. Would you like to buy any houses? (y/n)";
 	     if (player.doYouWantToDoThis(prompt)) {
 	    	 
 	    	System.out.println(player + " has $" + player.getBalance());
@@ -561,20 +561,7 @@ public class Game {
 			  player.setJailTime(-1);
 			  System.out.println("----------------");
 		  }
-		  else if (player.getPropertiesOwned().size() > 7 || player.getBalance() < 200){
-			  // stay in jail and wait for the next roll
-		  }
-		  else {
-			  String prompt = "Do you want to pay $50 to get out of jail? (y/n)";
-			  if (player.doYouWantToDoThis(prompt)) {
-				  System.out.println(player + " has paid $50 to get out jail.");
-				  subtractMoney(player, 50);
-				  player.setJailTime(-1);
-				  System.out.println("----------------");
-			  }
-		  }
-
-		  if (player.getJailTime() == 3) {
+		  else if (player.getJailTime() == 3) {
 			  System.out.println(player + " has rolled 3 times and now must pay $50 to get out of jail.");
 			  System.out.println(player + " has paid $50 to get out of jail.");
 			  subtractMoney(player, 50);
@@ -583,8 +570,18 @@ public class Game {
 			  checkBalance(player, otherPlayer);
 		  }
 		  else {
-			  System.out.println("----------------");
-		  }
+			  String prompt = "Do you want to pay $50 to get out of jail? (y/n)";
+			  if (player.doYouWantToDoThisJail(prompt)) {
+				  System.out.println(player + " has paid $50 to get out of jail.");
+				  subtractMoney(player, 50);
+				  player.setJailTime(-1);
+				  System.out.println("----------------");
+			  }
+			  else {
+				  System.out.println(player + " has decided not to pay to leave jail.");
+				  System.out.println("----------------");
+			  }
+		  } 
 	  }
   }
 }

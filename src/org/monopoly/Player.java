@@ -112,6 +112,8 @@ public abstract class Player {
 	
 	//use this same prompt as a check for buying properties, houses, AND mortgaging properties
 	public abstract boolean doYouWantToDoThis(String prompt); //no body for abstract methods
+	
+	public abstract boolean doYouWantToDoThisJail(String prompt);
 
 	public abstract Property buyHouseB(ArrayList<Property> currentHousableProperties);
 	

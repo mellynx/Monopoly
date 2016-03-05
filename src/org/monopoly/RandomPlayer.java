@@ -15,6 +15,15 @@ public class RandomPlayer extends Player {
   		System.out.println(prompt); 
   		return true;
   	}
+  	public boolean doYouWantToDoThisJail (String prompt) {
+  		System.out.println(prompt);
+  		
+  		// circumstances in which you want to stay in jail and wait for the next roll
+  		if (this.getPropertiesOwned().size() > 7 || this.getBalance() < 200) {
+  			return false;
+  		}
+		return true;  
+  	}
   	
   	public Property buyHouseB (ArrayList<Property> propsWhereYouCanBuyHouse) {
   	  // if there are properties in the housable list, and player has (house*2) amount of money, buy the house

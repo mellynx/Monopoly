@@ -31,6 +31,9 @@ public class ConsolePlayer extends Player {
 		}
 		return false;
 	} 
+	public boolean doYouWantToDoThisJail (String prompt) {
+		return (doYouWantToDoThis(prompt));
+	}
 	
 	public Property buyHouseB(ArrayList<Property> propsWhereYouCanBuyHouse) {
 		
