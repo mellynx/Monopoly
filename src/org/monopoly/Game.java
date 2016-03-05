@@ -111,7 +111,7 @@ public class Game {
     boardProperties.add(new Property("Jail"));
     
     addSingleProperty(new Property("St. Charles Place", 140, 100, 70, stcharlesRS), pink);
-    addSingleProperty(new Property("Electic Company", 150, RentType.UTILITY), utilities);
+    addSingleProperty(new Property("Electric Company", 150, RentType.UTILITY), utilities);
     addSingleProperty(new Property("States Ave", 140, 100, 70, statesRS), pink);
     addSingleProperty(new Property("Virgina Ave", 160, 100, 80, virginiaRS), pink);
     
@@ -552,8 +552,7 @@ public class Game {
 	  }
 	  else {
 		  addJailTime(player);
-		  System.out.println("Player is still in jail and has rolled " + player.getJailTime() + " time.");
-	  
+		  System.out.println("Player is still in jail and has rolled " + player.getJailTime() + " times.");
 
 		  // if player has get out of jail free card, use it, get out jail, do not move until next turn 
 		  if (player.getOutOfJailFreeCard) {
@@ -561,6 +560,9 @@ public class Game {
 			  player.setGetOutOfJailFreeCard(false);
 			  player.setJailTime(-1);
 			  System.out.println("----------------");
+		  }
+		  else if (player.getPropertiesOwned().size() > 7 || player.getBalance() < 200){
+			  // stay in jail and wait for the next roll
 		  }
 		  else {
 			  String prompt = "Do you want to pay $50 to get out of jail? (y/n)";
@@ -571,11 +573,17 @@ public class Game {
 				  System.out.println("----------------");
 			  }
 		  }
+
 		  if (player.getJailTime() == 3) {
-			  System.out.println("Player has rolled 3 times and now must pay $50 to get out of jail.");
+			  System.out.println(player + " has rolled 3 times and now must pay $50 to get out of jail.");
+			  System.out.println(player + " has paid $50 to get out of jail.");
 			  subtractMoney(player, 50);
+			  player.setJailTime(-1);
 			  System.out.println("----------------");
 			  checkBalance(player, otherPlayer);
+		  }
+		  else {
+			  System.out.println("----------------");
 		  }
 	  }
   }
