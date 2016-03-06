@@ -478,7 +478,7 @@ public class Game {
   } 
   
   
-  public void specialProperties (Player player, Player otherPlayer, Property property) {
+  public void specialProperties (Player player, Player otherPlayer, Property property) throws IOException {
 	 
 	  int locationIndex = property.getLocationIndex(boardProperties);
 	  
@@ -495,13 +495,19 @@ public class Game {
 	  		
 	  	case 4: //Income Tax (pay $200 or 10%)
 	  		if ((player.getBalance() * 10) < 200) {
+	  			System.out.println("Pay 10% of your balance on income tax.");
+	  			System.out.println(player + " has paid $" + (player.getBalance() * 10) + " to Income Tax.");
 	  			subtractMoney(player, (player.getBalance() * 10));
 	  		}
 	  		else {
+	  			System.out.println("Pay $200 to Income Tax.");
+	  			System.out.println(player + " has paid $200 to Income Tax.");
 	  			subtractMoney(player, 200);
 	  		}
 	  		break;
 	  	case 38: //Luxury Tax
+	  		System.out.println("Pay $75 to Luxury Tax.");
+  			System.out.println(player + " has paid $75 to Luxury Tax.");
 	  		subtractMoney(player, 75);
 	  		break;
 	  	
@@ -525,10 +531,56 @@ public class Game {
 	  }
   }
   public void communityChest(Player player, Player otherPlayer) {
-	  int rand = random.nextInt(6) + 1;
+	  int rand = random.nextInt(6);
+	  
+	  switch(rand) {
+	  	case 0:
+	  }
   }
-  public void chance(Player player, Player otherPlayer) {
-	  int rand = random.nextInt(6) + 1;
+  public void chance(Player player, Player otherPlayer) throws IOException {
+	  int rand = random.nextInt(12);
+	  
+	  switch(rand) {
+		  case 0: 
+			  System.out.println("Chance: Advance to Go, collect $200");
+			  player.setLocation(boardProperties.get(0));
+			  addMoney(player, 200);
+			  twoPlayerGamePtTwo (player, otherPlayer, 0);
+			  break;
+		  case 1: 
+			  System.out.println("Chance: Bank pays you divident of $50.");
+			  break;
+		  case 2: 
+			  System.out.println("Chance: Go back 3 spaces.");
+			  break;
+		  case 3: 
+			  System.out.println("Chance: Go directly to Jail. Do not pass Go, do not collect $200");
+			  break;
+		  case 4: 
+			  System.out.println("Chance: Pay poor tax of $15");
+			  break;
+		  case 5: 
+			  System.out.println("You have been elected chairman of the board. Pay each player $50");
+			  break;
+		  case 6: 
+			  System.out.println("Advance to Reading Railroad. If you pass Go, collect $200");
+			  break;
+		  case 7: 
+			  System.out.println("Advance to Boardwalk.");
+			  break;
+		  case 8: 
+			  System.out.println("Your building and loan matures. Collect $150.");
+			  break;
+		  case 9: 
+			  System.out.println("Advance to Illinois Ave.");
+			  break;
+		  case 10: 
+			  System.out.println("Get out of jail free.");
+			  break;
+		  case 11: 
+			  System.out.println("Make general repairs on your properties. For each house pay $25. For each hotel pay $100");
+			  break;
+	  }
   }
   
   
