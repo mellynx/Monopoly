@@ -530,11 +530,63 @@ public class Game {
 	  		break;
 	  }
   }
-  public void communityChest(Player player, Player otherPlayer) {
-	  int rand = random.nextInt(6);
+  public void communityChest(Player player, Player otherPlayer) throws IOException {
+	  int rand = random.nextInt(8);
 	  
 	  switch(rand) {
-	  	case 0:
+	  	case 0: 
+	  		 System.out.println("Community Chest: Collect $50 from every player.");
+	  		 addMoney(player, 50);
+	  		 subtractMoney(otherPlayer, 50);
+	  		 break;
+	  	case 1: 
+	  		System.out.println("Community Chest: Collect for services $25.");
+	  		addMoney(player, 25);
+	  		break;
+	  	case 2: 
+	  		System.out.println("Community Chest: Advance to Go. Collect $200.");
+	  		player.setLocation(boardProperties.get(0));
+			addMoney(player, 200);
+			twoPlayerGamePtTwo (player, otherPlayer, 0);
+	  		break;
+	  	case 3: 
+	  		System.out.println("Community Chest: Pay hospital $100.");
+	  		subtractMoney(player, 100);
+	  		break;
+	  	case 4: 
+	  		System.out.println("Community Chest: Get out of jail free.");
+	  		player.setGetOutOfJailFreeCard(true);
+	  		break;
+	  	case 5: 
+	  		System.out.println("Community Chest: Go directly to Jail. Do not pass Go, do not collect $200.");
+	  		player.setLocation(boardProperties.get(10));
+	  		addJailTime(player); 
+	  		break;
+	  	case 6: 
+	  		
+	  		System.out.println("Community Chest: You are assessed for street repairs. Pay $85 per house, $115 per hotel.");
+	  		
+	  		int houseCount = 0;
+	  		int hotelCount = 0;
+	  		
+	  		for (int i = 0; i < player.getPropertiesOwned().size(); i++) {
+	  			houseCount += player.getPropertiesOwned().get(i).getNumberOfHouses();
+	  			
+	  			if (player.getPropertiesOwned().get(i).getNumberOfHouses() == 5) {
+	  				hotelCount += 1;
+	  				houseCount -= 1;
+	  			}
+	  		}
+	  		
+	  		System.out.println(player + " owns " + houseCount + " houses and " + hotelCount + " hotels.");
+	  		System.out.println(player + " will pay $" + houseCount*85 + " for houses and $" + hotelCount*115 + " for hotels.");
+	  		subtractMoney(player, (houseCount*85 + hotelCount*115));
+	  		break;
+	  		
+	  	case 7: 
+	  		System.out.println("Community Chest: From sale of stock, collect $45.");
+	  		addMoney(player, 45);
+	  		break;
 	  }
   }
   public void chance(Player player, Player otherPlayer) throws IOException {
@@ -545,41 +597,82 @@ public class Game {
 			  System.out.println("Chance: Advance to Go, collect $200");
 			  player.setLocation(boardProperties.get(0));
 			  addMoney(player, 200);
-			  twoPlayerGamePtTwo (player, otherPlayer, 0);
+			  twoPlayerGamePtTwo(player, otherPlayer, 0);
 			  break;
 		  case 1: 
-			  System.out.println("Chance: Bank pays you divident of $50.");
+			  System.out.println("Chance: Bank pays you dividend of $50.");
+			  addMoney(player, 50);
 			  break;
 		  case 2: 
 			  System.out.println("Chance: Go back 3 spaces.");
+			  int index = player.getLocation().getLocationIndex(boardProperties);
+			  player.setLocation(boardProperties.get(index - 3));
+			  twoPlayerGamePtTwo(player, otherPlayer, 0);
 			  break;
 		  case 3: 
 			  System.out.println("Chance: Go directly to Jail. Do not pass Go, do not collect $200");
+			  player.setLocation(boardProperties.get(10));
+		  	  addJailTime(player); 
 			  break;
 		  case 4: 
 			  System.out.println("Chance: Pay poor tax of $15");
+			  subtractMoney(player, 15);
 			  break;
 		  case 5: 
 			  System.out.println("You have been elected chairman of the board. Pay each player $50");
+			  subtractMoney(player, 50);
+			  addMoney(otherPlayer, 50);
 			  break;
 		  case 6: 
 			  System.out.println("Advance to Reading Railroad. If you pass Go, collect $200");
+			  int indexB = player.getLocation().getLocationIndex(boardProperties);
+			  
+			  if (indexB > 5) {
+				  System.out.println("Collect $200 for passing Go.");
+				  addMoney(player, 200);
+			  }
+			  
+			  player.setLocation(boardProperties.get(5));
+			  twoPlayerGamePtTwo (player, otherPlayer, 0);
+			  
 			  break;
 		  case 7: 
 			  System.out.println("Advance to Boardwalk.");
+			  player.setLocation(boardProperties.get(39));
+			  twoPlayerGamePtTwo (player, otherPlayer, 0);
 			  break;
 		  case 8: 
 			  System.out.println("Your building and loan matures. Collect $150.");
+			  addMoney(player, 150);
 			  break;
 		  case 9: 
 			  System.out.println("Advance to Illinois Ave.");
+			  player.setLocation(boardProperties.get(24));
+			  twoPlayerGamePtTwo (player, otherPlayer, 0);
 			  break;
 		  case 10: 
 			  System.out.println("Get out of jail free.");
+			  player.setGetOutOfJailFreeCard(true);
 			  break;
 		  case 11: 
 			  System.out.println("Make general repairs on your properties. For each house pay $25. For each hotel pay $100");
-			  break;
+		  		
+		  		int houseCount = 0;
+		  		int hotelCount = 0;
+		  		
+		  		for (int i = 0; i < player.getPropertiesOwned().size(); i++) {
+		  			houseCount += player.getPropertiesOwned().get(i).getNumberOfHouses();
+		  			
+		  			if (player.getPropertiesOwned().get(i).getNumberOfHouses() == 5) {
+		  				hotelCount += 1;
+		  				houseCount -= 1;
+		  			}
+		  		}
+		  		
+		  		System.out.println(player + " owns " + houseCount + " houses and " + hotelCount + " hotels.");
+		  		System.out.println(player + " will pay $" + houseCount*25 + " for houses and $" + hotelCount*100 + " for hotels.");
+		  		subtractMoney(player, (houseCount*25 + hotelCount*100));
+		  		break;
 	  }
   }
   
