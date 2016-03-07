@@ -2,5 +2,23 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="lib/lib/ibxm.jar"/>
+	<classpathentry kind="lib" path="lib/lib/jinput.jar"/>
+	<classpathentry kind="lib" path="lib/lib/jnlp.jar"/>
+	<classpathentry kind="lib" path="lib/lib/jogg-0.0.7.jar"/>
+	<classpathentry kind="lib" path="lib/lib/jorbis-0.0.15.jar"/>
+	<classpathentry kind="lib" path="lib/lib/lwjgl_util_applet.jar"/>
+	<classpathentry kind="lib" path="lib/lib/lwjgl_util.jar"/>
+	<classpathentry kind="lib" path="lib/lib/lwjgl.jar">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="C:/Users/twisty/Desktop/lwjgl-2.9.3/native/windows"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="lib/lib/natives-linux.jar"/>
+	<classpathentry kind="lib" path="lib/lib/natives-mac.jar"/>
+	<classpathentry kind="lib" path="lib/lib/natives-windows.jar"/>
+	<classpathentry kind="lib" path="lib/lib/slick-examples.jar"/>
+	<classpathentry kind="lib" path="lib/lib/slick.jar"/>
+	<classpathentry kind="lib" path="lib/lib/tinylinepp.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
