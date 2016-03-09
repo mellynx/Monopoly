@@ -1,24 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="lib/lib/ibxm.jar"/>
-	<classpathentry kind="lib" path="lib/lib/jinput.jar"/>
-	<classpathentry kind="lib" path="lib/lib/jnlp.jar"/>
-	<classpathentry kind="lib" path="lib/lib/jogg-0.0.7.jar"/>
-	<classpathentry kind="lib" path="lib/lib/jorbis-0.0.15.jar"/>
-	<classpathentry kind="lib" path="lib/lib/lwjgl_util_applet.jar"/>
-	<classpathentry kind="lib" path="lib/lib/lwjgl_util.jar"/>
-	<classpathentry kind="lib" path="lib/lib/lwjgl.jar">
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
 		<attributes>
-			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="C:/Users/twisty/Desktop/lwjgl-2.9.3/native/windows"/>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="C:/Users/Van/Desktop/Keep/Monopoly/lib/native/windows"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/lib/natives-linux.jar"/>
-	<classpathentry kind="lib" path="lib/lib/natives-mac.jar"/>
-	<classpathentry kind="lib" path="lib/lib/natives-windows.jar"/>
-	<classpathentry kind="lib" path="lib/lib/slick-examples.jar"/>
-	<classpathentry kind="lib" path="lib/lib/slick.jar"/>
-	<classpathentry kind="lib" path="lib/lib/tinylinepp.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Van/Desktop/Keep/Monopoly/lib/jar/trident-7.2.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Van/Desktop/Keep/Monopoly/lib/jar/substance-7.2.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Van/Desktop/Keep/Monopoly/lib/jar/lzma.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Van/Desktop/Keep/Monopoly/lib/jar/lwjgl_util_applet.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Van/Desktop/Keep/Monopoly/lib/jar/lwjgl_util.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Van/Desktop/Keep/Monopoly/lib/jar/lwjgl_test.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Van/Desktop/Keep/Monopoly/lib/jar/lwjgl.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Van/Desktop/Keep/Monopoly/lib/jar/lwjgl-debug.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Van/Desktop/Keep/Monopoly/lib/jar/log4j-api-2.0-beta9.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Van/Desktop/Keep/Monopoly/lib/jar/laf-widget-7.2.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Van/Desktop/Keep/Monopoly/lib/jar/laf-plugin-7.2.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Van/Desktop/Keep/Monopoly/lib/jar/jinput.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Van/Desktop/Keep/Monopoly/lib/jar/asm-debug-all.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Van/Desktop/Keep/Monopoly/lib/jar/AppleJavaExtensions.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Van/Desktop/Keep/Monopoly/lib/lib/jorbis-0.0.15.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Van/Desktop/Keep/Monopoly/lib/lib/lwjgl_util.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Van/Desktop/Keep/Monopoly/lib/lib/slick-examples.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Van/Desktop/Keep/Monopoly/lib/lib/jogg-0.0.7.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Van/Desktop/Keep/Monopoly/lib/lib/lwjgl_util_applet.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Van/Desktop/Keep/Monopoly/lib/lib/jnlp.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Van/Desktop/Keep/Monopoly/lib/lib/natives-linux.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Van/Desktop/Keep/Monopoly/lib/lib/jinput.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Van/Desktop/Keep/Monopoly/lib/lib/tinylinepp.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Van/Desktop/Keep/Monopoly/lib/lib/slick.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Van/Desktop/Keep/Monopoly/lib/lib/natives-windows.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Van/Desktop/Keep/Monopoly/lib/lib/lwjgl.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Van/Desktop/Keep/Monopoly/lib/lib/natives-mac.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Van/Desktop/Keep/Monopoly/lib/lib/ibxm.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

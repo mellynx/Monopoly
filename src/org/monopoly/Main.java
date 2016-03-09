@@ -5,8 +5,13 @@ import java.io.IOException;
 
 public class Main {
   public static void main (String [] args) throws IOException {
-    Game game = new Game();
+	/* 
+	Player playerA = new RandomPlayer ("Dog");
+	Player playerB = new RandomPlayer ("Thimble");  
+	 
+    Game game = new Game(playerA, playerB);
     game.playGame();
+    */
   }
 }
 

@@ -19,14 +19,18 @@ public class Game {
   //maps each property to what set (color) of properties it belongs to
   Map<Property, Set <Property>> map = new HashMap<>();
   
-  Player playerOne = new RandomPlayer ("Dog");
-  Player playerTwo = new RandomPlayer ("Thimble");
+  Player playerOne, playerTwo;
   
   Random random = new Random();
   
   private static String[] phrases = {"Player owns this property and nothing happens to this player."};
+  
+  public Game (Player playerOne, Player playerTwo) {
+	  this.playerOne = playerOne;
+	  this.playerTwo = playerTwo;
+  }
 
-  public void playGame() throws IOException {
+  public void playGame() throws IOException, InterruptedException {
     
     addProperties();  // remember you have to CALL add properties
     
@@ -157,7 +161,7 @@ public class Game {
       map.put(property, set);
   }
   
-  private boolean twoPlayerGamePtOne (Player thisPlayer, Player otherPlayer) throws IOException {
+  private boolean twoPlayerGamePtOne (Player thisPlayer, Player otherPlayer) throws IOException, InterruptedException {
     
 	int dice = rollDice();
 	boolean status = false;
@@ -172,7 +176,7 @@ public class Game {
     }
     return status;
   }
-  private boolean twoPlayerGamePtTwo (Player thisPlayer, Player otherPlayer, int dice) throws IOException {  
+  private boolean twoPlayerGamePtTwo (Player thisPlayer, Player otherPlayer, int dice) throws IOException, InterruptedException {  
 	  
 	  Property landed;
 	    
@@ -193,6 +197,7 @@ public class Game {
         	// return void means to exit out of the method at that statement, without running the following statements.
         	return true;
         }
+        Thread.sleep(5000);
         System.out.println("---------------------");  
 
     return false;
@@ -219,7 +224,7 @@ public class Game {
     return boardProperties.get(index);
   }
   
-  public void afterLanding(Player player, Player otherPlayer, Property landedProperty, int diceRoll) throws IOException {
+  public void afterLanding(Player player, Player otherPlayer, Property landedProperty, int diceRoll) throws IOException, InterruptedException {
 	  
 	 // if property is not owned by anyone
 	 if (landedProperty.getPropertyOwner() == null) {
@@ -478,7 +483,7 @@ public class Game {
   } 
   
   
-  public void specialProperties (Player player, Player otherPlayer, Property property) throws IOException {
+  public void specialProperties (Player player, Player otherPlayer, Property property) throws IOException, InterruptedException {
 	 
 	  int locationIndex = property.getLocationIndex(boardProperties);
 	  
@@ -530,7 +535,7 @@ public class Game {
 	  		break;
 	  }
   }
-  public void communityChest(Player player, Player otherPlayer) throws IOException {
+  public void communityChest(Player player, Player otherPlayer) throws IOException, InterruptedException {
 	  int rand = random.nextInt(8);
 	  
 	  switch(rand) {
@@ -589,7 +594,7 @@ public class Game {
 	  		break;
 	  }
   }
-  public void chance(Player player, Player otherPlayer) throws IOException {
+  public void chance(Player player, Player otherPlayer) throws IOException, InterruptedException {
 	  int rand = random.nextInt(12);
 	  
 	  switch(rand) {
@@ -680,7 +685,7 @@ public class Game {
   public void addJailTime(Player player) {
 	  player.setJailTime(player.getJailTime() + 1);
   }
-  public void beingInJail(Player player, Player otherPlayer) throws IOException {
+  public void beingInJail(Player player, Player otherPlayer) throws IOException, InterruptedException {
 	  
 	  /**
 	   * In JAIL, player status JailTime = -1 if player is not in jail (or has just gotten out of jail)

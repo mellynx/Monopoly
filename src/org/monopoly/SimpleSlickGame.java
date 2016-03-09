@@ -16,6 +16,9 @@ public class SimpleSlickGame extends BasicGame
   Image imgBoard, imgDog, imgThimble, imgHouse, imgHotel;
   Game game;
   
+  Player playerA = new RandomPlayer ("Dog");
+  Player playerB = new RandomPlayer ("Thimble");
+  
   public SimpleSlickGame(String gamename)
   {
     super(gamename);
@@ -30,13 +33,15 @@ public class SimpleSlickGame extends BasicGame
     imgHouse = new Image("res/house.png");
     imgHotel = new Image("res/hotel.png");
     
-    game = new Game();
+    game = new Game(playerA, playerB);
     try {
       game.playGame();
     } catch (IOException e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
-    }
+    } catch (InterruptedException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
   }
   
   @Override
@@ -45,12 +50,14 @@ public class SimpleSlickGame extends BasicGame
   @Override
   public void render(GameContainer gc, Graphics g) throws SlickException
   {
-    g.drawString("Howdy!", 10, 10);
-    imgBoard.draw(0, 0, 768, 768);
-    imgDog.draw(700, 700, 50, 50);
-    imgThimble.draw(670, 20, 50, 50);
-    imgHouse.draw(75, 65, 25, 25);
-    imgHotel.draw(665, 75, 30, 30);
+	  imgBoard.draw(0, 0, 768, 768);
+	  
+	  //imgHouse.draw(75, 65, 25, 25);
+	  //imgHotel.draw(665, 75, 30, 30);
+	    
+	  int index = playerA.getLocation().getLocationIndex(game.boardProperties);
+	  imgDog.draw(tokenPosition(index).getX(), tokenPosition(index).getY(), 50, 50);
+	  imgThimble.draw(tokenPosition(index).getX(), tokenPosition(index).getY(), 50, 50);
   }
   public Position housePosition(int locationIndex) {
     Position position = new Position(0,0);
