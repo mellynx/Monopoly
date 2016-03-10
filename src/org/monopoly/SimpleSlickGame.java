@@ -129,22 +129,24 @@ public class SimpleSlickGame extends BasicGame
 	  int index = property.getLocationIndex(game.boardProperties);
 	  int numberOfHouses = property.getNumberOfHouses();
 	  
-	  for (int i = 0; i < numberOfHouses; i++) {
+	  if (numberOfHouses == 5) {
 		  if ((index > 0 && index < 10) || (index > 20 && index < 30)) {
-			  imgHouse.draw(housePosition(index).getX() + (i * 10), housePosition(index).getY(), 25, 25);
-			  
-			  if (i == 4) {
-				  imgHotel.draw(housePosition(index).getX() + (i * 10), housePosition(index).getY(), 30, 30);
-			  }
+			  imgHotel.draw((housePosition(index).getX()), housePosition(index).getY(), 30, 30);
 		  }
 		  else {
-			  imgHouse.draw(housePosition(index).getX(), housePosition(index).getY() + (i * 10), 25, 25);
-			  
-			  if (i == 4) {
-				  imgHotel.draw(housePosition(index).getX(), housePosition(index).getY() + (i * 10), 30, 30);
+			  imgHotel.draw(housePosition(index).getX(), (housePosition(index).getY()), 30, 30);
+		  }
+	  }
+	  else {
+		  for (int i = 0; i < numberOfHouses; i++) {
+			  if ((index > 0 && index < 10) || (index > 20 && index < 30)) {
+				  imgHouse.draw(housePosition(index).getX() + (i * 13), housePosition(index).getY(), 25, 25);
 			  }
-		  } 
-	  }   
+			  else {
+				  imgHouse.draw(housePosition(index).getX(), housePosition(index).getY() + (i * 13), 25, 25);
+			  } 
+		  }   
+	  }
   }
   
   
@@ -154,25 +156,25 @@ public class SimpleSlickGame extends BasicGame
 	  if (locationIndex >= 0 && locationIndex <= 10) {
 	      position.setY(748);
 	      if (locationIndex != 0 || locationIndex != 10) {
-	        position.setX(665 - (locationIndex * 62));
+	        position.setX(667 - (locationIndex * 63));
 	      }
 	    }
 	  if (locationIndex >= 10 && locationIndex <= 20) {
 	      position.setX(10);
 	      if (locationIndex != 10 || locationIndex != 20) {
-	        position.setY(665 - (locationIndex % 10) * 62);
+	        position.setY(667 - (locationIndex % 10) * 63);
 	      }
 	    }
 	  if (locationIndex >= 20 && locationIndex <= 30) {
 	      position.setY(10);
 	      if (locationIndex != 20 || locationIndex != 30) {
-	        position.setX(665 - ((10 - (locationIndex % 20)) * 62));
+	        position.setX(667 - ((10 - (locationIndex % 20)) * 63));
 	      }
 	    }
 	  if (locationIndex >= 30 && locationIndex <= 40) {
 	      position.setX(748);
 	      if (locationIndex != 30 || locationIndex != 40) {
-	        position.setY(665 - ((10 - (locationIndex % 30)) * 62));
+	        position.setY(667 - ((10 - (locationIndex % 30)) * 63));
 	      }
 	    }
 	  return position;
@@ -182,10 +184,10 @@ public class SimpleSlickGame extends BasicGame
 	  
 	  if (property.getMortgageStatus()) {
 		  if ((index > 0 && index < 10) || (index > 20 && index < 30)) {
-			  imgMortgaged.draw(mortgagedPropertyPosition(index).getX(), mortgagedPropertyPosition(index).getY(), 60, 10);
+			  imgMortgaged.draw(mortgagedPropertyPosition(index).getX(), mortgagedPropertyPosition(index).getY(), 63, 10);
 		  }
 		  else {
-			  imgMortgagedVert.draw(mortgagedPropertyPosition(index).getX(), mortgagedPropertyPosition(index).getY(), 10, 60);
+			  imgMortgagedVert.draw(mortgagedPropertyPosition(index).getX(), mortgagedPropertyPosition(index).getY(), 10, 63);
 		  }  
 	  }
   }
@@ -197,25 +199,25 @@ public class SimpleSlickGame extends BasicGame
 	  if (locationIndex >= 0 && locationIndex <= 10) {
 	      position.setY(758);
 	      if (locationIndex != 0 || locationIndex != 10) {
-	        position.setX(665 - (locationIndex * 62));
+	        position.setX(667 - (locationIndex * 63));
 	      }
 	    }
 	  if (locationIndex >= 10 && locationIndex <= 20) {
 	      position.setX(0);
 	      if (locationIndex != 10 || locationIndex != 20) {
-	        position.setY(665 - (locationIndex % 10) * 62);
+	        position.setY(667 - (locationIndex % 10) * 63);
 	      }
 	    }
 	  if (locationIndex >= 20 && locationIndex <= 30) {
 	      position.setY(0);
 	      if (locationIndex != 20 || locationIndex != 30) {
-	        position.setX(665 - ((10 - (locationIndex % 20)) * 62));
+	        position.setX(667 - ((10 - (locationIndex % 20)) * 63));
 	      }
 	    }
 	  if (locationIndex >= 30 && locationIndex <= 40) {
 	      position.setX(758);
 	      if (locationIndex != 30 || locationIndex != 40) {
-	        position.setY(665 - ((10 - (locationIndex % 30)) * 62));
+	        position.setY(667 - ((10 - (locationIndex % 30)) * 63));
 	      }
 	    }
 	  return position;
@@ -225,18 +227,18 @@ public class SimpleSlickGame extends BasicGame
 	  
 	  if (property.getPropertyOwner() == playerA) {
 		  if ((index > 0 && index < 10) || (index > 20 && index < 30)) {
-			  imgPlayerOneHor.draw(propertyOwnershipPosition(index).getX(), propertyOwnershipPosition(index).getY(), 60, 10);
+			  imgPlayerOneHor.draw(propertyOwnershipPosition(index).getX(), propertyOwnershipPosition(index).getY(), 63, 10);
 		  }
 		  else {
-			  imgPlayerOneVert.draw(propertyOwnershipPosition(index).getX(), propertyOwnershipPosition(index).getY(), 10, 60);
+			  imgPlayerOneVert.draw(propertyOwnershipPosition(index).getX(), propertyOwnershipPosition(index).getY(), 10, 63);
 		  }  
 	  }
 	  else if (property.getPropertyOwner() == playerB) {
 		  if ((index > 0 && index < 10) || (index > 20 && index < 30)) {
-			  imgPlayerTwoHor.draw(propertyOwnershipPosition(index).getX(), propertyOwnershipPosition(index).getY(), 60, 10);
+			  imgPlayerTwoHor.draw(propertyOwnershipPosition(index).getX(), propertyOwnershipPosition(index).getY(), 63, 10);
 		  }
 		  else {
-			  imgPlayerTwoVert.draw(propertyOwnershipPosition(index).getX(), propertyOwnershipPosition(index).getY(), 10, 60);
+			  imgPlayerTwoVert.draw(propertyOwnershipPosition(index).getX(), propertyOwnershipPosition(index).getY(), 10, 63);
 		  }
 	  }
   }
