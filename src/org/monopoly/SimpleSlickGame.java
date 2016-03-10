@@ -2,6 +2,9 @@ package org.monopoly;
 
 import java.io.IOException;
 import java.util.Random;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.newdawn.slick.AppGameContainer;
@@ -14,7 +17,20 @@ import org.newdawn.slick.SlickException;
 public class SimpleSlickGame extends BasicGame
 {
   Image imgBoard, imgDog, imgThimble, imgHouse, imgHotel;
-  Game game;
+  final Game game;
+  
+  // executor handles threads. this makes another thing that will runs thread for you 
+  // new single thread executor just runs another thread for you
+  // there's the thread running through all our code, and the thread in the below executor
+  // to run code on this executor, do executor.submit (below, which allows you to return things)
+  // (as opposed to call) -- even though we return void 
+  // submit says run this code in your thread, which in this case is the Single thread executor 
+  // now there's a thread running our stuff, and another thread rendering stuff 
+  // a vairable inside submit must be final, so that it can't change. 
+  // but players don't need to be final, they can be called
+  // be careful of modifying things in different threads. 
+  
+  private ExecutorService executor = Executors.newSingleThreadExecutor();
   
   Player playerA = new RandomPlayer ("Dog");
   Player playerB = new RandomPlayer ("Thimble");
@@ -22,6 +38,7 @@ public class SimpleSlickGame extends BasicGame
   public SimpleSlickGame(String gamename)
   {
     super(gamename);
+    game = new Game(playerA, playerB);
   }
 
   @Override
@@ -33,15 +50,23 @@ public class SimpleSlickGame extends BasicGame
     imgHouse = new Image("res/house.png");
     imgHotel = new Image("res/hotel.png");
     
-    game = new Game(playerA, playerB);
+    executor.submit(new Callable<Void>() {
+      @Override
+      public Void call() throws Exception {
+        try {
+          game.playGame();
+        } catch (Throwable t) {
+          t.printStackTrace();
+        }
+        return null;
+      }
+    });
     try {
-      game.playGame();
-    } catch (IOException e) {
-      e.printStackTrace();
+      Thread.sleep(2000);
     } catch (InterruptedException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
   }
   
   @Override
@@ -57,7 +82,10 @@ public class SimpleSlickGame extends BasicGame
 	    
 	  int index = playerA.getLocation().getLocationIndex(game.boardProperties);
 	  imgDog.draw(tokenPosition(index).getX(), tokenPosition(index).getY(), 50, 50);
-	  imgThimble.draw(tokenPosition(index).getX(), tokenPosition(index).getY(), 50, 50);
+	  int indexB = playerB.getLocation().getLocationIndex(game.boardProperties);
+	  imgThimble.draw(tokenPosition(indexB).getX(), tokenPosition(indexB).getY(), 50, 50);
+	  
+	  // TODO render all properties and see if they have houses
   }
   public Position housePosition(int locationIndex) {
     Position position = new Position(0,0);
@@ -118,7 +146,7 @@ public class SimpleSlickGame extends BasicGame
     if (locationIndex >= 30 && locationIndex <= 40) {
       position.setX(690);
       if (locationIndex != 30 || locationIndex != 40) {
-        position.setX(660 - ((10 - (locationIndex % 30)) * 60));
+        position.setY(660 - ((10 - (locationIndex % 30)) * 60));
       }
     }
     return position;

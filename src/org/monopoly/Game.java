@@ -197,7 +197,7 @@ public class Game {
         	// return void means to exit out of the method at that statement, without running the following statements.
         	return true;
         }
-        Thread.sleep(5000);
+        Thread.sleep(2000);
         System.out.println("---------------------");  
 
     return false;
