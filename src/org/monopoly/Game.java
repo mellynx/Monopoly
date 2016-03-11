@@ -326,7 +326,7 @@ public class Game {
   }
   
   
-  public void checkMonopolies (Player player) {
+  public void checkMonopolies (Player player) throws InterruptedException {
 	// stop asking the below prompt if the "generate" list is null (either because houses have been maxed out or player does not have enough money
 	 if (generatingListOfPropsWherePlayerCanBuyHouse(player, player.getHousableSetList()).size() > 0) {
 		 
@@ -444,7 +444,7 @@ public class Game {
 		}
 		while (mortgaged != null);
   }
-  public void unmortgageA (Player player) {
+  public void unmortgageA (Player player) throws InterruptedException {
 	
 	String prompt = "You have mortgaged properties. Would you like to unmortgage them? (y/n)";
 

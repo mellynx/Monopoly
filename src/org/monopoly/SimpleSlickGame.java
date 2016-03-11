@@ -14,7 +14,7 @@ import org.newdawn.slick.SlickException;
 
 public class SimpleSlickGame extends BasicGame
 {
-  Image imgBoard, imgDog, imgThimble, imgHouse, imgHotel, imgPlayerOneHor, imgPlayerTwoHor, imgMortgaged, imgMortgagedVert, imgPlayerOneVert, imgPlayerTwoVert;
+  Image imgBoard, imgDog, imgThimble, imgHouse, imgHotel, imgPlayerOneHor, imgPlayerTwoHor, imgMortgaged, imgMortgagedVert, imgPlayerOneVert, imgPlayerTwoVert, imgQuestionBackground;
   final Game game;
   
   // executor handles threads. this makes another thing that will runs thread for you 
@@ -31,7 +31,7 @@ public class SimpleSlickGame extends BasicGame
   private ExecutorService executor = Executors.newSingleThreadExecutor();
   
   Player playerA = new RandomPlayer ("Dog");
-  Player playerB = new RandomPlayer ("Thimble");
+  GuiPlayer playerB = new GuiPlayer ("Thimble"); // call specialized methods on specialized players
   
   public SimpleSlickGame(String gamename)
   {
@@ -54,6 +54,8 @@ public class SimpleSlickGame extends BasicGame
     imgPlayerTwoVert = new Image("res/playertwovert.png");
     imgMortgaged = new Image("res/mortgaged.png");
     imgMortgagedVert = new Image("res/mortgagedvert.png");
+    
+    imgQuestionBackground = new Image("res/back.png");
     
     executor.submit(new Callable<Void>() {
       @Override
@@ -91,12 +93,33 @@ public class SimpleSlickGame extends BasicGame
 		  drawMortgages(game.boardProperties.get(i));
 		  drawHouses(game.boardProperties.get(i));
 	  }
-	  // TODO render all properties and see if they have houses
+	  
+	  if (playerB.getStatus()) {
+	    imgQuestionBackground.draw(200, 200, 200, 100);
+	    // use the power of g
+	    g.drawString(playerB.getPrompt(), 200, 200);
+	    imgQuestionBackground.draw(200, 300, 50, 50);
+	    imgQuestionBackground.draw(250, 300, 50, 50);
+	    
+	    
+	  }
+	  
+	  //TODO if gui player status = true, then do things. gui player needs to have strings for options and prompt.
+  }
+  
+  public void mouseReleased(int button, int x, int y) {
+    if (x > 200 && x < 250 && y > 300 && y < 350) {
+      // need a place in gui player to receive answer to its questions -- aka the boolean answer
+      playerB.setAnswer(true);
+    }
+    else {
+      playerB.setAnswer(false);
+    }
+    playerB.notify(); // wake up the object you put to sleep; it can't wake itself up
   }
   
   
   public Position housePosition(int locationIndex) {
-	  //TODO make offsets for houses
     Position position = new Position(0,0);
     
     if (locationIndex >= 0 && locationIndex <= 10) {
@@ -249,11 +272,6 @@ public class SimpleSlickGame extends BasicGame
   
   public Position tokenPosition(int locationIndex) {
     Position position = new Position(0,0);
-    /* TODO make offsets if two players are in same position
-     * int [] array = {0, 20};
-     * int random = new Random().nextInt(array.length);
-    // get array[random];
-     */
     
     if (locationIndex >= 0 && locationIndex <= 10) {
       position.setY(700);

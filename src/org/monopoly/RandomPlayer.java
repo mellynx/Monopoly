@@ -36,25 +36,26 @@ public class RandomPlayer extends Player {
     return null;
   	}
   	
-  	public Property mortgagePropertiesB (ArrayList<Property> propertiesOwned) {
+  	public Property mortgagePropertiesB (ArrayList<Property> propertiesAvailableToMortgage) {
+  	  // above, with propertiesOwnedVariable, remember that this is not the original propertiesOwned list being passed in, but the list that's being passed in from morgagePropertiesA
+  	  // NAMING is very important
+  	  
   	// player will try to mortgage random properties
   		Random random = new Random();
   		
-  		if (propertiesOwned.size() > 0) {
-  			int randomProperty = random.nextInt(propertiesOwned.size());
+  	// if player has unmortgaged properties, has less than $500, and the random property chosen is unmortgaged, return that property
+  		if (propertiesAvailableToMortgage.size() > 0 && this.getBalance() < 500) {
+  			int randomProperty = random.nextInt(propertiesAvailableToMortgage.size());
   	  		
-  			// if player has unmortgaged properties, has less than $500, and the random property chosen is unmortgaged, return that property
-  	  		if (propertiesOwned.size() > mortgagedProperties.size() && this.getBalance() < 500) {
-  	  			if (!propertiesOwned.get(randomProperty).getMortgageStatus()) {
-  	  	  			return propertiesOwned.get(randomProperty);
+  	  			if (!propertiesAvailableToMortgage.get(randomProperty).getMortgageStatus()) {
+  	  	  			return propertiesAvailableToMortgage.get(randomProperty);
   	  	  		}
   	  			// otherwise, return the first unmortgaged property in player's propertiesOwned list 
   	  	  		else {
-  	  	  			for (int i = 0; i < propertiesOwned.size(); i++) {
-  	  	  				if (!propertiesOwned.get(i).getMortgageStatus()) {
-  	  	  					return propertiesOwned.get(i);
+  	  	  			for (int i = 0; i < propertiesAvailableToMortgage.size(); i++) {
+  	  	  				if (!propertiesAvailableToMortgage.get(i).getMortgageStatus()) {
+  	  	  					return propertiesAvailableToMortgage.get(i);
   	  	  				}
-  	  	  			}
   	  	  		}
   	  		}
   		}
