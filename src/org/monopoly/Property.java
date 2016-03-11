@@ -29,20 +29,20 @@ public class Property {
 		// you can initialize stuff in a constructor without taking it as a parameters. number of houses starts at 0 for all properties
 	}
 	// constructor for railroads
-	public Property(String name, int buyCost, int mortgageCost, RentType rentType, RentSchedule rentSchedule) {
+	public Property(String name, RentType rentType, RentSchedule rentSchedule) {
 	  this.name = name;
-	  this.buyCost = buyCost;
-	  this.mortgageCost = mortgageCost;
+	  this.buyCost = 200;
+	  this.mortgageCost = 100;
 	  this.rentType = rentType;
 	  this.rentSchedule = rentSchedule;
 	  houseCost = 0;
 	}
 	// constructor for utilities
-	public Property(String name, int buyCost, RentType rentType) {
+	public Property(String name, RentType rentType) {
 		this.name = name;
-		this.buyCost = buyCost;
+		this.buyCost = 150;
+		this.mortgageCost = 75;
 		this.rentType = rentType;
-		mortgageCost = 0;
 		houseCost = 0;
 	}
 	// constructor for board properties (like "Go")

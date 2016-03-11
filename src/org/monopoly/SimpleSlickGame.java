@@ -102,25 +102,25 @@ public class SimpleSlickGame extends BasicGame
     if (locationIndex >= 0 && locationIndex <= 10) {
       position.setY(665);
       if (locationIndex != 0 || locationIndex != 10) {
-        position.setX(655 - (locationIndex * 60));
+        position.setX(667 - (locationIndex * 63));
       }
     }
     if (locationIndex >= 10 && locationIndex <= 20) {
       position.setX(75);
       if (locationIndex != 10 || locationIndex != 20) {
-        position.setY(655 - (locationIndex % 10) * 60);
+        position.setY(667 - (locationIndex % 10) * 63);
       }
     }
     if (locationIndex >= 20 && locationIndex <= 30) {
       position.setY(75);
       if (locationIndex != 20 || locationIndex != 30) {
-        position.setX(655 - ((10 - (locationIndex % 20)) * 60));
+        position.setX(667 - ((10 - (locationIndex % 20)) * 63));
       }
     }
     if (locationIndex >= 30 && locationIndex <= 40) {
       position.setX(665);
       if (locationIndex != 30 || locationIndex != 40) {
-        position.setY(655 - ((10 - (locationIndex % 30)) * 60));
+        position.setY(667 - ((10 - (locationIndex % 30)) * 63));
       }
     }
     return position;
@@ -130,11 +130,14 @@ public class SimpleSlickGame extends BasicGame
 	  int numberOfHouses = property.getNumberOfHouses();
 	  
 	  if (numberOfHouses == 5) {
-		  if ((index > 0 && index < 10) || (index > 20 && index < 30)) {
-			  imgHotel.draw((housePosition(index).getX()), housePosition(index).getY(), 30, 30);
+		  if ((index > 0 && index < 10)) {
+			  imgHotel.draw((housePosition(index).getX()) + 20, housePosition(index).getY(), 30, 30);
 		  }
-		  else {
-			  imgHotel.draw(housePosition(index).getX(), (housePosition(index).getY()), 30, 30);
+		  else if (index > 10 && index < 20 || (index > 30 && index < 40)) {
+			  imgHotel.draw(housePosition(index).getX(), (housePosition(index).getY()) + 20, 30, 30);
+		  }
+		  else { // if (index > 20 && index < 30) 
+			  imgHotel.draw((housePosition(index).getX()) - 20, housePosition(index).getY(), 30, 30);
 		  }
 	  }
 	  else {

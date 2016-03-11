@@ -38,16 +38,17 @@ public class RandomPlayer extends Player {
   	
   	public Property mortgagePropertiesB (ArrayList<Property> propertiesOwned) {
   	// player will try to mortgage random properties
-  	// we need a stop condition (balance), otherwise RandomPlayer will mortgage everything until he hits null
   		Random random = new Random();
   		
   		if (propertiesOwned.size() > 0) {
-  			int houseNumber = random.nextInt(propertiesOwned.size());
+  			int randomProperty = random.nextInt(propertiesOwned.size());
   	  		
+  			// if player has unmortgaged properties, has less than $500, and the random property chosen is unmortgaged, return that property
   	  		if (propertiesOwned.size() > mortgagedProperties.size() && this.getBalance() < 500) {
-  	  			if (!propertiesOwned.get(houseNumber).getMortgageStatus()) {
-  	  	  			return propertiesOwned.get(houseNumber);
+  	  			if (!propertiesOwned.get(randomProperty).getMortgageStatus()) {
+  	  	  			return propertiesOwned.get(randomProperty);
   	  	  		}
+  	  			// otherwise, return the first unmortgaged property in player's propertiesOwned list 
   	  	  		else {
   	  	  			for (int i = 0; i < propertiesOwned.size(); i++) {
   	  	  				if (!propertiesOwned.get(i).getMortgageStatus()) {

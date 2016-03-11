@@ -105,7 +105,7 @@ public class Game {
     addSingleProperty(new Property("Baltic Ave", 60, 50, 30, balticRS), brown);
     boardProperties.add(new Property("Income Tax"));
   
-    addSingleProperty(new Property("Reading Railroad", 200, 100, RentType.RAILROAD, readingrrRS), railroads);
+    addSingleProperty(new Property("Reading Railroad", RentType.RAILROAD, readingrrRS), railroads);
   
     addSingleProperty(new Property("Oriental Ave", 100, 50, 50, orientalRS), lightBlue);
     boardProperties.add(new Property("Chance"));
@@ -115,11 +115,11 @@ public class Game {
     boardProperties.add(new Property("Jail"));
     
     addSingleProperty(new Property("St. Charles Place", 140, 100, 70, stcharlesRS), pink);
-    addSingleProperty(new Property("Electric Company", 150, RentType.UTILITY), utilities);
+    addSingleProperty(new Property("Electric Company", RentType.UTILITY), utilities);
     addSingleProperty(new Property("States Ave", 140, 100, 70, statesRS), pink);
     addSingleProperty(new Property("Virgina Ave", 160, 100, 80, virginiaRS), pink);
     
-    addSingleProperty(new Property("Pennsylvania Railroad", 200, 100, RentType.RAILROAD, pennsylvaniarrRS), railroads);
+    addSingleProperty(new Property("Pennsylvania Railroad", RentType.RAILROAD, pennsylvaniarrRS), railroads);
     
     addSingleProperty(new Property("St. James Place", 180, 100, 90, stjamesRS), orange);
     boardProperties.add(new Property("Community Chest"));
@@ -133,11 +133,11 @@ public class Game {
     addSingleProperty(new Property("Indiana", 220, 150, 110, indianaRS), red);
     addSingleProperty(new Property("Illinois", 240, 150, 120, illinoisRS), red);
     
-    addSingleProperty(new Property("B & O Railroad", 200, 100, RentType.RAILROAD, borrRS), railroads);
+    addSingleProperty(new Property("B & O Railroad", RentType.RAILROAD, borrRS), railroads);
     
     addSingleProperty(new Property("Atlantic", 260, 150, 130, atlanticRS), yellow);
     addSingleProperty(new Property("Ventnor", 260, 150, 130, ventnorRS), yellow);
-    addSingleProperty(new Property("Water Works", 150, RentType.UTILITY), utilities);
+    addSingleProperty(new Property("Water Works", RentType.UTILITY), utilities);
     addSingleProperty(new Property("Marvin Gardens", 280, 150, 140, marvingardensRS), yellow);
     
     boardProperties.add(new Property("Go To Jail"));
@@ -147,7 +147,7 @@ public class Game {
     boardProperties.add(new Property("Community Chest"));
     addSingleProperty(new Property("Pennsylvania", 320, 200, 160, pennsylvaniaRS), green);
     
-    addSingleProperty(new Property("Short Line Railroad", 200, 100, RentType.RAILROAD, shortlinerrRS), railroads);
+    addSingleProperty(new Property("Short Line Railroad", RentType.RAILROAD, shortlinerrRS), railroads);
     
     boardProperties.add(new Property("Chance"));
     addSingleProperty(new Property("Park", 350, 200, 175, parkRS), blue);
@@ -334,13 +334,17 @@ public class Game {
 	     if (player.doYouWantToDoThis(prompt)) {
 	    	 
 	    	System.out.println(player + " has $" + player.getBalance());
-	    	String promptB = "Would you like to mortgage some properties first? (y/n)";
 	    	
-	    	if (player.doYouWantToDoThis(promptB)) {
-	    		mortgagePropertiesA(player);
-	    	}
-	    	else {
-	    		System.out.println(player + " has chosen not to mortgage any properties.");
+	    	if (player.getPropertiesOwned().size() > player.getMortgagedProperties().size()) {
+	    		
+	    		String promptB = "Would you like to mortgage some properties first? (y/n)";
+		    	
+		    	if (player.doYouWantToDoThis(promptB)) {
+		    		mortgagePropertiesA(player);
+		    	}
+		    	else {
+		    		System.out.println(player + " has chosen not to mortgage any properties.");
+		    	}
 	    	}
 	    	buyHouseA(player);
 	     }
@@ -353,8 +357,7 @@ public class Game {
 	Property houseBought;
 	
 	do {
-		houseBought = player
-				.buyHouseB(generatingListOfPropsWherePlayerCanBuyHouse(player, player.getHousableSetList()));
+		houseBought = player.buyHouseB(generatingListOfPropsWherePlayerCanBuyHouse(player, player.getHousableSetList()));
 
 		if (houseBought != null) {
 			player.whatHappensWhenYouBuyHouse(houseBought);
@@ -426,7 +429,7 @@ public class Game {
 	  ArrayList<Property> propertiesToPassForMortgage = new ArrayList<Property>();
 	  
 	  for (int i = 0; i < player.getPropertiesOwned().size(); i++) {
-		  if (!player.getPropertiesOwned().get(i).getMortgageStatus() && player.getPropertiesOwned().get(i).getRentType() == RentType.REGULAR) {
+		  if (!player.getPropertiesOwned().get(i).getMortgageStatus()) {
 			  propertiesToPassForMortgage.add(player.getPropertiesOwned().get(i));
 		  }
 	  }
@@ -437,9 +440,9 @@ public class Game {
 			
 			if (mortgaged != null) {
   			player.whatHappensWhenYouMortgage(mortgaged);
-  		}
-  	}
-      while (mortgaged != null);
+			}
+		}
+		while (mortgaged != null);
   }
   public void unmortgageA (Player player) {
 	

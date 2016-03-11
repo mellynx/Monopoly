@@ -44,12 +44,6 @@ public abstract class Player {
 	public void addToMortgagedProperties (Property property) {
 		mortgagedProperties.add(property);
 	}
-	public void removeFromHousableSets (Set<Property> a) { // the list of properties on which a player is eligible to build a house
-		housableSets.remove(a);
-	}
-	public void removeFromPropertiesOwnedList (Property property) {
-		propertiesOwned.remove(property);
-	}
 	public void removeFromMortgagedProperties (Property property) {
 		mortgagedProperties.remove(property);
 	}
