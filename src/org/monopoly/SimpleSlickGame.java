@@ -196,11 +196,13 @@ public class SimpleSlickGame extends BasicGame {
 	
 	public void selectionFromList(int x, int y, ArrayList<Property> someList) {
 		if (x > 240 && x < 420 && y > 360 && y < 375) { // player selected none
+			System.out.println(0); //TODO remove
 			playerB.setPropertyAnswer(null);
 		}
 		else {
 			for (int i = 0; i < someList.size(); i++) {
 				if (x > 240 && x < 420 && (y > 380 + (10 * i)) && (y < 390 + (10 *i))) {
+					System.out.println(i);
 					playerB.setPropertyAnswer(someList.get(i));
 				}
 			}
