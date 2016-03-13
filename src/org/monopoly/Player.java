@@ -107,12 +107,12 @@ public abstract class Player {
 	//use this same prompt as a check for buying properties, houses, AND mortgaging properties
 	public abstract boolean doYouWantToDoThis(String prompt) throws InterruptedException; //no body for abstract methods
 	
-	public abstract boolean doYouWantToDoThisJail(String prompt);
+	public abstract boolean doYouWantToDoThisJail(String prompt) throws InterruptedException;
 
-	public abstract Property buyHouseB(ArrayList<Property> currentHousableProperties);
+	public abstract Property buyHouseB(ArrayList<Property> currentHousableProperties) throws InterruptedException;
 	
-	public abstract Property mortgagePropertiesB (ArrayList<Property> propertiesOwned);
+	public abstract Property mortgagePropertiesB (ArrayList<Property> propertiesOwned) throws InterruptedException;
 	
-	public abstract Property unmortgageB (ArrayList<Property> mortgagedProperties);
+	public abstract Property unmortgageB (ArrayList<Property> mortgagedProperties) throws InterruptedException;
 }
 

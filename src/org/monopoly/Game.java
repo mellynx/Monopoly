@@ -353,7 +353,7 @@ public class Game {
 	     }
 	 }
   }
-  public void buyHouseA (Player player) {
+  public void buyHouseA (Player player) throws InterruptedException {
 	Property houseBought;
 	
 	do {
@@ -424,7 +424,7 @@ public class Game {
   }     
   
   
-  public void mortgagePropertiesA (Player player) {
+  public void mortgagePropertiesA (Player player) throws InterruptedException {
 	  
 	  ArrayList<Property> propertiesToPassForMortgage = new ArrayList<Property>();
 	  
@@ -463,7 +463,7 @@ public class Game {
   }
   
   
-  public boolean checkBalance(Player player, Player otherPlayer) {
+  public boolean checkBalance(Player player, Player otherPlayer) throws InterruptedException {
 	if (player.getBalance() < 0) {
 
 		// as long as player has properties, they should mortgage them to save the game. otherwise, they lose the game.
@@ -582,7 +582,7 @@ public class Game {
 	  			
 	  			if (player.getPropertiesOwned().get(i).getNumberOfHouses() == 5) {
 	  				hotelCount += 1;
-	  				houseCount -= 1;
+	  				houseCount -= 5;
 	  			}
 	  		}
 	  		
@@ -673,7 +673,7 @@ public class Game {
 		  			
 		  			if (player.getPropertiesOwned().get(i).getNumberOfHouses() == 5) {
 		  				hotelCount += 1;
-		  				houseCount -= 1;
+		  				houseCount -= 5;
 		  			}
 		  		}
 		  		
