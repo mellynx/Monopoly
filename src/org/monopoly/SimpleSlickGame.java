@@ -6,6 +6,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.monopoly.GuiPlayer.StatusType;
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.GameContainer;
@@ -14,21 +16,20 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
 public class SimpleSlickGame extends BasicGame {
-  // TODO: Apply privates liberally...that's dirty.
   
   // TODO: This is begging for some enclosing class or a map that holds all these based on an enum for image type.  I love enums and you should too!
-	Image imgBoard, imgDog, imgThimble, imgHouse, imgHotel, imgPlayerOneHor, imgPlayerTwoHor, imgMortgaged,
+	private Image imgBoard, imgDog, imgThimble, imgHouse, imgHotel, imgPlayerOneHor, imgPlayerTwoHor, imgMortgaged,
 			imgMortgagedVert, imgPlayerOneVert, imgPlayerTwoVert, imgQuestionBackground, imgYesButton, imgNoButton;
 	final Game game;
 	
-	// TODO: I have a suspicion that these shouldn't exist, will explore below.
-	ArrayList<Property> propertyList, mortgageList, unmortgageList;
+	private ArrayList<Property> list;
 
 	private ExecutorService executor = Executors.newSingleThreadExecutor();
 
 	Player playerA = new RandomPlayer("Dog");
-	GuiPlayer playerB = new GuiPlayer("Thimble"); // call specialized methods on
-													// specialized players
+	//remember that we are able to call specialized methods on specialized players (in addition to what we inherit)
+	GuiPlayer playerB = new GuiPlayer("Thimble"); 
+	 
 
 	public SimpleSlickGame(String gamename) {
 		super(gamename);
@@ -92,43 +93,43 @@ public class SimpleSlickGame extends BasicGame {
 			drawHouses(game.boardProperties.get(i));
 		}
 
-		// for DoYouWantToDoThis questions
-		if (playerB.getStatus()) {
+
+		if (playerB.getStatusType() == StatusType.BOOLEAN) {
 			drawPrompt(g, 250);
 			imgYesButton.draw(265, 440, 110, 45);
 			imgNoButton.draw(395, 440, 110, 45);
 		}
-		// for buyHouseB
-		else if (playerB.getStatusBuyHouse()) {
-			propertyList = playerB.getListToPass();
+
+		else if (playerB.getStatusType() == StatusType.HOUSE) {
+			list = playerB.getListToPass();
 			
-			drawPrompt(g, 150 + (propertyList.size() * 30));
+			drawPrompt(g, 150 + (list.size() * 30));
 			
 			g.drawString("None", 240, 370);
-			for (int i = 0; i < propertyList.size(); i++) {
-				g.drawString(propertyList.get(i).getName(), 240, (400 + i * 30));
+			for (int i = 0; i < list.size(); i++) {
+				g.drawString(list.get(i).getName(), 240, (400 + i * 30));
 			}
 		}
-		// for mortgagePropertiesB
-		else if (playerB.getStatusMortgage()) {
-			mortgageList = playerB.getListToPass();
+
+		else if (playerB.getStatusType() == StatusType.MORTGAGE) {
+			list = playerB.getListToPass();
 			
-			drawPrompt(g, 150 + (mortgageList.size() * 30));
+			drawPrompt(g, 150 + (list.size() * 30));
 		
 			g.drawString("None", 240, 370);
-			for (int i = 0; i < mortgageList.size(); i++) {
-				g.drawString(mortgageList.get(i).getName(), 240, (400 + i * 30));
+			for (int i = 0; i < list.size(); i++) {
+				g.drawString(list.get(i).getName(), 240, (400 + i * 30));
 			}
 		}
-		// for unmortgageB
-		else if (playerB.getStatusUnmortgage()) {
-			unmortgageList = playerB.getListToPass();
+
+		else if (playerB.getStatusType() == StatusType.UNMORTGAGE) {
+			list = playerB.getListToPass();
 			
-			drawPrompt(g, 150 + (unmortgageList.size() * 30));
+			drawPrompt(g, 150 + (list.size() * 30));
 			
 			g.drawString("None", 240, 370);
-			for (int i = 0; i < unmortgageList.size(); i++) {
-				g.drawString(unmortgageList.get(i).getName(), 240, (400 + i * 30));
+			for (int i = 0; i < list.size(); i++) {
+				g.drawString(list.get(i).getName(), 240, (400 + i * 30));
 			}
 		}
 		
@@ -160,38 +161,38 @@ public class SimpleSlickGame extends BasicGame {
 
 	public void mouseReleased(int button, int x, int y) {
 		// for DoYouWantToDoThis questions
-		if (playerB.getStatus()) {
+		if (playerB.getStatusType() == StatusType.BOOLEAN) {
 			if (x > 265 && x < 375 && y > 440 && y < 485) {
 				// need a place in gui player to receive answer to its questions -- aka the boolean answer
 				playerB.setAnswer(true);
-				playerB.getLatch().countDown();
+				playerB.stopWaiting();
 			} 
 			else if (x > 395 && x < 505 && y > 440 && y < 485){
 				playerB.setAnswer(false);
-				playerB.getLatch().countDown();
+				playerB.stopWaiting();
 			}
 		}
-		else if (playerB.getStatusBuyHouse()) {
-			selectionFromList(x, y, getPropertyList());
+		else if (playerB.getStatusType() == StatusType.HOUSE) {
+			selectionFromList(x, y, getList());
 		}
-		else if (playerB.getStatusMortgage()) {
-			selectionFromList(x, y, getMortgageList());
+		else if (playerB.getStatusType() == StatusType.MORTGAGE) {
+			selectionFromList(x, y, getList());
 		}
-		else if (playerB.getStatusUnmortgage()) {
-			selectionFromList(x, y, getUnmortgageList());
+		else if (playerB.getStatusType() == StatusType.UNMORTGAGE) {
+			selectionFromList(x, y, getList());
 		}
 	}
 	
 	public void selectionFromList(int x, int y, ArrayList<Property> someList) {
 		if (x > 240 && x < 420 && y > 370 && y < 385) { // player selected none
 			playerB.setPropertyAnswer(null);
-			playerB.getLatch().countDown();
+			playerB.stopWaiting();
 		}
 		else {
 			for (int i = 0; i < someList.size(); i++) {
 				if (x > 240 && x < 420 && (y > 400 + (30 * i)) && (y < 415 + (30 * i))) {
 					playerB.setPropertyAnswer(someList.get(i));
-					playerB.getLatch().countDown();
+					playerB.stopWaiting();
 				}
 			}
 		}
@@ -391,13 +392,7 @@ public class SimpleSlickGame extends BasicGame {
 		}
 	}
 	
-	public ArrayList<Property> getPropertyList() {
-		return propertyList;
-	}
-	public ArrayList<Property> getMortgageList() {
-		return mortgageList;
-	}
-	public ArrayList<Property> getUnmortgageList() {
-		return unmortgageList;
+	public ArrayList<Property> getList() {
+		return list;
 	}
 }
