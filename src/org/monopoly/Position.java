@@ -1,6 +1,6 @@
 package org.monopoly;
 
-public class Position {
+public class Position {  // TODO: Space these functions out captain!
   int x, y;
   
   public Position(int x, int y) {

@@ -14,9 +14,14 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
 public class SimpleSlickGame extends BasicGame {
+  // TODO: Apply privates liberally...that's dirty.
+  
+  // TODO: This is begging for some enclosing class or a map that holds all these based on an enum for image type.  I love enums and you should too!
 	Image imgBoard, imgDog, imgThimble, imgHouse, imgHotel, imgPlayerOneHor, imgPlayerTwoHor, imgMortgaged,
 			imgMortgagedVert, imgPlayerOneVert, imgPlayerTwoVert, imgQuestionBackground, imgYesButton, imgNoButton;
 	final Game game;
+	
+	// TODO: I have a suspicion that these shouldn't exist, will explore below.
 	ArrayList<Property> propertyList, mortgageList, unmortgageList;
 
 	// executor handles threads. this makes another thing that will runs thread

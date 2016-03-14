@@ -8,6 +8,7 @@ import java.util.ArrayList;
 public class ConsolePlayer extends Player {
   
   // note the combination of buffered and input stream reader
+  // TODO: Make this private and final.  No one else besides things in this class should use it and it should never be reassigned. 
   BufferedReader keyboard = new BufferedReader(new InputStreamReader(System.in));
 
 	public ConsolePlayer(String playerToken) {
@@ -31,7 +32,7 @@ public class ConsolePlayer extends Player {
 		}
 		return false;
 	} 
-	public boolean doYouWantToDoThisJail (String prompt) {
+	public boolean doYouWantToDoThisJail (String prompt) {  // TODO: This really makes me ask why this is a separate abstract function.
 		return (doYouWantToDoThis(prompt));
 	}
 	
@@ -39,7 +40,7 @@ public class ConsolePlayer extends Player {
 		
 		String prompt = "Press the number of the property where you'd like to buy a house, or 0 to stop buying houses.";
 		
-		Property buyHouseResult = selectingFromList(propsWhereYouCanBuyHouse, prompt);
+		Property buyHouseResult = selectingFromList(propsWhereYouCanBuyHouse, prompt);  // TODO: You can collapse these two lines to just: return selectingFromList(...., same with the other two places.
 		return buyHouseResult;
 	}
 	
@@ -78,6 +79,7 @@ public class ConsolePlayer extends Player {
 
 		int c = Integer.parseInt(input);
 		
+		// TODO: You should also check if they chose a number longer than the array.
 		if (c != 0) {
 			Property t = arrayListProperties.get(c - 1);
 			return t;
