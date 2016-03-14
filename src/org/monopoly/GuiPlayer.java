@@ -34,11 +34,7 @@ public class GuiPlayer extends Player {
 		return getAnswer();
 	}
 
-	@Override
-	public boolean doYouWantToDoThisJail(String prompt) throws InterruptedException {
-		boolean toReturn = doYouWantToDoThis(prompt);
-		return toReturn;
-	}
+	
 
 	@Override
 	public Property buyHouseB(ArrayList<Property> currentHousableProperties) throws InterruptedException {

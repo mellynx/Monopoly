@@ -24,22 +24,6 @@ public class SimpleSlickGame extends BasicGame {
 	// TODO: I have a suspicion that these shouldn't exist, will explore below.
 	ArrayList<Property> propertyList, mortgageList, unmortgageList;
 
-	// executor handles threads. this makes another thing that will runs thread
-	// for you
-	// new single thread executor just runs another thread for you
-	// there's the thread running through all our code, and the thread in the
-	// below executor
-	// to run code on this executor, do executor.submit (below, which allows you
-	// to return things)
-	// (as opposed to call) -- even though we return void
-	// submit says run this code in your thread, which in this case is the
-	// Single thread executor
-	// now there's a thread running our stuff, and another thread rendering
-	// stuff
-	// a vairable inside submit must be final, so that it can't change.
-	// but players don't need to be final, they can be called
-	// be careful of modifying things in different threads.
-
 	private ExecutorService executor = Executors.newSingleThreadExecutor();
 
 	Player playerA = new RandomPlayer("Dog");
@@ -116,41 +100,41 @@ public class SimpleSlickGame extends BasicGame {
 		}
 		// for buyHouseB
 		else if (playerB.getStatusBuyHouse()) {
-			drawPrompt(g, 400);
-			
 			propertyList = playerB.getListToPass();
 			
-			g.drawString("None", 240, 360);
+			drawPrompt(g, 150 + (propertyList.size() * 30));
+			
+			g.drawString("None", 240, 370);
 			for (int i = 0; i < propertyList.size(); i++) {
-				g.drawString(propertyList.get(i).getName(), 240, (380 + i * 20));
+				g.drawString(propertyList.get(i).getName(), 240, (400 + i * 30));
 			}
 		}
 		// for mortgagePropertiesB
 		else if (playerB.getStatusMortgage()) {
-			drawPrompt(g, 400);
-			
 			mortgageList = playerB.getListToPass();
 			
-			g.drawString("None", 240, 360);
+			drawPrompt(g, 150 + (mortgageList.size() * 30));
+		
+			g.drawString("None", 240, 370);
 			for (int i = 0; i < mortgageList.size(); i++) {
-				g.drawString(mortgageList.get(i).getName(), 240, (380 + i * 20));
+				g.drawString(mortgageList.get(i).getName(), 240, (400 + i * 30));
 			}
 		}
 		// for unmortgageB
 		else if (playerB.getStatusUnmortgage()) {
-			drawPrompt(g, 400);
-			
 			unmortgageList = playerB.getListToPass();
 			
-			g.drawString("None", 240, 360);
+			drawPrompt(g, 150 + (unmortgageList.size() * 30));
+			
+			g.drawString("None", 240, 370);
 			for (int i = 0; i < unmortgageList.size(); i++) {
-				g.drawString(unmortgageList.get(i).getName(), 240, (380 + i * 20));
+				g.drawString(unmortgageList.get(i).getName(), 240, (400 + i * 30));
 			}
 		}
 		
 	}
 	public void drawPrompt(Graphics g, int height) {
-		imgQuestionBackground.draw(200, 270, 350, height);
+		imgQuestionBackground.draw(200, 270, 380, height);
 		// use the power of g to draw the words we want
 		// wordwrap method: first, split string into separate words
 		// then, get the length of each word and decide to put on existing line or a new line
@@ -187,7 +171,6 @@ public class SimpleSlickGame extends BasicGame {
 				playerB.getLatch().countDown();
 			}
 		}
-		// for buyHouseB
 		else if (playerB.getStatusBuyHouse()) {
 			selectionFromList(x, y, getPropertyList());
 		}
@@ -200,15 +183,15 @@ public class SimpleSlickGame extends BasicGame {
 	}
 	
 	public void selectionFromList(int x, int y, ArrayList<Property> someList) {
-		if (x > 240 && x < 420 && y > 360 && y < 375) { // player selected none
-			System.out.println(0); //TODO remove
+		if (x > 240 && x < 420 && y > 370 && y < 385) { // player selected none
 			playerB.setPropertyAnswer(null);
+			playerB.getLatch().countDown();
 		}
 		else {
 			for (int i = 0; i < someList.size(); i++) {
-				if (x > 240 && x < 420 && (y > 380 + (10 * i)) && (y < 390 + (10 *i))) {
-					System.out.println(i);
+				if (x > 240 && x < 420 && (y > 400 + (30 * i)) && (y < 415 + (30 * i))) {
 					playerB.setPropertyAnswer(someList.get(i));
+					playerB.getLatch().countDown();
 				}
 			}
 		}
@@ -243,7 +226,6 @@ public class SimpleSlickGame extends BasicGame {
 		}
 		return position;
 	}
-
 	public void drawHouses(Property property) {
 		int index = property.getLocationIndex(game.boardProperties);
 		int numberOfHouses = property.getNumberOfHouses();
@@ -251,21 +233,26 @@ public class SimpleSlickGame extends BasicGame {
 		if (numberOfHouses == 5) {
 			if ((index > 0 && index < 10)) {
 				imgHotel.draw((housePosition(index).getX()) + 20, housePosition(index).getY(), 30, 30);
-			} else if (index > 10 && index < 20 || (index > 30 && index < 40)) {
+			} 
+			else if (index > 10 && index < 20 || (index > 30 && index < 40)) {
 				imgHotel.draw(housePosition(index).getX(), (housePosition(index).getY()) + 20, 30, 30);
-			} else { // if (index > 20 && index < 30)
+			} 
+			else { // if (index > 20 && index < 30)
 				imgHotel.draw((housePosition(index).getX()) + 20, housePosition(index).getY(), 30, 30);
 			}
-		} else {
+		} 
+		else {
 			for (int i = 0; i < numberOfHouses; i++) {
 				if ((index > 0 && index < 10) || (index > 20 && index < 30)) {
 					imgHouse.draw(housePosition(index).getX() + (i * 13), housePosition(index).getY(), 25, 25);
-				} else {
+				} 
+				else {
 					imgHouse.draw(housePosition(index).getX(), housePosition(index).getY() + (i * 13), 25, 25);
 				}
 			}
 		}
 	}
+
 
 	public Position mortgagedPropertyPosition(int locationIndex) {
 		Position position = new Position(0, 0);

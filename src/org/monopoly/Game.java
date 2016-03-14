@@ -775,7 +775,7 @@ public class Game {
 		  }
 		  else {
 			  String prompt = "Do you want to pay $50 to get out of jail? (y/n)";
-			  if (player.doYouWantToDoThisJail(prompt)) {
+			  if (player.doYouWantToDoThis(prompt)) {
 				  System.out.println(player + " has paid $50 to get out of jail.");
 				  subtractMoney(player, 50);
 				  player.setJailTime(-1);

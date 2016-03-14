@@ -12,17 +12,18 @@ public class RandomPlayer extends Player {
   	}
   	
   	public boolean doYouWantToDoThis(String prompt) {
-  		System.out.println(prompt); 
-  		return true;
-  	}
-  	public boolean doYouWantToDoThisJail (String prompt) {  // TODO: Instead of making a separate method just for this class, make the string that asks this question a constant somewhere (public static final) and check it here.
   		System.out.println(prompt);
-  		
+  		// if the player is in jail
+  		if (this.getJailTime() >= 0) {
   		// circumstances in which you want to stay in jail and wait for the next roll
-  		if (this.getPropertiesOwned().size() > 7 || this.getBalance() < 200) {
-  			return false;
+  			if (this.getPropertiesOwned().size() > 7 || this.getBalance() < 200) {
+  	  			return false;
+  	  		}
+  			return true; 
   		}
-		return true;  
+  		else {
+  			return true;
+  		}
   	}
   	
   	public Property buyHouseB (ArrayList<Property> propsWhereYouCanBuyHouse) {

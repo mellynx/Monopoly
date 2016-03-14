@@ -31,9 +31,6 @@ public class ConsolePlayer extends Player {
 			return true;
 		}
 		return false;
-	} 
-	public boolean doYouWantToDoThisJail (String prompt) {  // TODO: This really makes me ask why this is a separate abstract function.
-		return (doYouWantToDoThis(prompt));
 	}
 	
 	public Property buyHouseB(ArrayList<Property> propsWhereYouCanBuyHouse) {
