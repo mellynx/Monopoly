@@ -16,14 +16,15 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
 public class SimpleSlickGame extends BasicGame {
+	//DONE 
 
 	// TODO: This is begging for some enclosing class or a map that holds all
 	// these based on an enum for image type. I love enums and you should too!
-	private Image imgBoard, imgDog, imgThimble, imgHouse, imgHotel, imgPlayerOneHor, imgPlayerTwoHor, imgMortgaged,
-			imgMortgagedVert, imgPlayerOneVert, imgPlayerTwoVert, imgQuestionBackground, imgYesButton, imgNoButton;
+	
+	private Image board, dog, thimble, house, hotel, playerOneHor, playerTwoHor, mortgagedHor, mortgagedVert, playerOneVert, playerTwoVert, background, yesButton, noButton;
 	final Game game;
-
 	private ArrayList<Property> list;
+
 	
 	// study executors 
 	private ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -32,7 +33,7 @@ public class SimpleSlickGame extends BasicGame {
 	// remember that we are able to call specialized methods on specialized
 	// players (in addition to what we inherit)
 	GuiPlayer playerB = new GuiPlayer("Thimble");
-
+	
 	public SimpleSlickGame(String gamename) {
 		super(gamename);
 		game = new Game(playerA, playerB);
@@ -41,22 +42,22 @@ public class SimpleSlickGame extends BasicGame {
 	@Override
 	public void init(GameContainer gc) throws SlickException {
 
-		imgBoard = new Image("res/board.jpg");
-		imgDog = new Image("res/dog.png");
-		imgThimble = new Image("res/thimble.png");
-		imgHouse = new Image("res/house.png");
-		imgHotel = new Image("res/hotel.png");
+		board = new Image("res/board.jpg");
+		dog = new Image("res/dog.png");
+		thimble = new Image("res/thimble.png");
+		house = new Image("res/house.png");
+		hotel = new Image("res/hotel.png");
 
-		imgPlayerOneHor = new Image("res/playerone.png");
-		imgPlayerOneVert = new Image("res/playeronevert.png");
-		imgPlayerTwoHor = new Image("res/playertwo.png");
-		imgPlayerTwoVert = new Image("res/playertwovert.png");
-		imgMortgaged = new Image("res/mortgaged.png");
-		imgMortgagedVert = new Image("res/mortgagedvert.png");
+		playerOneHor = new Image("res/playerone.png");
+		playerOneVert = new Image("res/playeronevert.png");
+		playerTwoHor = new Image("res/playertwo.png");
+		playerTwoVert = new Image("res/playertwovert.png");
+		mortgagedHor = new Image("res/mortgaged.png");
+		mortgagedVert = new Image("res/mortgagedvert.png");
 
-		imgQuestionBackground = new Image("res/back.png");
-		imgYesButton = new Image("res/yes.png");
-		imgNoButton = new Image("res/no.png");
+		background = new Image("res/back.png");
+		yesButton = new Image("res/yes.png");
+		noButton = new Image("res/no.png");
 
 		executor.submit(new Callable<Void>() {
 			@Override
@@ -82,21 +83,21 @@ public class SimpleSlickGame extends BasicGame {
 
 	@Override
 	public void render(GameContainer gc, Graphics g) throws SlickException {
-		imgBoard.draw(0, 0, 768, 768);
+		board.draw(0, 0, 768, 768);
 		
-		drawPlayer(g, playerA, imgDog);
-		drawPlayer(g, playerB, imgThimble);
+		drawPlayer(g, playerA, dog);
+		drawPlayer(g, playerB, thimble);
 
-		for (int i = 0; i < game.boardProperties.size(); i++) {
-			drawOwnership(game.boardProperties.get(i));
-			drawMortgages(game.boardProperties.get(i));
-			drawHouses(game.boardProperties.get(i));
+		for (int i = 0; i < game.getBoardProperties().size(); i++) {
+			drawOwnership(game.getBoardProperties().get(i));
+			drawMortgages(game.getBoardProperties().get(i));
+			drawHouses(game.getBoardProperties().get(i));
 		}
 
 		if (playerB.getStatusType() == StatusType.BOOLEAN) {
 			drawPrompt(g, 200);
-			imgYesButton.draw(265, 400, 110, 45);
-			imgNoButton.draw(395, 400, 110, 45);
+			yesButton.draw(265, 400, 110, 45);
+			noButton.draw(395, 400, 110, 45);
 		}
 
 		else if (playerB.getStatusType() == StatusType.LIST) {
@@ -107,36 +108,6 @@ public class SimpleSlickGame extends BasicGame {
 				g.drawString(list.get(i).getName(), 240, (400 + i * 30));
 			}
 		}
-	}
-
-	public void drawPrompt(Graphics g, int height) {
-		imgQuestionBackground.draw(200, 270, 370, height);
-
-		// word wrap method: first, split string into separate words. get the length of each word. 
-		// if width of the current string > 220, draw the current string and reset strbuff
-		String[] words = playerB.getPrompt().split(" ");
-		StringBuffer strbuff = new StringBuffer();
-
-		int stringWidth = 0;
-		int lineCount = 0;
-		for (int i = 0; i < words.length; i++) {
-			int wordWidth = g.getFont().getWidth(words[i]);
-			stringWidth += wordWidth;
-			strbuff.append(words[i] + " ");
-			
-			if (stringWidth > 220) {
-				g.drawString(strbuff.toString(), 230, (300 + (lineCount * 20)));
-				stringWidth = 0;
-				strbuff.setLength(0);
-				lineCount++;
-			}
-		}
-		g.drawString(strbuff.toString(), 230, (300 + (lineCount * 20)));
-	}
-	
-	public void drawPlayer(Graphics g, Player player, Image image) {
-		int index = player.getLocation().getLocationIndex(game.boardProperties);
-		image.draw(tokenPosition(index).getX(), tokenPosition(index).getY(), 50, 50);
 	}
 
 	public void mouseReleased(int button, int x, int y) {
@@ -171,85 +142,141 @@ public class SimpleSlickGame extends BasicGame {
 			}
 		}
 	}
+
 	
-	public Position propertyOwnershipPosition(int locationIndex) {
-		return positionHelperMethod(locationIndex, 758, 0, 667, 63);
+	public void drawPlayer(Graphics g, Player player, Image image) {
+		Property property = player.getLocation();
+		image.draw(tokenPosition(property).getX(), tokenPosition(property).getY(), 50, 50);
 	}
-
 	public void drawOwnership(Property property) {
-		int index = property.getLocationIndex(game.boardProperties);
-
 		if (property.getPropertyOwner() == playerA) {
-			if ((index > 0 && index < 10) || (index > 20 && index < 30)) {
-				imgPlayerOneHor.draw(propertyOwnershipPosition(index).getX(), propertyOwnershipPosition(index).getY(),
-						63, 10);
-			} else {
-				imgPlayerOneVert.draw(propertyOwnershipPosition(index).getX(), propertyOwnershipPosition(index).getY(),
-						10, 63);
-			}
-		} 
-		else if (property.getPropertyOwner() == playerB) {
-			if ((index > 0 && index < 10) || (index > 20 && index < 30)) {
-				imgPlayerTwoHor.draw(propertyOwnershipPosition(index).getX(), propertyOwnershipPosition(index).getY(),
-						63, 10);
-			} 
-			else {
-				imgPlayerTwoVert.draw(propertyOwnershipPosition(index).getX(), propertyOwnershipPosition(index).getY(),
-						10, 63);
-			}
+			drawHelperMethod(property, playerOneHor, playerOneVert, propertyOwnershipPosition(property));
+		}
+		else if (property.getPropertyOwner() == playerA) {
+			drawHelperMethod(property, playerTwoHor, playerTwoVert, propertyOwnershipPosition(property));
 		}
 	}
-
-	public Position housePosition(int locationIndex) {
-		return positionHelperMethod(locationIndex, 665, 75, 667, 63);
+	public void drawMortgages(Property property) {
+		if (property.getMortgageStatus()) {
+			drawHelperMethod(property, mortgagedHor, mortgagedVert, mortgagedPropertyPosition(property));
+		}
+	}	
+	// helps draw ownership and mortgages
+	public void drawHelperMethod(Property property, Image imageHor, Image imageVert, Position position) {
+		int index = property.getLocationIndex(game.getBoardProperties());
+		
+		// horizontal properties
+		if ((index > 0 && index < 10) || (index > 20 && index < 30)) {
+			imageHor.draw(position.getX(), position.getY(), 63, 10);
+		}
+		else { // vertical properties
+			imageVert.draw(position.getX(), position.getY(), 10, 63);
+		}
 	}
-
 	public void drawHouses(Property property) {
-		int index = property.getLocationIndex(game.boardProperties);
 		int numberOfHouses = property.getNumberOfHouses();
 
 		if (numberOfHouses == 5) {
-			if ((index > 0 && index < 10) || (index > 20 && index < 30)) { // row 1 or row 3
-				imgHotel.draw((housePosition(index).getX()) + 20, housePosition(index).getY(), 30, 30);
-			} 
-			else { // row 2 or row 4
-				imgHotel.draw(housePosition(index).getX(), (housePosition(index).getY()) + 20, 30, 30);
-			} 
+			drawHousesHelperMethod(property, hotel, housePosition(property), 20, 30);
 		} 
 		else {
 			for (int i = 0; i < numberOfHouses; i++) {
-				if ((index > 0 && index < 10) || (index > 20 && index < 30)) {
-					imgHouse.draw(housePosition(index).getX() + (i * 13), housePosition(index).getY(), 25, 25);
-				} 
-				else {
-					imgHouse.draw(housePosition(index).getX(), housePosition(index).getY() + (i * 13), 25, 25);
-				}
+				drawHousesHelperMethod(property, house, housePosition(property), i * 13, 25);
 			}
 		}
 	}
-
-	public Position mortgagedPropertyPosition(int locationIndex) {
-		return positionHelperMethod(locationIndex, 748, 10, 667, 63);
-	}
-
-	public void drawMortgages(Property property) {
-		int index = property.getLocationIndex(game.boardProperties);
-
-		if (property.getMortgageStatus()) {
-			if ((index > 0 && index < 10) || (index > 20 && index < 30)) {
-				imgMortgaged.draw(mortgagedPropertyPosition(index).getX(), mortgagedPropertyPosition(index).getY(), 63,
-						10);
-			} else {
-				imgMortgagedVert.draw(mortgagedPropertyPosition(index).getX(), mortgagedPropertyPosition(index).getY(),
-						10, 63);
-			}
+	public void drawHousesHelperMethod(Property property, Image image, Position position, int fudge, int size) {
+		int index = property.getLocationIndex(game.getBoardProperties());
+		
+		if ((index > 0 && index < 10) || (index > 20 && index < 30)) {
+			image.draw(position.getX() + fudge, position.getY(), size, size);
+		}
+		else { // vertical properties
+			image.draw(position.getX(), position.getY() + fudge, size, size);
 		}
 	}
+	public void drawPrompt(Graphics g, int height) {
+		background.draw(200, 270, 370, height);
 
-	public Position tokenPosition(int locationIndex) {
-		return positionHelperMethod(locationIndex, 700, 20, 660, 60);
+		// word wrap method: first, split string into separate words. get the length of each word. 
+		// if width of the current string > 220, draw the current string and reset strbuff
+		String[] words = playerB.getPrompt().split(" ");
+		StringBuffer strbuff = new StringBuffer();
+
+		int stringWidth = 0;
+		int lineCount = 0;
+		for (int i = 0; i < words.length; i++) {
+			int wordWidth = g.getFont().getWidth(words[i]);
+			stringWidth += wordWidth;
+			strbuff.append(words[i] + " ");
+			
+			if (stringWidth > 220) {
+				g.drawString(strbuff.toString(), 230, (300 + (lineCount * 20)));
+				stringWidth = 0;
+				strbuff.setLength(0);
+				lineCount++;
+			}
+		}
+		g.drawString(strbuff.toString(), 230, (300 + (lineCount * 20)));
 	}
 
+	
+	// these Position methods set the X and Y coordinates of ownership, mortgage, houses, and tokens
+	public Position propertyOwnershipPosition(Property property) {
+		return positionHelperMethod(property, 758, 0, 667, 63);
+	}
+	public Position mortgagedPropertyPosition(Property property) {
+		return positionHelperMethod(property, 748, 10, 667, 63);
+	}
+	public Position housePosition(Property property) {
+		return positionHelperMethod(property, 665, 75, 667, 63);
+	}
+	public Position tokenPosition(Property property) {
+		return positionHelperMethod(property, 700, 20, 660, 60);
+	}
+	// sets position for token, property ownership, house, and mortgage methods
+	public Position positionHelperMethod(Property property, int a, int b, int c, int d) {
+		int index = property.getLocationIndex(game.getBoardProperties());
+		Position position = new Position(0, 0);
+		
+		if (index > 0 && index < 10) {
+			position.setY(a);
+			position.setX(c - (index * d));
+		}
+		else if (index > 10 && index < 20) {
+			position.setX(b);
+			position.setY(c - (index % 10) * d);
+		}
+		else if (index > 20 && index < 30) {
+			position.setY(b);
+			position.setX(c - ((10 - (index % 20)) * d));	
+		}
+		else if (index > 30 && index < 40) {
+			position.setX(a);
+			position.setY(c - ((10 - (index % 30)) * d));
+		}
+		else {
+			if (index == 0 || index == 30) {
+				position.setX(720);
+			}
+			else if (index == 10 || index == 20) {
+				position.setX(50);
+			}
+			if (index == 0 || index == 10) {
+				position.setY(720);
+			}
+			else if (index == 20 || index == 30) {
+				position.setY(50);
+			}
+		}
+		return position;
+	}
+	
+	
+	public ArrayList<Property> getList() {
+		return list;
+	}
+	
 	public static void main(String[] args) {
 		try {
 			AppGameContainer appgc;
@@ -259,46 +286,5 @@ public class SimpleSlickGame extends BasicGame {
 		} catch (SlickException ex) {
 			Logger.getLogger(SimpleSlickGame.class.getName()).log(Level.SEVERE, null, ex);
 		}
-	}
-
-	public ArrayList<Property> getList() {
-		return list;
-	}
-	
-	public Position positionHelperMethod(int locationIndex, int a, int b, int c, int d) {
-		Position position = new Position(0, 0);
-		
-		if (locationIndex > 0 && locationIndex < 10) {
-			position.setY(a);
-			position.setX(c - (locationIndex * d));
-		}
-		else if (locationIndex > 10 && locationIndex < 20) {
-			position.setX(b);
-			position.setY(c - (locationIndex % 10) * d);
-		}
-		else if (locationIndex > 20 && locationIndex < 30) {
-			position.setY(b);
-			position.setX(c - ((10 - (locationIndex % 20)) * d));	
-		}
-		else if (locationIndex > 30 && locationIndex < 40) {
-			position.setX(a);
-			position.setY(c - ((10 - (locationIndex % 30)) * d));
-		}
-		else {
-			if (locationIndex == 0 || locationIndex == 30) {
-				position.setX(720);
-			}
-			else if (locationIndex == 10 || locationIndex == 20) {
-				position.setX(50);
-			}
-			if (locationIndex == 0 || locationIndex == 10) {
-				position.setY(720);
-			}
-			else if (locationIndex == 20 || locationIndex == 30) {
-				position.setY(50);
-			}
-		}
-		return position;
-		//return positionHelperMethod(locationIndex, 700, 20, 660, 60);
 	}
 }

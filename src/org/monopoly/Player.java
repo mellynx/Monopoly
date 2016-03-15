@@ -9,7 +9,7 @@ public abstract class Player {
 	int balance, jailTime;
 	boolean getOutOfJailFreeCard;
 	Property position;
-	ArrayList<Set<Property>> housableSets; //A
+	ArrayList<Set<Property>> housableSets; 
 	ArrayList<Property> propertiesOwned;
 	ArrayList<Property> mortgagedProperties = new ArrayList<>();
 	
@@ -104,7 +104,7 @@ public abstract class Player {
 		System.out.println(this + " has $" + getBalance() + " left.");
 	}
 	
-	//use this same prompt as a check for buying properties, houses, AND mortgaging properties
+	//use this same prompt as a check for buying properties, houses, mortgaging properties, and jail 
 	public abstract boolean doYouWantToDoThis(String prompt) throws InterruptedException; //no body for abstract methods
 
 	public abstract Property buyHouseB(ArrayList<Property> currentHousableProperties) throws InterruptedException;

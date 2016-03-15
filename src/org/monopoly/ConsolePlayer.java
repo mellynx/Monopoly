@@ -8,9 +8,9 @@ import java.util.ArrayList;
 public class ConsolePlayer extends Player {
 
 	// note the combination of buffered and input stream reader
-	// TODO: Make this private and final. No one else besides things in this
+	// Make this private and final. No one else besides things in this
 	// class should use it and it should never be reassigned.
-	BufferedReader keyboard = new BufferedReader(new InputStreamReader(System.in));
+	private final BufferedReader keyboard = new BufferedReader(new InputStreamReader(System.in));
 
 	public ConsolePlayer(String playerToken) {
 		super(playerToken);
@@ -38,40 +38,21 @@ public class ConsolePlayer extends Player {
 
 		String prompt = "Press the number of the property where you'd like to buy a house, or 0 to stop buying houses.";
 
-		Property buyHouseResult = selectingFromList(propsWhereYouCanBuyHouse, prompt); // TODO:
-																						// You
-																						// can
-																						// collapse
-																						// these
-																						// two
-																						// lines
-																						// to
-																						// just:
-																						// return
-																						// selectingFromList(....,
-																						// same
-																						// with
-																						// the
-																						// other
-																						// two
-																						// places.
-		return buyHouseResult;
+		return selectingFromList(propsWhereYouCanBuyHouse, prompt);
 	}
 
 	public Property mortgagePropertiesB(ArrayList<Property> propertiesOwned) {
 
 		String prompt = "Select the number of the property that you'd like to mortgage, or 0 to stop mortgaging properties.";
 
-		Property mortgagePropertiesResult = selectingFromList(propertiesOwned, prompt);
-		return mortgagePropertiesResult;
+		return selectingFromList(propertiesOwned, prompt);
 	}
 
 	public Property unmortgageB(ArrayList<Property> mortgagedProperties) {
 
 		String prompt = "Select the number of the property that you'd like to unmortgage, or 0 to stop unmortgaging properties.";
 
-		Property unmortgagedResult = selectingFromList(mortgagedProperties, prompt);
-		return unmortgagedResult;
+		return selectingFromList(mortgagedProperties, prompt);
 	}
 
 	public Property selectingFromList(ArrayList<Property> arrayListProperties, String prompt) {
@@ -95,9 +76,16 @@ public class ConsolePlayer extends Player {
 
 		int c = Integer.parseInt(input);
 
-		// TODO: You should also check if they chose a number longer than the
-		// array.
-		if (c != 0) {
+		while (c > arrayListProperties.size() + 1 || c < 1) {
+			System.out.println("Please try again.");
+			try {
+				input = keyboard.readLine();
+				c = Integer.parseInt(input);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		if (c > 0 && c < arrayListProperties.size() + 1) {
 			Property t = arrayListProperties.get(c - 1);
 			return t;
 		}

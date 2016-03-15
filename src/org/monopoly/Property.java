@@ -57,11 +57,9 @@ public class Property {
 	  rentType = RentType.NONE;
 	}
 	
-	
 	public void setPropertyOwner(Player owner) {
 		this.owner = owner;	// using this in setters and getters
 	}
-	
 	
 	public String getName() {
 		return name;
@@ -133,7 +131,6 @@ public class Property {
 			}
 		}
 	}
-	
 	
 	public void addOneHouse() {
 		numberOfHouses++;

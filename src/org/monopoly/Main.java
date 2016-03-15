@@ -6,10 +6,15 @@ import java.io.IOException;
 public class Main {
 	public static void main(String[] args) throws IOException {
 		/*
-		 * Player playerA = new RandomPlayer ("Dog"); 
-		 * Player playerB = new RandomPlayer ("Thimble");
-		 * 
-		 * Game game = new Game(playerA, playerB); game.playGame();
-		 */
+		 Player playerA = new RandomPlayer ("Dog"); 
+		 Player playerB = new RandomPlayer ("Thimble");
+		 
+		 Game game = new Game(playerA, playerB); 
+		 try {
+			game.playGame();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		*/
 	}
 }
