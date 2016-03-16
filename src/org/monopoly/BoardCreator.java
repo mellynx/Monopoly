@@ -19,7 +19,6 @@ public class BoardCreator {
 	}
 
 	public void addProperties() {
-		// remember you have to CALL add properties
 		
 		Set<Property> brown = new HashSet<Property>();
 		Set<Property> lightBlue = new HashSet<Property>();

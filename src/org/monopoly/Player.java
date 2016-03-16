@@ -9,7 +9,7 @@ public abstract class Player {
 	int balance, jailTime;
 	boolean getOutOfJailFreeCard;
 	Property position;
-	ArrayList<Set<Property>> housableSets; 
+	ArrayList<Set<Property>> monopoliesList; 
 	ArrayList<Property> propertiesOwned;
 	ArrayList<Property> mortgagedProperties = new ArrayList<>();
 	ArrayList<Property> unmortgagedProperties = new ArrayList<>();
@@ -19,7 +19,7 @@ public abstract class Player {
 		this.balance = 1500;
 		this.jailTime = -1;
 		this.getOutOfJailFreeCard = false;
-		housableSets = new ArrayList<>();	// (A) the list of sets a player can buy houses at, which starts at empty. Here we're setting the class variable
+		monopoliesList = new ArrayList<>();	
 		propertiesOwned = new ArrayList<>();
 	}
 	public void setBalance(int money) {
@@ -35,12 +35,11 @@ public abstract class Player {
 		jailTime = jailCount;
 	}
 	
-	
 	public void addJailTime() {
 		setJailTime(getJailTime() + 1);
 	}
-	public void addToHousableSets (Set<Property> a) { // the list of properties on which a player is eligible to build a house
-		housableSets.add(a);
+	public void addToMonopolies (Set<Property> a) { 
+		monopoliesList.add(a);
 	}
 	public void addToPropertiesOwnedList (Property property) {
 		propertiesOwned.add(property);
@@ -52,14 +51,12 @@ public abstract class Player {
 		mortgagedProperties.remove(property);
 	}
 	
-	
 	public void addMoney(int money) {
 		setBalance(getBalance() + money);
 	}
 	public void subtractMoney(int money) {
 		setBalance(getBalance() - money);
 	}
-	
 	
 	public String getToken() {
 		return playerToken;
@@ -77,7 +74,7 @@ public abstract class Player {
 		return getOutOfJailFreeCard;
 	}
 	public ArrayList<Set<Property>> getHousableSetList() {
-		return housableSets;
+		return monopoliesList;
 	}
 	public ArrayList<Property> getPropertiesOwned() {
 		return propertiesOwned;
@@ -86,7 +83,6 @@ public abstract class Player {
 		return mortgagedProperties;
 	}
 	public ArrayList<Property> getUnmortgagedProperties() {
-		// using add all and remove all
 		unmortgagedProperties.addAll(mortgagedProperties);
 		unmortgagedProperties.removeAll(mortgagedProperties);
 		return unmortgagedProperties;
@@ -110,7 +106,6 @@ public abstract class Player {
 		}
 		return hotelCount;
 	}
-	
 	
 	public String toString() {
 		return getToken().toString();
@@ -144,7 +139,7 @@ public abstract class Player {
 		System.out.println(this + " now has $" + getBalance());
 	}
 	public void handleMortgaging(Property property) {
-		addToMortgagedProperties(property); // use the add method, don't add directly to the list  
+		addToMortgagedProperties(property);   
 		property.changeMortgageStatus();
 		addMoney(property.getMortgageCost());
 		System.out.println(this + " has mortgaged " + property);
@@ -160,7 +155,7 @@ public abstract class Player {
 	}
 	
 	//use this same prompt as a check for buying properties, houses, mortgaging properties, and jail 
-	public abstract boolean chooseYesOrNo(String prompt); //no body for abstract methods
+	public abstract boolean chooseYesOrNo(String prompt); 
 
 	public abstract Property selectWhereToBuyHouse (ArrayList<Property> currentHousableProperties);
 	

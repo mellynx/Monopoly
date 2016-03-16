@@ -11,30 +11,20 @@ import org.monopoly.Property.SpecialType;
 import java.util.Map;
 
 public class Game {
-
-	// the list of all properties on the board
-	private final ArrayList<Property> boardProperties = new ArrayList<Property>();
-
+	
 	// maps each property to what set (color) of properties it belongs to
 	private final Map<Property, Set<Property>> map = new HashMap<>();
-
+	private final ArrayList<Property> boardProperties = new ArrayList<Property>();
 	private final Player playerOne, playerTwo;
 	private final Random random;
-
-	/* Kind of cool random phrase generator 
-	private static String[] phrases = { "Player owns this property and nothing happens to this player.", "Any other phrase you want." };
-	String phrase = phrases[(int) (Math.random() * phrases.length)];
-	*/
 
 	public Game(Player playerOne, Player playerTwo) {
 		this.playerOne = playerOne;
 		this.playerTwo = playerTwo;
-		random = new Random();
 		
-		// the three calls below are in the constructor because they are involved in the setup of the game 
-		// note how we call the board creator class 
+		random = new Random();
 		new BoardCreator(boardProperties, map).addProperties(); 
-		// players start at the first property on the arrayList
+
 		playerOne.setLocation(boardProperties.get(0)); 
 		playerTwo.setLocation(boardProperties.get(0));
 	}
@@ -77,8 +67,6 @@ public class Game {
 		}
 
 		if (checkBalance(thisPlayer, otherPlayer)) {
-			// return void means to exit out of the method at that statement,
-			// without running the following statements.
 			return true;
 		}
 		// Thread.sleep(2000);
@@ -92,11 +80,9 @@ public class Game {
 	}
 	private Property moveSpace(Player player, int roll) {
 
-		// get the current index of where the player is
 		int index = player.getLocation().getLocationIndex(boardProperties);
 		index += roll;
 		
-		// giving players $200 every time they pass Go
 		if (index >= boardProperties.size()) {
 			System.out.println("Collect $200 for passing Go.");
 			player.setBalance(player.getBalance() + 200);
@@ -213,8 +199,7 @@ public class Game {
 	}
 
 	public void payRent(Player player, Property landedProperty, int diceRoll) {
-		// prints statement of what's happening; deducts rent from player's
-		// balance; prints out his new balance; adds rent to other player's balance
+
 		System.out.println(player + " has paid $" + landedProperty.getRentCost(diceRoll) + " in rent to "
 				+ landedProperty.getPropertyOwner() + " for landing on " + landedProperty);
 		player.subtractMoney(landedProperty.getRentCost(diceRoll)); 
@@ -222,6 +207,7 @@ public class Game {
 		landedProperty.getPropertyOwner().addMoney(landedProperty.getRentCost(diceRoll));
 	}
 	public void buyProperty(Player player, Property landedProperty) {
+		
 		System.out.println(player + " has bought " + landedProperty + " for $" + landedProperty.getBuyCost());
 		player.subtractMoney(landedProperty.getBuyCost());
 		System.out.println(player + " has $" + player.getBalance() + " left.");
@@ -266,17 +252,10 @@ public class Game {
 		}
 	}
 	
-	/**
-	 * javadoc documentation. note the two stars above the method below checks
-	 * whether a property that a player owns is part of a property set/color
-	 * where he can buy houses the method does not check whether he has enough
-	 * money to
-	 */
 	public boolean isPropertyPartOfMonopoly(Player player, Property landedProperty) {
 		Set<Property> color = map.get(landedProperty);
 
-		// cannot call a method on a null object
-		// ensure that utilities and railroads aren't eligible for monopolies
+		// railroads and utilities aren't eligible for monopolies
 		for (Property a : color) {
 			if (a.getPropertyOwner() != player || landedProperty.getRentType() == RentType.UTILITY
 					|| landedProperty.getRentType() == RentType.RAILROAD) {
@@ -286,13 +265,14 @@ public class Game {
 		return true;
 	}
 	public void addMonopoly(Player player, Property landedProperty) {
+		
 		System.out.println(player + " has achieved a monopoly for " + map.get(landedProperty));
 		Set<Property> color = map.get(landedProperty);
-		player.addToHousableSets(color);
+		player.addToMonopolies(color);
+		
 	}
 	public void checkMonopolies(Player player) { 
-		// don't ask the below prompt if the "generate" list is null (either
-		// because houses have been maxed out or player does not have enough money)
+
 		if (getBuyableHouseLocations(player, player.getHousableSetList()).size() > 0) {
 
 			String prompt = "Player has completed a monopoly and is eligible to buy houses. Would you like to buy any houses? (y/n)";
@@ -317,11 +297,11 @@ public class Game {
 		}
 	}
 
+	// find the minimum and maximum house number in any given monopoly
 	public int findMinimumHouseNumber(Set<Property> monopoly) {
 		
 		int minHouseCount = 100;
 
-		// loop through each property in the set to find the minimum house number
 		for (Property property : monopoly) {
 			if (property.getNumberOfHouses() < minHouseCount) {
 				minHouseCount = property.getNumberOfHouses();
@@ -333,7 +313,6 @@ public class Game {
 		
 		int maxHouseCount = 0;
 
-		// loop through each property in the set to find the minimum house number
 		for (Property property : monopoly) {
 			if (property.getNumberOfHouses() > maxHouseCount) {
 				maxHouseCount = property.getNumberOfHouses();
@@ -342,22 +321,19 @@ public class Game {
 		return maxHouseCount;
 	}
 	
+	// loops through all monopolies, and all properties within each monopoly 
+	// to find the properties where player can buy a house 
+	// player must have enough money, houses must be built evenly, houses must not be maxed out, and no property in that monopoly can be mortgaged
 	public ArrayList<Property> getBuyableHouseLocations(Player player, ArrayList<Set<Property>> monopolies) {
 		
 		ArrayList<Property> houseableProperties = new ArrayList<>();
 
-		// loop through all monopolies to select each monopoly one by one
 		for (int i = 0; i < monopolies.size(); i++) {
 			Set<Property> monopoly = monopolies.get(i);
 
-			// for each set, return minimum house number across the properties for that set
 			int minHouseCountPerSet = findMinimumHouseNumber(monopoly);
 
-			// looping through every property in a set
 			for (Property property : monopoly) {
-				// if player can afford a house there, if the houses are being
-				// built evenly, if there aren't already the max number of
-				// houses, and no property of that color is mortgaged -- then add that property to the list we present to the player
 				if (player.getBalance() > property.getHouseCost() && property.getNumberOfHouses() == minHouseCountPerSet 
 						&& property.getNumberOfHouses() < 5 && !doesMonopolyHaveMortgages(property)) {
 					houseableProperties.add(property);
@@ -433,7 +409,7 @@ public class Game {
 	public void beingInJail(Player player) {
 		/*
 		 * In JAIL, player status JailTime = -1 if player is not in jail (or has
-		 * just gotten out of jail) 0 if player has just landed in jail and 1-3
+		 * just gotten out of jail), 0 if player has just landed in jail, and 1-3
 		 * for the subsequent rolls player tries to make to get out of jail
 		 */
 
@@ -447,7 +423,7 @@ public class Game {
 			System.out.println(player + " has rolled out of jail!");
 			player.setJailTime(-1);
 			
-			// 10 is the locationIndex of jail, aka where the player is starting from 
+			// 10 is the locationIndex of jail, i.e. where the player is starting from 
 			int index = 10 + diceOne + diceTwo; 
 			System.out.println(player + " has landed on " + boardProperties.get(index));
 			player.setLocation(boardProperties.get(index));
@@ -457,7 +433,7 @@ public class Game {
 			player.addJailTime();
 			System.out.println("Player is still in jail and has rolled " + player.getJailTime() + " times.");
 
-			// if player has get out of jail free card, use it, get out jail, do not move until next turn
+			// if player has get out of jail free card, use it, do not move until next turn
 			if (player.getOutOfJailFreeCard) {
 				System.out.println(player + " has used a get-out-of-jail-free card.");
 				player.setGetOutOfJailFreeCard(false);
@@ -484,7 +460,7 @@ public class Game {
 		SpecialType type = property.getSpecialType();
 		
 		switch (type) {
-		// Go -- collecting $200 cannot be done here because you collect that every time you PASS go
+		
 		case GO: 
 			break;
 		case JAIL: 
@@ -530,9 +506,7 @@ public class Game {
 		switch (rand) {
 		case 0:
 			System.out.println("Community Chest: Collect $50 from every player.");
-			player.addMoney(50);
-			
-			// use this to refer to OtherPlayer rather than passing it down through a bunch of methods 
+			player.addMoney(50); 
 			referToOtherPlayer(player).subtractMoney(50);
 			break;
 		case 1:

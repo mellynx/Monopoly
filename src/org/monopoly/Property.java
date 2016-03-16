@@ -11,7 +11,7 @@ public class Property {
 	RentSchedule rentSchedule;
 	boolean buyable = true;
 	boolean mortgageStatus = false;
-	RentType rentType; // below, enum only tells us what the possible categories for enum are. Here, we must declare the class and variable
+	RentType rentType; 
 	SpecialType specialType;
 	
 	enum RentType {
@@ -29,8 +29,7 @@ public class Property {
 		this.mortgageCost = mortgageCost;
 		this.numberOfHouses = 0;
 		this.rentSchedule = rentSchedule;
-		rentType = RentType.REGULAR;  // this is weird format. yeah get used to it. You have to put RentType. in all the parameters passed
-		// you can initialize stuff in a constructor without taking it as a parameters. number of houses starts at 0 for all properties
+		rentType = RentType.REGULAR;  
 	}
 	// constructor for railroads
 	public Property(String name, RentType rentType, RentSchedule rentSchedule) {
@@ -50,8 +49,6 @@ public class Property {
 		houseCost = 0;
 	}
 	// constructor for board properties (like "Go")
-	// buyable is now default true for all properties except board properties
-	// houseCost and buyCost must be initialized because they are final, which means they can only be set once. AKA they must be set here
 	public Property(String name, SpecialType specialType) {
 	  this.name = name;
 	  this.specialType = specialType;
@@ -63,7 +60,7 @@ public class Property {
 	}
 	
 	public void setPropertyOwner(Player owner) {
-		this.owner = owner;	// using this in setters and getters
+		this.owner = owner;	
 	}
 	
 	public String getName() {
@@ -81,13 +78,15 @@ public class Property {
 	public int getNumberOfHouses() {
 		return numberOfHouses;
 	}
-	public RentType getRentType() { // figure out if a property is regular, utility, railroad, etc
+	// figure out if a property is regular, utility, railroad, etc
+	public RentType getRentType() { 
 		return rentType;
 	}
 	public SpecialType getSpecialType() {
 		return specialType;
 	}
-	public boolean getBuyableStatus() { // separates board properties from all other properties
+	// separates board properties from all other properties
+	public boolean getBuyableStatus() { 
 		return buyable;
 	}
 	public boolean getMortgageStatus() {
@@ -97,7 +96,7 @@ public class Property {
 		return mortgageCost;
 	}
 	public int getLocationIndex(ArrayList<Property> boardOfProperties) {
-		// below, access the current property by using 'this'
+		
 		int locationIndex = 0;
 		
 		for (int i = 0; i < boardOfProperties.size(); i++) {
@@ -108,6 +107,7 @@ public class Property {
 		return locationIndex;
 	}
 	public int getRentCost(int dice) {
+		
 		if (rentType == RentType.REGULAR) {
 			return rentSchedule.getRent(getNumberOfHouses());
 		}

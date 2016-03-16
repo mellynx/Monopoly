@@ -4,10 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class RentSchedule {
-	int rent, house1, house2, house3, house4, hotel, railroad1, railroad2, railroad3, railroad4;
 	
-	//static means it is the same thing across instances of the class
-	// not static means there is one for each instance of the class
+	int rent, house1, house2, house3, house4, hotel, railroad1, railroad2, railroad3, railroad4;
 	Map<Integer, Integer> map = new HashMap<>();
 	
 	// for regular properties
@@ -26,7 +24,7 @@ public class RentSchedule {
 		map.put(3, railroad3);
 		map.put(4, railroad4);
 	}
-	// never put code outside of a method
+
 	public int getRent(int houseOrRailroad) {
 		return map.get(houseOrRailroad);
 	}

@@ -28,7 +28,7 @@ public class RandomPlayer extends Player {
 	}
 
 	public Property selectWhereToBuyHouse(ArrayList<Property> propsWhereYouCanBuyHouse) {
-		// if there are properties in the housable list, pick a random property from this list
+		// if there are properties where player can buy a house, pick one of these properties at random
 		// if the player has (house*2) amount of money, buy a house there
 		if (propsWhereYouCanBuyHouse.size() > 0) {
 			int randomInt = random.nextInt(propsWhereYouCanBuyHouse.size());
@@ -55,13 +55,8 @@ public class RandomPlayer extends Player {
 	}
 
 	public Property selectWhatToMortgage(ArrayList<Property> mortgageableProperties) {
-		// above, with propsWhereYouCanMortgage list, remember that this is not the
-		// original propertiesOwned list being passed in, but the list that's
-		// being passed in from morgagePropertiesA. NAMING is very important
-		
-		// the arrayList that is passed in here is: properties that a player owns that are not already mortgaged
 
-		// if player owns unmortgaged properties, and has less than $500, mortgage/return that property
+		// if player owns unmortgaged properties and has less than $500, mortgage/return that property
 		if (mortgageableProperties.size() > 0 && this.getBalance() < 500) {
 
 			int randomProperty = random.nextInt(mortgageableProperties.size());

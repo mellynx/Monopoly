@@ -26,12 +26,9 @@ public class SimpleSlickGame extends BasicGame {
 		BOARD, DOG, THIMBLE, HOUSE, HOTEL, PLAYER_ONE_HOR, PLAYER_TWO_HOR, MORTGAGED_HOR, MORTGAGED_VERT, PLAYER_ONE_VERT, PLAYER_TWO_VERT, BACKGROUND, YES_BUTTON, NO_BUTTON;
 	}
 
-	// study executors 
 	private ExecutorService executor = Executors.newSingleThreadExecutor();
 
 	Player playerA = new RandomPlayer("Dog");
-	// remember that we are able to call specialized methods on specialized
-	// players (in addition to what we inherit)
 	GuiPlayer playerB = new GuiPlayer("Thimble");
 	
 	public SimpleSlickGame(String gamename) {
@@ -144,7 +141,6 @@ public class SimpleSlickGame extends BasicGame {
 			}
 		}
 	}
-
 	
 	public void drawPlayer(Graphics g, Player player, Image image) {
 		Property property = player.getLocation();
@@ -225,7 +221,6 @@ public class SimpleSlickGame extends BasicGame {
 		}
 		g.drawString(strbuff.toString(), 230, (300 + (lineCount * 20)));
 	}
-
 	
 	// these Position methods set the X and Y coordinates of ownership, mortgage, houses, and tokens
 	public Position propertyOwnershipPosition(Property property) {
@@ -240,7 +235,6 @@ public class SimpleSlickGame extends BasicGame {
 	public Position tokenPosition(Property property) {
 		return positionHelperMethod(property, 700, 20, 660, 60);
 	}
-	// sets position for token, property ownership, house, and mortgage methods
 	public Position positionHelperMethod(Property property, int a, int b, int c, int d) {
 		int index = property.getLocationIndex(game.getBoardProperties());
 		Position position = new Position(0, 0);
@@ -277,7 +271,6 @@ public class SimpleSlickGame extends BasicGame {
 		}
 		return position;
 	}
-	
 	
 	public ArrayList<Property> getList() {
 		return list;

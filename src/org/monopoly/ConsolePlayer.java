@@ -7,9 +7,6 @@ import java.util.ArrayList;
 
 public class ConsolePlayer extends Player {
 
-	// note the combination of buffered and input stream reader
-	// Make this private and final. No one else besides things in this
-	// class should use it and it should never be reassigned.
 	private final BufferedReader keyboard = new BufferedReader(new InputStreamReader(System.in));
 
 	public ConsolePlayer(String playerToken) {
@@ -35,34 +32,27 @@ public class ConsolePlayer extends Player {
 	}
 
 	public Property selectWhereToBuyHouse(ArrayList<Property> propsWhereYouCanBuyHouse) {
-
 		String prompt = "Press the number of the property where you'd like to buy a house, or 0 to stop buying houses.";
 		return selectingFromList(propsWhereYouCanBuyHouse, prompt);
 	}
 	
 	public Property selectWhereToSellHouse(ArrayList<Property> propsWhereYouCanSellHouse) {
-		
 		String prompt = "Press the number of the property where you'd like to sell a house, or 0 to stop selling houses.";
 		return selectingFromList(propsWhereYouCanSellHouse, prompt);
 	}
 
 	public Property selectWhatToMortgage(ArrayList<Property> mortgageableProperties) {
-
 		String prompt = "Select the number of the property that you'd like to mortgage, or 0 to stop mortgaging properties.";
 		return selectingFromList(mortgageableProperties, prompt);
 	}
 
 	public Property selectWhatToUnmortgage(ArrayList<Property> mortgagedProperties) {
-
 		String prompt = "Select the number of the property that you'd like to unmortgage, or 0 to stop unmortgaging properties.";
 		return selectingFromList(mortgagedProperties, prompt);
 	}
 
 	public Property selectingFromList(ArrayList<Property> arrayListProperties, String prompt) {
 
-		// input is not constant throughout the game, so we want to have it as
-		// local variables even though we'll have to declare it four times.
-		// helps with bugs!
 		String input;
 
 		System.out.println(prompt);

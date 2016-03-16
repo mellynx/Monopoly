@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
 
 public class GuiPlayer extends Player {
-	// countdown latches: https://docs.oracle.com/javase/7/docs/api/java/util/concurrent/CountDownLatch.html
-	// need to make a new latch every time, because they can't ever count up
 
 	private boolean answer;
 	private Property propertyAnswer;
@@ -65,10 +63,9 @@ public class GuiPlayer extends Player {
 		waitForInput();
 		return propertyAnswer;
 	}
-
 	
 	public void waitForInput() {
-		// need to initialize this right before the await()
+		
 		latch = new CountDownLatch(1);
 		try {
 			latch.await();
@@ -80,9 +77,6 @@ public class GuiPlayer extends Player {
 		latch.countDown();
 	}
 
-	
-	// when you can just access class variables within the class, you don't need setters (or getters) for 
-	// the method that's already in the class. See "return propertyAnswer" instead of return getPropertyAnswer
 	public String getPrompt() {
 		return prompt;
 	}
@@ -92,7 +86,6 @@ public class GuiPlayer extends Player {
 	public StatusType getStatusType() {
 		return statusType;
 	}
-
 	
 	public void setAnswer(boolean answer) {
 		this.answer = answer;
