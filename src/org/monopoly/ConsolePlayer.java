@@ -37,21 +37,24 @@ public class ConsolePlayer extends Player {
 	public Property selectWhereToBuyHouse(ArrayList<Property> propsWhereYouCanBuyHouse) {
 
 		String prompt = "Press the number of the property where you'd like to buy a house, or 0 to stop buying houses.";
-
 		return selectingFromList(propsWhereYouCanBuyHouse, prompt);
 	}
+	
+	public Property selectWhereToSellHouse(ArrayList<Property> propsWhereYouCanSellHouse) {
+		
+		String prompt = "Press the number of the property where you'd like to sell a house, or 0 to stop selling houses.";
+		return selectingFromList(propsWhereYouCanSellHouse, prompt);
+	}
 
-	public Property selectWhatToMortgage(ArrayList<Property> propertiesOwned) {
+	public Property selectWhatToMortgage(ArrayList<Property> mortgageableProperties) {
 
 		String prompt = "Select the number of the property that you'd like to mortgage, or 0 to stop mortgaging properties.";
-
-		return selectingFromList(propertiesOwned, prompt);
+		return selectingFromList(mortgageableProperties, prompt);
 	}
 
 	public Property selectWhatToUnmortgage(ArrayList<Property> mortgagedProperties) {
 
 		String prompt = "Select the number of the property that you'd like to unmortgage, or 0 to stop unmortgaging properties.";
-
 		return selectingFromList(mortgagedProperties, prompt);
 	}
 

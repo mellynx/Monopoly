@@ -143,6 +143,9 @@ public class Property {
 	public void addOneHouse() {
 		numberOfHouses++;
 	}
+	public void subtractOneHouse() {
+		numberOfHouses--;
+	}
 	public void changeMortgageStatus() {
 		if (getMortgageStatus()) {
 			mortgageStatus = false;
@@ -154,6 +157,5 @@ public class Property {
 	public String toString() {
 		return getName();
 	}
-	
 }
 

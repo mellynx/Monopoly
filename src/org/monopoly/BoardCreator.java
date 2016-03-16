@@ -98,29 +98,29 @@ public class BoardCreator {
 
 		boardProperties.add(new Property("Free Parking", SpecialType.FREE_PARKING));
 
-		addSingleProperty(new Property("Kentucky", 220, 150, 110, kentuckyRS), red);
+		addSingleProperty(new Property("Kentucky Ave", 220, 150, 110, kentuckyRS), red);
 		boardProperties.add(new Property("Chance", SpecialType.CHANCE));
-		addSingleProperty(new Property("Indiana", 220, 150, 110, indianaRS), red);
-		addSingleProperty(new Property("Illinois", 240, 150, 120, illinoisRS), red);
+		addSingleProperty(new Property("Indiana Ave", 220, 150, 110, indianaRS), red);
+		addSingleProperty(new Property("Illinois Ave", 240, 150, 120, illinoisRS), red);
 
 		addSingleProperty(new Property("B & O Railroad", RentType.RAILROAD, borrRS), railroads);
 
-		addSingleProperty(new Property("Atlantic", 260, 150, 130, atlanticRS), yellow);
-		addSingleProperty(new Property("Ventnor", 260, 150, 130, ventnorRS), yellow);
+		addSingleProperty(new Property("Atlantic Ave", 260, 150, 130, atlanticRS), yellow);
+		addSingleProperty(new Property("Ventnor Ave", 260, 150, 130, ventnorRS), yellow);
 		addSingleProperty(new Property("Water Works", RentType.UTILITY), utilities);
 		addSingleProperty(new Property("Marvin Gardens", 280, 150, 140, marvingardensRS), yellow);
 
 		boardProperties.add(new Property("Go To Jail", SpecialType.GO_TO_JAIL));
 
-		addSingleProperty(new Property("Pacific", 300, 20, 150, pacificRS), green);
-		addSingleProperty(new Property("North Carolina", 300, 200, 150, northcarolinaRS), green);
+		addSingleProperty(new Property("Pacific Ave", 300, 20, 150, pacificRS), green);
+		addSingleProperty(new Property("North Carolina Ave", 300, 200, 150, northcarolinaRS), green);
 		boardProperties.add(new Property("Community Chest", SpecialType.COMMUNITY_CHEST));
-		addSingleProperty(new Property("Pennsylvania", 320, 200, 160, pennsylvaniaRS), green);
+		addSingleProperty(new Property("Pennsylvania Ave", 320, 200, 160, pennsylvaniaRS), green);
 
 		addSingleProperty(new Property("Short Line Railroad", RentType.RAILROAD, shortlinerrRS), railroads);
 
 		boardProperties.add(new Property("Chance", SpecialType.CHANCE));
-		addSingleProperty(new Property("Park", 350, 200, 175, parkRS), blue);
+		addSingleProperty(new Property("Park Place", 350, 200, 175, parkRS), blue);
 		boardProperties.add(new Property("Luxury Tax", SpecialType.LUXURY_TAX));
 		addSingleProperty(new Property("Boardwalk", 400, 200, 200, boardwalkRS), blue);
 	}

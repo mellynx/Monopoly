@@ -11,7 +11,6 @@ import org.monopoly.Property.SpecialType;
 import java.util.Map;
 
 public class Game {
-	//TODO: ideally, remove properties once players have mortgaged. things are removed once you unmortgage
 
 	// the list of all properties on the board
 	private final ArrayList<Property> boardProperties = new ArrayList<Property>();
@@ -39,7 +38,7 @@ public class Game {
 		playerOne.setLocation(boardProperties.get(0)); 
 		playerTwo.setLocation(boardProperties.get(0));
 	}
-
+	
 	public void playGame() {
 		
 		while (true) {
@@ -51,7 +50,6 @@ public class Game {
 			}
 		}
 	}
-
 	private boolean playGame(Player thisPlayer, Player otherPlayer) {
 
 		int dice = rollDice();
@@ -92,7 +90,6 @@ public class Game {
 	private int rollDice() {
 		return (random.nextInt(6) + 1 + random.nextInt(6) + 1);
 	}
-
 	private Property moveSpace(Player player, int roll) {
 
 		// get the current index of where the player is
@@ -111,6 +108,7 @@ public class Game {
 	}
 
 	public void afterLanding(Player player, Property landedProperty, int diceRoll) { 
+
 		// if property is not owned by anyone
 		if (landedProperty.getPropertyOwner() == null) {
 			// if the property is a board property, nothing happens
@@ -121,46 +119,41 @@ public class Game {
 			else {
 				System.out.println("This property costs $" + landedProperty.getBuyCost());
 				String prompt = "Do you want to buy this property? (y/n)";
-				// if player wants to buy the property
-				try {
-					if (player.chooseYesOrNo(prompt)) {
-						// if player has the money
-						if (player.getBalance() > landedProperty.getBuyCost()) {
-							buyProperty(player, landedProperty);
-						}
-						// if player does not have the money
-						else {
-							// if player has properties to mortgage
-							if (player.getPropertiesOwned().size() > player.getMortgagedProperties().size()) {
+				if (player.chooseYesOrNo(prompt)) {
+					// if player has the money
+					if (player.getBalance() > landedProperty.getBuyCost()) {
+						buyProperty(player, landedProperty);
+					}
+					// if player does not have the money
+					else {
+						// if player has properties to mortgage
+						if (player.getPropertiesOwned().size() > player.getMortgagedProperties().size()) {
 
-								prompt = "Player cannot afford to buy this property. Would you like to mortgage some properties? (y/n)";
-								if (player.chooseYesOrNo(prompt)) {
-									mortgageProperties(player); 
+							prompt = "Player cannot afford to buy this property. Would you like to mortgage some properties? (y/n)";
+							if (player.chooseYesOrNo(prompt)) {
+								mortgageProperties(player); 
 
-									// if this is enough for player to buy the property, let them
-									if (player.getBalance() > landedProperty.getBuyCost()) {
-										buyProperty(player, landedProperty);
-									} 
-									else {
-										System.out.println(player + " still does not have enough money to buy the property.");
-									}
+								// if this is enough for player to buy the property, let them
+								if (player.getBalance() > landedProperty.getBuyCost()) {
+									buyProperty(player, landedProperty);
 								} 
 								else {
-									System.out.println(player + " cannot afford to buy this property.");
+									System.out.println(player + " still does not have enough money to buy the property.");
 								}
-							}
-							// if player does not have any properties to mortgage
+							} 
 							else {
 								System.out.println(player + " cannot afford to buy this property.");
 							}
 						}
+						// if player does not have any properties to mortgage
+						else {
+							System.out.println(player + " cannot afford to buy this property.");
+						}
 					}
-					// if player does not want to buy
-					else {
-						System.out.println(player + " has chosen not to buy this property.");
-					}
-				} catch (InterruptedException e) {
-					e.printStackTrace();
+				}
+				// if player does not want to buy
+				else {
+					System.out.println(player + " has chosen not to buy this property.");
 				}
 			}
 		}
@@ -181,17 +174,34 @@ public class Game {
 			System.out.println(player + " owns this property and nothing happens to the player.");
 		}
 	}
-
-	public void buyProperty(Player player, Property landedProperty) {
-		System.out.println(player + " has bought " + landedProperty + " for $" + landedProperty.getBuyCost());
-		player.subtractMoney(landedProperty.getBuyCost());
-		System.out.println(player + " has $" + player.getBalance() + " left.");
-		landedProperty.setPropertyOwner(player);
-		player.addToPropertiesOwnedList(landedProperty);
-		
-		if (isPropertyPartOfMonopoly(player, landedProperty)) {
-			addMonopoly(player, landedProperty);
+	public boolean checkBalance(Player player, Player otherPlayer) {
+		if (player.getBalance() < 0) {
+			// as long as player has properties, they should mortgage them to save the game. otherwise, they lose the game.
+			if (player.getPropertiesOwned().size() > player.getMortgagedProperties().size()) {
+				System.out.println("Player is out of money and must mortgage properties.");
+				mortgageProperties(player);
+			} 
+			// if player still has no money and can sell houses
+			if (player.getBalance() < 0) {
+				if (player.getHousesPlayerOwns() > 0 || player.getHotelsPlayerOwns() > 0) {
+					System.out.println("Player is out of money and must sell houses/hotels.");
+					sellHouses(player);
+				}
+				
+				// if the player still has no money and wants to mortgage the properties they just sold houses off
+				if (player.getBalance() < 0) {
+					if (player.getPropertiesOwned().size() > player.getMortgagedProperties().size()) {
+						System.out.println("Player is out of money and must mortgage properties.");
+						mortgageProperties(player);
+					}
+					else {
+						System.out.println(otherPlayer.getToken() + " has won the game!");
+						return true;
+					}
+				}
+			}
 		}
+		return false;
 	}
 
 	public void payRent(Player player, Property landedProperty, int diceRoll) {
@@ -203,48 +213,24 @@ public class Game {
 		System.out.println(player + " has $" + player.getBalance() + " left.");
 		landedProperty.getPropertyOwner().addMoney(landedProperty.getRentCost(diceRoll));
 	}
-
-	public void checkMonopolies(Player player) { 
-		// don't ask the below prompt if the "generate" list is null (either
-		// because houses have been maxed out or player does not have enough money)
-		if (getBuyableHouseLocations(player, player.getHousableSetList()).size() > 0) {
-
-			String prompt = "Player has completed a monopoly and is eligible to buy houses. Would you like to buy any houses? (y/n)";
-			try {
-				if (player.chooseYesOrNo(prompt)) {
-
-					if (player.getPropertiesOwned().size() > player.getMortgagedProperties().size()) {
-
-						String promptB = "Would you like to mortgage some properties first? (y/n)";
-
-						if (player.chooseYesOrNo(promptB)) {
-							mortgageProperties(player);
-						} 
-						else {
-							System.out.println(player + " has chosen not to mortgage any properties.");
-						}
-					}
-					buyHouse(player);
-				} 
-				else {
-					System.out.println(player + " has chosen not to buy any houses.");
-				}
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+	public void buyProperty(Player player, Property landedProperty) {
+		System.out.println(player + " has bought " + landedProperty + " for $" + landedProperty.getBuyCost());
+		player.subtractMoney(landedProperty.getBuyCost());
+		System.out.println(player + " has $" + player.getBalance() + " left.");
+		landedProperty.setPropertyOwner(player);
+		player.addToPropertiesOwnedList(landedProperty);
+		
+		// if this purchase completes a monopoly, add that monopoly to monopolies set
+		if (isPropertyPartOfMonopoly(player, landedProperty)) {
+			addMonopoly(player, landedProperty);
 		}
 	}
-
 	public void buyHouse(Player player) {
-	
+		
 		while (true) {
 			Property houseToBuy = null;
 			
-			try {
-				houseToBuy = player.selectWhereToBuyHouse(getBuyableHouseLocations(player, player.getHousableSetList()));
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+			houseToBuy = player.selectWhereToBuyHouse(getBuyableHouseLocations(player, player.getHousableSetList()));
 			
 			if (houseToBuy != null) {
 				player.handleHouseBuying(houseToBuy);
@@ -255,7 +241,23 @@ public class Game {
 			}
 		}
 	}
-
+	public void sellHouses(Player player) {
+		
+		while (true) {
+			Property houseToSell = null;
+			
+			houseToSell = player.selectWhereToSellHouse(getSellableHouseLocations(player, player.getHousableSetList()));
+			
+			if (houseToSell != null) {
+				player.handleHouseSelling(houseToSell);
+			}
+			else {
+				System.out.println(player + " does not want to sell any more houses.");
+				break;
+			}
+		}
+	}
+	
 	/**
 	 * javadoc documentation. note the two stars above the method below checks
 	 * whether a property that a player owns is part of a property set/color
@@ -275,36 +277,36 @@ public class Game {
 		}
 		return true;
 	}
-
 	public void addMonopoly(Player player, Property landedProperty) {
 		System.out.println(player + " has achieved a monopoly for " + map.get(landedProperty));
 		Set<Property> color = map.get(landedProperty);
 		player.addToHousableSets(color);
 	}
+	public void checkMonopolies(Player player) { 
+		// don't ask the below prompt if the "generate" list is null (either
+		// because houses have been maxed out or player does not have enough money)
+		if (getBuyableHouseLocations(player, player.getHousableSetList()).size() > 0) {
 
-	public ArrayList<Property> getBuyableHouseLocations(Player player, ArrayList<Set<Property>> monopolies) {
-		
-		ArrayList<Property> houseableProperties = new ArrayList<>();
+			String prompt = "Player has completed a monopoly and is eligible to buy houses. Would you like to buy any houses? (y/n)";
+			if (player.chooseYesOrNo(prompt)) {
 
-		// loop through the list of all sets to pick out each individual set
-		for (int i = 0; i < monopolies.size(); i++) {
-			Set<Property> monopoly = monopolies.get(i);
+				if (player.getPropertiesOwned().size() > player.getMortgagedProperties().size()) {
 
-			// for each set, return minimum house number across the properties
-			// for that set
-			int minHouseCountPerSet = findMinimumHouseNumber(monopoly);
+					String promptB = "Would you like to mortgage some properties first? (y/n)";
 
-			// looping through every property in a set
-			for (Property property : monopoly) {
-				// if player can afford a house there, if the houses are being
-				// built evenly, if there aren't already the max number of
-				// houses then add that property to the list we present to the player
-				if (player.getBalance() > property.getHouseCost() && property.getNumberOfHouses() == minHouseCountPerSet && property.getNumberOfHouses() < 5) {
-					houseableProperties.add(property);
+					if (player.chooseYesOrNo(promptB)) {
+						mortgageProperties(player);
+					} 
+					else {
+						System.out.println(player + " has chosen not to mortgage any properties.");
+					}
 				}
+				buyHouse(player);
+			} 
+			else {
+				System.out.println(player + " has chosen not to buy any houses.");
 			}
 		}
-		return houseableProperties;
 	}
 
 	public int findMinimumHouseNumber(Set<Property> monopoly) {
@@ -319,26 +321,76 @@ public class Game {
 		}
 		return minHouseCount;
 	}
+	public int findMaximumHouseNumber(Set<Property> monopoly) {
+		
+		int maxHouseCount = 0;
 
-	
-	public void mortgageProperties(Player player) {
-
-		ArrayList<Property> mortgageableProperties = new ArrayList<Property>();
-
-		for (Property property: player.getPropertiesOwned()) {
-			if (!property.getMortgageStatus()) {
-				mortgageableProperties.add(property);
+		// loop through each property in the set to find the minimum house number
+		for (Property property : monopoly) {
+			if (property.getNumberOfHouses() > maxHouseCount) {
+				maxHouseCount = property.getNumberOfHouses();
 			}
 		}
+		return maxHouseCount;
+	}
+	
+	public ArrayList<Property> getBuyableHouseLocations(Player player, ArrayList<Set<Property>> monopolies) {
 		
-		while (true) {
-			Property toMortgage = null;
-			
-			try {
-				toMortgage = player.selectWhatToMortgage(mortgageableProperties);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
+		ArrayList<Property> houseableProperties = new ArrayList<>();
+
+		// loop through all monopolies to select each monopoly one by one
+		for (int i = 0; i < monopolies.size(); i++) {
+			Set<Property> monopoly = monopolies.get(i);
+
+			// for each set, return minimum house number across the properties for that set
+			int minHouseCountPerSet = findMinimumHouseNumber(monopoly);
+
+			// looping through every property in a set
+			for (Property property : monopoly) {
+				// if player can afford a house there, if the houses are being
+				// built evenly, if there aren't already the max number of
+				// houses, and no property of that color is mortgaged -- then add that property to the list we present to the player
+				if (player.getBalance() > property.getHouseCost() && property.getNumberOfHouses() == minHouseCountPerSet 
+						&& property.getNumberOfHouses() < 5 && !doesMonopolyHaveMortgages(property)) {
+					houseableProperties.add(property);
+				}
 			}
+		}
+		return houseableProperties;
+	}
+	public ArrayList<Property> getSellableHouseLocations(Player player, ArrayList<Set<Property>> monopolies) {
+		
+		ArrayList<Property> sellableHouses = new ArrayList<>();
+		
+		for (int i = 0; i < monopolies.size(); i++) {
+			
+			Set<Property> monopoly = monopolies.get(i);
+			int maxHouseCountPerSet = findMaximumHouseNumber(monopoly);
+			
+			for (Property property: monopoly) {
+				if (property.getNumberOfHouses() == maxHouseCountPerSet && property.getNumberOfHouses() > 0) {
+					sellableHouses.add(property);
+				}
+			}
+		}
+		return sellableHouses;
+	}
+
+	public void mortgageProperties(Player player) {
+
+		while (true) {
+			
+			ArrayList<Property> mortgageableProperties = new ArrayList<Property>();
+			Property toMortgage = null;
+
+			for (Property property: player.getPropertiesOwned()) {
+				// property must not already be mortgaged and no houses must exist on any property of that color
+				if (!property.getMortgageStatus() && !doesMonopolyHaveHouses(property)) {
+					mortgageableProperties.add(property);
+				}
+			}
+			
+			toMortgage = player.selectWhatToMortgage(mortgageableProperties);
 			
 			if (toMortgage != null) {
 				player.handleMortgaging(toMortgage);
@@ -349,55 +401,76 @@ public class Game {
 			}
 		}
 	}
-
 	public void unmortgageProperties(Player player) {
 
 		String prompt = "You have mortgaged properties. Would you like to unmortgage them? (y/n)";
 		
-		try {
-			if (player.chooseYesOrNo(prompt)) {
-				while (true) {
-					Property toUnmortgage;
-					
-					toUnmortgage = player.selectWhatToUnmortgage(player.getMortgagedProperties());
-					
-					if (toUnmortgage != null) {
-						player.handleUnmortgaging(toUnmortgage);
-					}
-					else {
-						System.out.println(player + " does not want to unmortgage any more properties.");
-						break;
-					}
+		if (player.chooseYesOrNo(prompt)) {
+			while (true) {
+				Property toUnmortgage;
+				
+				toUnmortgage = player.selectWhatToUnmortgage(player.getMortgagedProperties());
+				
+				if (toUnmortgage != null) {
+					player.handleUnmortgaging(toUnmortgage);
+				}
+				else {
+					System.out.println(player + " does not want to unmortgage any more properties.");
+					break;
 				}
 			}
-		} catch (InterruptedException e) {
-			e.printStackTrace();
 		}
 	}
 
-	public boolean checkBalance(Player player, Player otherPlayer) {
-		if (player.getBalance() < 0) {
+	public void beingInJail(Player player) {
+		/*
+		 * In JAIL, player status JailTime = -1 if player is not in jail (or has
+		 * just gotten out of jail) 0 if player has just landed in jail and 1-3
+		 * for the subsequent rolls player tries to make to get out of jail
+		 */
 
-			// as long as player has properties, they should mortgage them to
-			// save the game. otherwise, they lose the game.
-			if (player.getPropertiesOwned().size() > player.getMortgagedProperties().size()) {
+		// attempt to roll doubles
+		int diceOne = random.nextInt(6) + 1;
+		int diceTwo = random.nextInt(6) + 1;
 
-				System.out.println("Player is out of money and must mortgage properties.");
-				mortgageProperties(player);
+		System.out.println(player + " rolls a " + diceOne + " and a " + diceTwo);
 
-				if (player.getBalance() < 0) {
-					System.out.println(otherPlayer.getToken() + " has won the game!");
-					return true;
-				}
+		if (diceOne == diceTwo) {
+			System.out.println(player + " has rolled out of jail!");
+			player.setJailTime(-1);
+			
+			// 10 is the locationIndex of jail, aka where the player is starting from 
+			int index = 10 + diceOne + diceTwo; 
+			System.out.println(player + " has landed on " + boardProperties.get(index));
+			player.setLocation(boardProperties.get(index));
+			afterLanding(player, boardProperties.get(index), diceOne + diceTwo);
+		} 
+		else {
+			player.addJailTime();
+			System.out.println("Player is still in jail and has rolled " + player.getJailTime() + " times.");
+
+			// if player has get out of jail free card, use it, get out jail, do not move until next turn
+			if (player.getOutOfJailFreeCard) {
+				System.out.println(player + " has used a get-out-of-jail-free card.");
+				player.setGetOutOfJailFreeCard(false);
+				player.setJailTime(-1);
+			} 
+			else if (player.getJailTime() == 3) {
+				System.out.println(player + " has rolled 3 times and now must pay $50 to get out of jail.");
+				payToLeaveJail(player);
+				checkBalance(player, referToOtherPlayer(player));
 			} 
 			else {
-				System.out.println(otherPlayer.getToken() + " has won the game!");
-				return true;
+				String prompt = "Do you want to pay $50 to get out of jail? (y/n)";
+				if (player.chooseYesOrNo(prompt)) {
+					payToLeaveJail(player);
+				} 
+				else { 
+					System.out.println(player + " has decided not to pay to leave jail.");
+				}
 			}
 		}
-		return false;
 	}
-
 	public void specialProperties(Player player, Property property) {
 
 		SpecialType type = property.getSpecialType();
@@ -443,7 +516,6 @@ public class Game {
 			break;
 		}
 	}
-
 	public void communityChest(Player player) {
 		int rand = random.nextInt(8);
 
@@ -489,7 +561,6 @@ public class Game {
 			break;
 		}
 	}
-
 	public void chance(Player player) {
 		int rand = random.nextInt(12);
 
@@ -570,77 +641,14 @@ public class Game {
 	}	
 	public void generalRepairHelper(Player player, int houseCost, int hotelCost) {
 
-		int houseCount = 0;
-		int hotelCount = 0;
-
-		for (int i = 0; i < player.getPropertiesOwned().size(); i++) {
-			houseCount += player.getPropertiesOwned().get(i).getNumberOfHouses();
-
-			if (player.getPropertiesOwned().get(i).getNumberOfHouses() == 5) {
-				hotelCount += 1;
-				houseCount -= 5;
-			}
-		}
+		int houseCount = player.getHousesPlayerOwns();
+		int hotelCount = player.getHotelsPlayerOwns();
 
 		System.out.println(player + " owns " + houseCount + " houses and " + hotelCount + " hotels.");
 		System.out.println(player + " will pay $" + houseCount * houseCost + " for houses and $" + hotelCount * hotelCost + " for hotels.");
 		player.subtractMoney(houseCount * houseCost + hotelCount * hotelCost);
 	}
 
-	public void beingInJail(Player player) {
-		/*
-		 * In JAIL, player status JailTime = -1 if player is not in jail (or has
-		 * just gotten out of jail) 0 if player has just landed in jail and 1-3
-		 * for the subsequent rolls player tries to make to get out of jail
-		 */
-
-		// attempt to roll doubles
-		int diceOne = random.nextInt(6) + 1;
-		int diceTwo = random.nextInt(6) + 1;
-
-		System.out.println(player + " rolls a " + diceOne + " and a " + diceTwo);
-
-		if (diceOne == diceTwo) {
-			System.out.println(player + " has rolled out of jail!");
-			player.setJailTime(-1);
-			
-			// 10 is the locationIndex of jail, aka where the player is starting from 
-			int index = 10 + diceOne + diceTwo; 
-			System.out.println(player + " has landed on " + boardProperties.get(index));
-			player.setLocation(boardProperties.get(index));
-			afterLanding(player, boardProperties.get(index), diceOne + diceTwo);
-		} 
-		else {
-			player.addJailTime();
-			System.out.println("Player is still in jail and has rolled " + player.getJailTime() + " times.");
-
-			// if player has get out of jail free card, use it, get out jail, do not move until next turn
-			if (player.getOutOfJailFreeCard) {
-				System.out.println(player + " has used a get-out-of-jail-free card.");
-				player.setGetOutOfJailFreeCard(false);
-				player.setJailTime(-1);
-			} 
-			else if (player.getJailTime() == 3) {
-				System.out.println(player + " has rolled 3 times and now must pay $50 to get out of jail.");
-				payToLeaveJail(player);
-				checkBalance(player, referToOtherPlayer(player));
-			} 
-			else {
-				String prompt = "Do you want to pay $50 to get out of jail? (y/n)";
-				try {
-					if (player.chooseYesOrNo(prompt)) {
-						payToLeaveJail(player);
-					} 
-					else { 
-						System.out.println(player + " has decided not to pay to leave jail.");
-					}
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-	}	
-	
 	public ArrayList<Property> getBoardProperties() {
 		return boardProperties;
 	}
@@ -656,5 +664,25 @@ public class Game {
 		System.out.println(player + " has paid $50 to get out of jail.");
 		player.subtractMoney(50);
 		player.setJailTime(-1);
+	}
+	public boolean doesMonopolyHaveHouses (Property property) {
+		Set<Property> monopoly = map.get(property);
+		
+		for (Property a : monopoly) {
+			if (a.numberOfHouses > 0) {
+				return true;
+			}
+		}
+		return false;
+	}
+	public boolean doesMonopolyHaveMortgages (Property property) {
+		Set<Property> monopoly = map.get(property);
+		
+		for (Property a : monopoly) {
+			if (a.getMortgageStatus()) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

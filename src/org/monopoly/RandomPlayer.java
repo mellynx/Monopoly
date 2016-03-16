@@ -40,8 +40,21 @@ public class RandomPlayer extends Player {
 		System.out.println(this + " does not want to buy any houses.");
 		return null;
 	}
+	
+	public Property selectWhereToSellHouse(ArrayList<Property> propsWhereYouCanSellHouse) {
+		
+		if (propsWhereYouCanSellHouse.size() > 0 && this.getBalance() < 100) {
+			
+			int randomProperty = random.nextInt(propsWhereYouCanSellHouse.size());
+			return propsWhereYouCanSellHouse.get(randomProperty);
+		}
+		else if (propsWhereYouCanSellHouse.size() == 0) {
+			System.out.println(this + " does not have any more houses to sell.");
+		}
+		return null;
+	}
 
-	public Property selectWhatToMortgage(ArrayList<Property> propsWhereYouCanMortgage) {
+	public Property selectWhatToMortgage(ArrayList<Property> mortgageableProperties) {
 		// above, with propsWhereYouCanMortgage list, remember that this is not the
 		// original propertiesOwned list being passed in, but the list that's
 		// being passed in from morgagePropertiesA. NAMING is very important
@@ -49,12 +62,12 @@ public class RandomPlayer extends Player {
 		// the arrayList that is passed in here is: properties that a player owns that are not already mortgaged
 
 		// if player owns unmortgaged properties, and has less than $500, mortgage/return that property
-		if (propsWhereYouCanMortgage.size() > 0 && this.getBalance() < 500) {
+		if (mortgageableProperties.size() > 0 && this.getBalance() < 500) {
 
-			int randomProperty = random.nextInt(propsWhereYouCanMortgage.size());
-			return propsWhereYouCanMortgage.get(randomProperty);
+			int randomProperty = random.nextInt(mortgageableProperties.size());
+			return mortgageableProperties.get(randomProperty);
 		}
-		else if (propsWhereYouCanMortgage.size() == 0) {
+		else if (mortgageableProperties.size() == 0) {
 			System.out.println(this + " does not have any more properties to mortgage.");
 		}
 		return null;

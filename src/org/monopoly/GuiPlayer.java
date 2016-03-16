@@ -26,37 +26,39 @@ public class GuiPlayer extends Player {
 	public boolean chooseYesOrNo(String prompt) {
 		statusType = StatusType.BOOLEAN;
 		this.prompt = prompt;
-
-		// the doneSignal has a wait count of 1; we tell it to await an answer,
-		// then trigger the release from the mouse click in SimpleSlickGame
-		try {
-			waitForInput();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		waitForInput();
 		return answer;
 	}
 
 	@Override
-	public Property selectWhereToBuyHouse(ArrayList<Property> currentHousableProperties) throws InterruptedException {
+	public Property selectWhereToBuyHouse(ArrayList<Property> currentHousableProperties) {
 		statusType = StatusType.LIST;
 		prompt = "Click the property name where you'd like to buy a house, or 'none' to stop buying houses.";
 		propertiesToPass = currentHousableProperties;
 		waitForInput();
 		return propertyAnswer;
 	}
-
+	
 	@Override
-	public Property selectWhatToMortgage(ArrayList<Property> propertiesOwned) throws InterruptedException {
+	public Property selectWhereToSellHouse(ArrayList<Property> currentSellableProperties) {
 		statusType = StatusType.LIST;
-		prompt = "Click the property name that you'd like to mortgage, or 'none' to stop mortgaging.";
-		propertiesToPass = propertiesOwned;
+		prompt = "Click on the property where you'd like to sell a house, or 'none' to stop selling houses.";
+		propertiesToPass = currentSellableProperties;
 		waitForInput();
 		return propertyAnswer;
 	}
 
 	@Override
-	public Property selectWhatToUnmortgage(ArrayList<Property> mortgagedProperties) throws InterruptedException {
+	public Property selectWhatToMortgage(ArrayList<Property> mortgageableProperties) {
+		statusType = StatusType.LIST;
+		prompt = "Click the property name that you'd like to mortgage, or 'none' to stop mortgaging.";
+		propertiesToPass = mortgageableProperties;
+		waitForInput();
+		return propertyAnswer;
+	}
+
+	@Override
+	public Property selectWhatToUnmortgage(ArrayList<Property> mortgagedProperties) {
 		statusType = StatusType.LIST;
 		prompt = "Click the property name that you'd like to unmortgage, or 'none' to stop umortgaging.";
 		propertiesToPass = mortgagedProperties;
@@ -64,16 +66,21 @@ public class GuiPlayer extends Player {
 		return propertyAnswer;
 	}
 
-	public void waitForInput() throws InterruptedException {
+	
+	public void waitForInput() {
 		// need to initialize this right before the await()
 		latch = new CountDownLatch(1);
-		latch.await();
+		try {
+			latch.await();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
-
 	public void stopWaiting() {
 		latch.countDown();
 	}
 
+	
 	// when you can just access class variables within the class, you don't need setters (or getters) for 
 	// the method that's already in the class. See "return propertyAnswer" instead of return getPropertyAnswer
 	public String getPrompt() {
@@ -86,6 +93,7 @@ public class GuiPlayer extends Player {
 		return statusType;
 	}
 
+	
 	public void setAnswer(boolean answer) {
 		this.answer = answer;
 	}
