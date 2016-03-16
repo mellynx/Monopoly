@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
 
 public class GuiPlayer extends Player {
-	// DONE
 	// countdown latches: https://docs.oracle.com/javase/7/docs/api/java/util/concurrent/CountDownLatch.html
 	// need to make a new latch every time, because they can't ever count up
 
@@ -24,7 +23,7 @@ public class GuiPlayer extends Player {
 	}
 
 	@Override
-	public boolean doYouWantToDoThis(String prompt) {
+	public boolean chooseYesOrNo(String prompt) {
 		statusType = StatusType.BOOLEAN;
 		this.prompt = prompt;
 
@@ -39,7 +38,7 @@ public class GuiPlayer extends Player {
 	}
 
 	@Override
-	public Property buyHouseB(ArrayList<Property> currentHousableProperties) throws InterruptedException {
+	public Property selectWhereToBuyHouse(ArrayList<Property> currentHousableProperties) throws InterruptedException {
 		statusType = StatusType.LIST;
 		prompt = "Click the property name where you'd like to buy a house, or 'none' to stop buying houses.";
 		propertiesToPass = currentHousableProperties;
@@ -48,7 +47,7 @@ public class GuiPlayer extends Player {
 	}
 
 	@Override
-	public Property mortgagePropertiesB(ArrayList<Property> propertiesOwned) throws InterruptedException {
+	public Property selectWhatToMortgage(ArrayList<Property> propertiesOwned) throws InterruptedException {
 		statusType = StatusType.LIST;
 		prompt = "Click the property name that you'd like to mortgage, or 'none' to stop mortgaging.";
 		propertiesToPass = propertiesOwned;
@@ -57,7 +56,7 @@ public class GuiPlayer extends Player {
 	}
 
 	@Override
-	public Property unmortgageB(ArrayList<Property> mortgagedProperties) throws InterruptedException {
+	public Property selectWhatToUnmortgage(ArrayList<Property> mortgagedProperties) throws InterruptedException {
 		statusType = StatusType.LIST;
 		prompt = "Click the property name that you'd like to unmortgage, or 'none' to stop umortgaging.";
 		propertiesToPass = mortgagedProperties;

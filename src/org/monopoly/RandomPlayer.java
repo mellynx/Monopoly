@@ -12,7 +12,7 @@ public class RandomPlayer extends Player {
 		random = new Random();
 	}
 
-	public boolean doYouWantToDoThis(String prompt) {
+	public boolean chooseYesOrNo(String prompt) {
 		System.out.println(prompt);
 		// if the player is in jail
 		if (this.getJailTime() >= 0) {
@@ -27,7 +27,7 @@ public class RandomPlayer extends Player {
 		}
 	}
 
-	public Property buyHouseB(ArrayList<Property> propsWhereYouCanBuyHouse) {
+	public Property selectWhereToBuyHouse(ArrayList<Property> propsWhereYouCanBuyHouse) {
 		// if there are properties in the housable list, pick a random property from this list
 		// if the player has (house*2) amount of money, buy a house there
 		if (propsWhereYouCanBuyHouse.size() > 0) {
@@ -41,7 +41,7 @@ public class RandomPlayer extends Player {
 		return null;
 	}
 
-	public Property mortgagePropertiesB(ArrayList<Property> propsWhereYouCanMortgage) {
+	public Property selectWhatToMortgage(ArrayList<Property> propsWhereYouCanMortgage) {
 		// above, with propsWhereYouCanMortgage list, remember that this is not the
 		// original propertiesOwned list being passed in, but the list that's
 		// being passed in from morgagePropertiesA. NAMING is very important
@@ -54,12 +54,13 @@ public class RandomPlayer extends Player {
 			int randomProperty = random.nextInt(propsWhereYouCanMortgage.size());
 			return propsWhereYouCanMortgage.get(randomProperty);
 		}
-		
-		System.out.println(this + " does not want to mortgage any more properties."); 
+		else if (propsWhereYouCanMortgage.size() == 0) {
+			System.out.println(this + " does not have any more properties to mortgage.");
+		}
 		return null;
 	}
 
-	public Property unmortgageB(ArrayList<Property> mortgagedProperties) {
+	public Property selectWhatToUnmortgage(ArrayList<Property> mortgagedProperties) {
 		
 		if (mortgagedProperties.size() > 0) {
 			int randomProperty = random.nextInt(mortgagedProperties.size());
@@ -67,12 +68,9 @@ public class RandomPlayer extends Player {
 			if (this.getBalance() > 600) { 
 				return mortgagedProperties.get(randomProperty);
 			}
-			else {
-				System.out.println(this + " does not want to unmortgage any more properties.");
-			}
 		}
 		else {
-			System.out.println(this + " does not have any more properties to mortgage.");
+			System.out.println(this + " does not have any more properties to unmortgage.");
 		}
 		return null;
 	}

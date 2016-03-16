@@ -1,6 +1,7 @@
 package org.monopoly;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -16,16 +17,15 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
 public class SimpleSlickGame extends BasicGame {
-	//DONE 
-
-	// TODO: This is begging for some enclosing class or a map that holds all
-	// these based on an enum for image type. I love enums and you should too!
 	
-	private Image board, dog, thimble, house, hotel, playerOneHor, playerTwoHor, mortgagedHor, mortgagedVert, playerOneVert, playerTwoVert, background, yesButton, noButton;
 	final Game game;
 	private ArrayList<Property> list;
-
+	private HashMap<ImageType, Image> map = new HashMap<>();
 	
+	enum ImageType {
+		BOARD, DOG, THIMBLE, HOUSE, HOTEL, PLAYER_ONE_HOR, PLAYER_TWO_HOR, MORTGAGED_HOR, MORTGAGED_VERT, PLAYER_ONE_VERT, PLAYER_TWO_VERT, BACKGROUND, YES_BUTTON, NO_BUTTON;
+	}
+
 	// study executors 
 	private ExecutorService executor = Executors.newSingleThreadExecutor();
 
@@ -41,23 +41,23 @@ public class SimpleSlickGame extends BasicGame {
 
 	@Override
 	public void init(GameContainer gc) throws SlickException {
-
-		board = new Image("res/board.jpg");
-		dog = new Image("res/dog.png");
-		thimble = new Image("res/thimble.png");
-		house = new Image("res/house.png");
-		hotel = new Image("res/hotel.png");
-
-		playerOneHor = new Image("res/playerone.png");
-		playerOneVert = new Image("res/playeronevert.png");
-		playerTwoHor = new Image("res/playertwo.png");
-		playerTwoVert = new Image("res/playertwovert.png");
-		mortgagedHor = new Image("res/mortgaged.png");
-		mortgagedVert = new Image("res/mortgagedvert.png");
-
-		background = new Image("res/back.png");
-		yesButton = new Image("res/yes.png");
-		noButton = new Image("res/no.png");
+		
+		map.put(ImageType.BOARD, new Image("res/board.jpg"));
+		map.put(ImageType.DOG, new Image("res/dog.png"));
+		map.put(ImageType.THIMBLE, new Image("res/thimble.png"));
+		map.put(ImageType.HOUSE, new Image("res/house.png"));
+		map.put(ImageType.HOTEL, new Image("res/hotel.png"));
+		
+		map.put(ImageType.PLAYER_ONE_HOR, new Image("res/playerone.png"));
+		map.put(ImageType.PLAYER_ONE_VERT, new Image("res/playeronevert.png"));
+		map.put(ImageType.PLAYER_TWO_HOR, new Image("res/playertwo.png"));
+		map.put(ImageType.PLAYER_TWO_VERT, new Image("res/playertwovert.png"));
+		map.put(ImageType.MORTGAGED_HOR, new Image("res/mortgaged.png"));
+		map.put(ImageType.MORTGAGED_VERT, new Image("res/mortgagedvert.png"));
+		
+		map.put(ImageType.BACKGROUND, new Image("res/back.png"));
+		map.put(ImageType.YES_BUTTON, new Image("res/yes.png"));
+		map.put(ImageType.NO_BUTTON, new Image("res/no.png"));
 
 		executor.submit(new Callable<Void>() {
 			@Override
@@ -83,10 +83,12 @@ public class SimpleSlickGame extends BasicGame {
 
 	@Override
 	public void render(GameContainer gc, Graphics g) throws SlickException {
-		board.draw(0, 0, 768, 768);
+		map.get(ImageType.BOARD).draw(0, 0, 768, 768);
 		
-		drawPlayer(g, playerA, dog);
-		drawPlayer(g, playerB, thimble);
+		drawPlayer(g, playerA, map.get(ImageType.DOG));
+		drawPlayer(g, playerB, map.get(ImageType.THIMBLE));
+		drawBalance(g, playerA, "pink", 110, 625, 130, 628);
+		drawBalance(g, playerB, "blue", 420, 125, 435, 128);
 
 		for (int i = 0; i < game.getBoardProperties().size(); i++) {
 			drawOwnership(game.getBoardProperties().get(i));
@@ -96,8 +98,8 @@ public class SimpleSlickGame extends BasicGame {
 
 		if (playerB.getStatusType() == StatusType.BOOLEAN) {
 			drawPrompt(g, 200);
-			yesButton.draw(265, 400, 110, 45);
-			noButton.draw(395, 400, 110, 45);
+			map.get(ImageType.YES_BUTTON).draw(265, 400, 110, 45);
+			map.get(ImageType.NO_BUTTON).draw(395, 400, 110, 45);
 		}
 
 		else if (playerB.getStatusType() == StatusType.LIST) {
@@ -148,17 +150,21 @@ public class SimpleSlickGame extends BasicGame {
 		Property property = player.getLocation();
 		image.draw(tokenPosition(property).getX(), tokenPosition(property).getY(), 50, 50);
 	}
+	public void drawBalance(Graphics g, Player player, String color, int backgroundX, int backgroundY, int textX, int textY) {
+		map.get(ImageType.BACKGROUND).draw(backgroundX, backgroundY, 220, 25);
+		g.drawString(player.getToken() + "(" + color + "): $" + player.getBalance(), textX, textY);
+	}
 	public void drawOwnership(Property property) {
 		if (property.getPropertyOwner() == playerA) {
-			drawHelperMethod(property, playerOneHor, playerOneVert, propertyOwnershipPosition(property));
+			drawHelperMethod(property, map.get(ImageType.PLAYER_ONE_HOR), map.get(ImageType.PLAYER_ONE_VERT), propertyOwnershipPosition(property));
 		}
-		else if (property.getPropertyOwner() == playerA) {
-			drawHelperMethod(property, playerTwoHor, playerTwoVert, propertyOwnershipPosition(property));
+		else if (property.getPropertyOwner() == playerB) {
+			drawHelperMethod(property, map.get(ImageType.PLAYER_TWO_HOR), map.get(ImageType.PLAYER_TWO_VERT), propertyOwnershipPosition(property));
 		}
 	}
 	public void drawMortgages(Property property) {
 		if (property.getMortgageStatus()) {
-			drawHelperMethod(property, mortgagedHor, mortgagedVert, mortgagedPropertyPosition(property));
+			drawHelperMethod(property, map.get(ImageType.MORTGAGED_HOR), map.get(ImageType.MORTGAGED_VERT), mortgagedPropertyPosition(property));
 		}
 	}	
 	// helps draw ownership and mortgages
@@ -177,11 +183,11 @@ public class SimpleSlickGame extends BasicGame {
 		int numberOfHouses = property.getNumberOfHouses();
 
 		if (numberOfHouses == 5) {
-			drawHousesHelperMethod(property, hotel, housePosition(property), 20, 30);
+			drawHousesHelperMethod(property, map.get(ImageType.HOTEL), housePosition(property), 20, 30);
 		} 
 		else {
 			for (int i = 0; i < numberOfHouses; i++) {
-				drawHousesHelperMethod(property, house, housePosition(property), i * 13, 25);
+				drawHousesHelperMethod(property, map.get(ImageType.HOUSE), housePosition(property), i * 13, 25);
 			}
 		}
 	}
@@ -196,7 +202,7 @@ public class SimpleSlickGame extends BasicGame {
 		}
 	}
 	public void drawPrompt(Graphics g, int height) {
-		background.draw(200, 270, 370, height);
+		map.get(ImageType.BACKGROUND).draw(200, 270, 370, height);
 
 		// word wrap method: first, split string into separate words. get the length of each word. 
 		// if width of the current string > 220, draw the current string and reset strbuff

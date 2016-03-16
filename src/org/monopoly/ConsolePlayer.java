@@ -16,7 +16,7 @@ public class ConsolePlayer extends Player {
 		super(playerToken);
 	}
 
-	public boolean doYouWantToDoThis(String prompt) {
+	public boolean chooseYesOrNo(String prompt) {
 
 		String input;
 
@@ -34,21 +34,21 @@ public class ConsolePlayer extends Player {
 		return false;
 	}
 
-	public Property buyHouseB(ArrayList<Property> propsWhereYouCanBuyHouse) {
+	public Property selectWhereToBuyHouse(ArrayList<Property> propsWhereYouCanBuyHouse) {
 
 		String prompt = "Press the number of the property where you'd like to buy a house, or 0 to stop buying houses.";
 
 		return selectingFromList(propsWhereYouCanBuyHouse, prompt);
 	}
 
-	public Property mortgagePropertiesB(ArrayList<Property> propertiesOwned) {
+	public Property selectWhatToMortgage(ArrayList<Property> propertiesOwned) {
 
 		String prompt = "Select the number of the property that you'd like to mortgage, or 0 to stop mortgaging properties.";
 
 		return selectingFromList(propertiesOwned, prompt);
 	}
 
-	public Property unmortgageB(ArrayList<Property> mortgagedProperties) {
+	public Property selectWhatToUnmortgage(ArrayList<Property> mortgagedProperties) {
 
 		String prompt = "Select the number of the property that you'd like to unmortgage, or 0 to stop unmortgaging properties.";
 

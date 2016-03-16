@@ -1,16 +1,24 @@
 package org.monopoly;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 import org.monopoly.Property.RentType;
+import org.monopoly.Property.SpecialType;
 
 public class BoardCreator {
+	
+	ArrayList<Property> boardProperties;
+	Map<Property, Set<Property>> map;
+	
+	public BoardCreator(ArrayList<Property> boardProperties, Map<Property, Set<Property>> map) {
+		this.boardProperties = boardProperties;
+		this.map = map;
+	}
 
-	public static void addProperties(ArrayList<Property> boardProperties, Map<Property, Set<Property>> map) {
+	public void addProperties() {
 		// remember you have to CALL add properties
 		
 		Set<Property> brown = new HashSet<Property>();
@@ -59,22 +67,22 @@ public class BoardCreator {
 		RentSchedule borrRS = new RentSchedule(25, 50, 100, 200);
 		RentSchedule shortlinerrRS = new RentSchedule(25, 50, 100, 200);
 
-		boardProperties.add(new Property("Go"));
+		boardProperties.add(new Property("Go", SpecialType.GO));
 
 		// buy cost, house cost
 		addSingleProperty(new Property("Mediterranean Ave", 60, 50, 30, mediterraneanRS), brown);
-		boardProperties.add(new Property("Community Chest"));
+		boardProperties.add(new Property("Community Chest", SpecialType.COMMUNITY_CHEST));
 		addSingleProperty(new Property("Baltic Ave", 60, 50, 30, balticRS), brown);
-		boardProperties.add(new Property("Income Tax"));
+		boardProperties.add(new Property("Income Tax", SpecialType.INCOME_TAX));
 
 		addSingleProperty(new Property("Reading Railroad", RentType.RAILROAD, readingrrRS), railroads);
 
 		addSingleProperty(new Property("Oriental Ave", 100, 50, 50, orientalRS), lightBlue);
-		boardProperties.add(new Property("Chance"));
+		boardProperties.add(new Property("Chance", SpecialType.CHANCE));
 		addSingleProperty(new Property("Vermont Ave", 100, 50, 50, vermontRS), lightBlue);
 		addSingleProperty(new Property("Connecticut Ave", 100, 50, 60, connecticutRS), lightBlue);
 
-		boardProperties.add(new Property("Jail"));
+		boardProperties.add(new Property("Jail", SpecialType.JAIL));
 
 		addSingleProperty(new Property("St. Charles Place", 140, 100, 70, stcharlesRS), pink);
 		addSingleProperty(new Property("Electric Company", RentType.UTILITY), utilities);
@@ -84,14 +92,14 @@ public class BoardCreator {
 		addSingleProperty(new Property("Pennsylvania Railroad", RentType.RAILROAD, pennsylvaniarrRS), railroads);
 
 		addSingleProperty(new Property("St. James Place", 180, 100, 90, stjamesRS), orange);
-		boardProperties.add(new Property("Community Chest"));
+		boardProperties.add(new Property("Community Chest", SpecialType.COMMUNITY_CHEST));
 		addSingleProperty(new Property("Tennessee Ave", 180, 100, 90, tennesseeRS), orange);
 		addSingleProperty(new Property("New York Ave", 200, 100, 100, newyorkRS), orange);
 
-		boardProperties.add(new Property("Free Parking"));
+		boardProperties.add(new Property("Free Parking", SpecialType.FREE_PARKING));
 
 		addSingleProperty(new Property("Kentucky", 220, 150, 110, kentuckyRS), red);
-		boardProperties.add(new Property("Chance"));
+		boardProperties.add(new Property("Chance", SpecialType.CHANCE));
 		addSingleProperty(new Property("Indiana", 220, 150, 110, indianaRS), red);
 		addSingleProperty(new Property("Illinois", 240, 150, 120, illinoisRS), red);
 
@@ -102,21 +110,21 @@ public class BoardCreator {
 		addSingleProperty(new Property("Water Works", RentType.UTILITY), utilities);
 		addSingleProperty(new Property("Marvin Gardens", 280, 150, 140, marvingardensRS), yellow);
 
-		boardProperties.add(new Property("Go To Jail"));
+		boardProperties.add(new Property("Go To Jail", SpecialType.GO_TO_JAIL));
 
 		addSingleProperty(new Property("Pacific", 300, 20, 150, pacificRS), green);
 		addSingleProperty(new Property("North Carolina", 300, 200, 150, northcarolinaRS), green);
-		boardProperties.add(new Property("Community Chest"));
+		boardProperties.add(new Property("Community Chest", SpecialType.COMMUNITY_CHEST));
 		addSingleProperty(new Property("Pennsylvania", 320, 200, 160, pennsylvaniaRS), green);
 
 		addSingleProperty(new Property("Short Line Railroad", RentType.RAILROAD, shortlinerrRS), railroads);
 
-		boardProperties.add(new Property("Chance"));
+		boardProperties.add(new Property("Chance", SpecialType.CHANCE));
 		addSingleProperty(new Property("Park", 350, 200, 175, parkRS), blue);
-		boardProperties.add(new Property("Luxury Tax"));
+		boardProperties.add(new Property("Luxury Tax", SpecialType.LUXURY_TAX));
 		addSingleProperty(new Property("Boardwalk", 400, 200, 200, boardwalkRS), blue);
 	}
-	private static void addSingleProperty(Property property, Set<Property> set) {
+	private void addSingleProperty(Property property, Set<Property> set) {
 		boardProperties.add(property);
 		set.add(property);
 		map.put(property, set);

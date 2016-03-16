@@ -30,6 +30,9 @@ public abstract class Player {
 	public void setJailTime(int jailCount) {
 		jailTime = jailCount;
 	}
+	public void addJailTime() {
+		setJailTime(getJailTime() + 1);
+	}
 	public void setGetOutOfJailFreeCard(boolean trueOrFalse) {
 		getOutOfJailFreeCard = trueOrFalse;
 	}
@@ -48,7 +51,14 @@ public abstract class Player {
 		mortgagedProperties.remove(property);
 	}
 	
-  
+	
+	public void addMoney(int money) {
+		setBalance(getBalance() + money);
+	}
+	public void subtractMoney(int money) {
+		setBalance(getBalance() - money);
+	}
+	
 	
 	public String getToken() {
 		return playerToken;
@@ -79,7 +89,7 @@ public abstract class Player {
 	public String toString() {
 		return getToken().toString();
 	}
-	public void whatHappensWhenYouBuyHouse(Property property) {
+	public void handleHouseBuying(Property property) {
 		property.addOneHouse();
 		int money = getBalance() - property.getHouseCost();
 		setBalance(money);
@@ -87,7 +97,7 @@ public abstract class Player {
 		System.out.println(property + " now has " + property.getNumberOfHouses() + " houses.");
 		System.out.println(this + " has $" + getBalance() + " left.");
 	}
-	public void whatHappensWhenYouMortgage(Property property) {
+	public void handleMortgaging(Property property) {
 		addToMortgagedProperties(property); // use the add method, don't add directly to the list  
 		property.changeMortgageStatus();
 		int money = getBalance() + property.getMortgageCost();
@@ -95,7 +105,7 @@ public abstract class Player {
 		System.out.println(this + " has mortgaged " + property);
 		System.out.println(this + " now has $" + getBalance());
 	}
-	public void whatHappensWhenYouUnmortgage(Property property) {
+	public void handleUnmortgaging(Property property) {
 		removeFromMortgagedProperties(property);
 		property.changeMortgageStatus();
 		int money = getBalance() - property.getMortgageCost();
@@ -105,12 +115,12 @@ public abstract class Player {
 	}
 	
 	//use this same prompt as a check for buying properties, houses, mortgaging properties, and jail 
-	public abstract boolean doYouWantToDoThis(String prompt) throws InterruptedException; //no body for abstract methods
+	public abstract boolean chooseYesOrNo(String prompt) throws InterruptedException; //no body for abstract methods
 
-	public abstract Property buyHouseB(ArrayList<Property> currentHousableProperties) throws InterruptedException;
+	public abstract Property selectWhereToBuyHouse (ArrayList<Property> currentHousableProperties) throws InterruptedException;
 	
-	public abstract Property mortgagePropertiesB (ArrayList<Property> propertiesOwned) throws InterruptedException;
+	public abstract Property selectWhatToMortgage (ArrayList<Property> propertiesOwned) throws InterruptedException;
 	
-	public abstract Property unmortgageB (ArrayList<Property> mortgagedProperties) throws InterruptedException;
+	public abstract Property selectWhatToUnmortgage (ArrayList<Property> mortgagedProperties) throws InterruptedException;
 }
 

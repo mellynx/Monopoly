@@ -12,10 +12,14 @@ public class Property {
 	boolean buyable = true;
 	boolean mortgageStatus = false;
 	RentType rentType; // below, enum only tells us what the possible categories for enum are. Here, we must declare the class and variable
+	SpecialType specialType;
 	
 	enum RentType {
 	  RAILROAD, UTILITY, REGULAR, NONE;
 	 }
+	enum SpecialType {
+		GO, JAIL, FREE_PARKING, INCOME_TAX, LUXURY_TAX, GO_TO_JAIL, COMMUNITY_CHEST, CHANCE;
+	}
 	
 	// constructor for the main properties
 	public Property(String name, int buyCost, int houseCost, int mortgageCost, RentSchedule rentSchedule) { 
@@ -48,8 +52,9 @@ public class Property {
 	// constructor for board properties (like "Go")
 	// buyable is now default true for all properties except board properties
 	// houseCost and buyCost must be initialized because they are final, which means they can only be set once. AKA they must be set here
-	public Property(String name) {
+	public Property(String name, SpecialType specialType) {
 	  this.name = name;
+	  this.specialType = specialType;
 	  buyable = false;
 	  houseCost = 0;
 	  buyCost = 0;
@@ -78,6 +83,9 @@ public class Property {
 	}
 	public RentType getRentType() { // figure out if a property is regular, utility, railroad, etc
 		return rentType;
+	}
+	public SpecialType getSpecialType() {
+		return specialType;
 	}
 	public boolean getBuyableStatus() { // separates board properties from all other properties
 		return buyable;

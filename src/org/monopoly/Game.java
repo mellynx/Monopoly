@@ -1,13 +1,12 @@
 package org.monopoly;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
 import org.monopoly.Property.RentType;
+import org.monopoly.Property.SpecialType;
 
 import java.util.Map;
 
@@ -34,69 +33,49 @@ public class Game {
 		random = new Random();
 		
 		// the three calls below are in the constructor because they are involved in the setup of the game 
-		// TODO is this right to use BoardCreator? 
-		BoardCreator.addProperties(boardProperties, map); 
+		// note how we call the board creator class 
+		new BoardCreator(boardProperties, map).addProperties(); 
 		// players start at the first property on the arrayList
 		playerOne.setLocation(boardProperties.get(0)); 
 		playerTwo.setLocation(boardProperties.get(0));
 	}
 
-	public void playGame() throws IOException, InterruptedException {
+	public void playGame() {
 		
 		while (true) {
-			// TODO: Naming! What does twoPlayerGamePtOne mean?? What is
-			// actually happening? See my further down comment on naming as
-			// commands.
-			if (twoPlayerGamePtOne(playerOne, playerTwo)) {
+			if (playGame(playerOne, playerTwo)) {
 				break;
 			}
-			if (twoPlayerGamePtOne(playerTwo, playerOne)) {
+			if (playGame(playerTwo, playerOne)) {
 				break;
 			}
 		}
 	}
 
-	private boolean twoPlayerGamePtOne(Player thisPlayer, Player otherPlayer) throws IOException, InterruptedException {
+	private boolean playGame(Player thisPlayer, Player otherPlayer) {
 
 		int dice = rollDice();
-		boolean status = false;
+		Property landed;
 
 		// if player starts turn in jail
-		if (thisPlayer.getLocation() == boardProperties.get(10) && thisPlayer.getJailTime() >= 0) { 
-			// TODO:You shouldn't need to check their position. Jailtime or whatever variable should clearly tell you if they're in jailor not.
-			// TODO: Lol. Consider you are ordering someone to do something.
-			// You're like "Hey Isaac, being in jail this player". That sounds
-			// wrong. More like "Hey Isaac, handleJail for this player" or
-			// something.
-			beingInJail(thisPlayer, otherPlayer);
+		if (thisPlayer.getJailTime() >= 0) { 
+			beingInJail(thisPlayer);
 		} 
 		else {
 			System.out.println("Player " + thisPlayer.getToken() + " has rolled a " + dice);
-			// TODO: Part two of the game?? What?? "Isaac! Hey do a thing for
-			// me: twoPlayerGamePtTwo"
-			status = twoPlayerGamePtTwo(thisPlayer, otherPlayer, dice);
+			landed = moveSpace(thisPlayer, dice);
+			thisPlayer.setLocation(landed);
+			System.out.println("Player " + thisPlayer.getToken() + " has landed on " + landed);
+			System.out.println(thisPlayer + " has $" + thisPlayer.getBalance());
+			afterLanding(thisPlayer, landed, dice);
 		}
-		return status;
-	}
-
-	// TODO: This doesn't really feel like enough code to really be in a
-	// separate method if you can't come up for a good name for what it is
-	// separate from the previous.
-	private boolean twoPlayerGamePtTwo(Player thisPlayer, Player otherPlayer, int dice)
-			throws IOException, InterruptedException { // TODO: Where are all these exceptions coming from? You should try/catch them instead of bubbling them up like this.
-		Property landed;
-
-		landed = moveSpace(thisPlayer, dice);
-		thisPlayer.setLocation(landed);
-		System.out.println("Player " + thisPlayer.getToken() + " has landed on " + landed);
-		afterLanding(thisPlayer, otherPlayer, landed, dice);
 
 		if (thisPlayer.getHousableSetList().size() > 0) {
 			checkMonopolies(thisPlayer);
 		}
 
 		if (thisPlayer.getMortgagedProperties().size() > 0) {
-			unmortgageA(thisPlayer);
+			unmortgageProperties(thisPlayer);
 		}
 
 		if (checkBalance(thisPlayer, otherPlayer)) {
@@ -118,96 +97,70 @@ public class Game {
 
 		// get the current index of where the player is
 		int index = player.getLocation().getLocationIndex(boardProperties);
-		// TODO: You might consider doing index += roll here and save doing it
-		// twice in the next couple of lines.
+		index += roll;
+		
 		// giving players $200 every time they pass Go
-		if (index + roll >= boardProperties.size()) {
+		if (index >= boardProperties.size()) {
 			System.out.println("Collect $200 for passing Go.");
 			player.setBalance(player.getBalance() + 200);
 		}
 
-		index = ((index + roll) % boardProperties.size());
+		index = index % boardProperties.size();
 
 		return boardProperties.get(index);
 	}
 
-	// TODO: Do you really need to pass otherPlayer in here?
-	public void afterLanding(Player player, Player otherPlayer, Property landedProperty, int diceRoll)
-			throws IOException, InterruptedException { // TODO: These exceptions// probably shouldn't be bubbling up.
+	public void afterLanding(Player player, Property landedProperty, int diceRoll) { 
 		// if property is not owned by anyone
 		if (landedProperty.getPropertyOwner() == null) {
 			// if the property is a board property, nothing happens
 			if (!landedProperty.getBuyableStatus()) {
-				specialProperties(player, otherPlayer, landedProperty);
-				System.out.println(player + " has $" + player.getBalance());
+				specialProperties(player, landedProperty);
 			}
-			// if property is not a board property, ask player if they want to
-			// buy the property
+			// if property is not a board property, ask player if they want to buy the property
 			else {
-				System.out.println(player + " has $" + player.getBalance() + " and the property costs $"
-						+ landedProperty.getBuyCost());
+				System.out.println("This property costs $" + landedProperty.getBuyCost());
 				String prompt = "Do you want to buy this property? (y/n)";
 				// if player wants to buy the property
-				if (player.doYouWantToDoThis(prompt)) {
-					// if player has the money
-					if (player.getBalance() > landedProperty.getBuyCost()) { // TODO: you should probably check if they have the money before asking if they want to buy it
-						buyProperty(player, landedProperty);
-						// if this newly purchased property completes a
-						// monopoly, save the set
-						if (isPropertyPartOfHousableSet(player, landedProperty)) {
-							addToHousableSetList(player, landedProperty);
+				try {
+					if (player.chooseYesOrNo(prompt)) {
+						// if player has the money
+						if (player.getBalance() > landedProperty.getBuyCost()) {
+							buyProperty(player, landedProperty);
 						}
-					}
-					// if player does not have the money
-					else {
-						// if player has properties to mortgage
-						System.out.println(player + " has $" + player.getBalance() + " and the property costs $"
-								+ landedProperty.getBuyCost());
+						// if player does not have the money
+						else {
+							// if player has properties to mortgage
+							if (player.getPropertiesOwned().size() > player.getMortgagedProperties().size()) {
 
-						if (player.getPropertiesOwned().size() > player.getMortgagedProperties().size()) {
+								prompt = "Player cannot afford to buy this property. Would you like to mortgage some properties? (y/n)";
+								if (player.chooseYesOrNo(prompt)) {
+									mortgageProperties(player); 
 
-							// TODO: If you don't care about the value of the
-							// previous prompt anymore (I don't think you do,
-							// just reuse prompt.
-							String promptB = "Player cannot afford to buy this property. Would you like to mortgage some properties? (y/n)";
-							if (player.doYouWantToDoThis(promptB)) {
-								mortgagePropertiesA(player); // TODO: We talked
-																// aboutthis but
-																// A and B
-																// suffixes
-																// don't count
-																// as proper
-																// naming.
-
-								// if this is enough for player to buy the
-								// property, let them
-								if (player.getBalance() > landedProperty.getBuyCost()) {
-									buyProperty(player, landedProperty);
-
-									// if this newly purchased property
-									// completes a monopoly, save the set
-									if (isPropertyPartOfHousableSet(player, landedProperty)) {
-										addToHousableSetList(player, landedProperty);
+									// if this is enough for player to buy the property, let them
+									if (player.getBalance() > landedProperty.getBuyCost()) {
+										buyProperty(player, landedProperty);
+									} 
+									else {
+										System.out.println(player + " still does not have enough money to buy the property.");
 									}
 								} 
 								else {
-									System.out
-											.println(player + " still does not have enough money to buy the property.");
+									System.out.println(player + " cannot afford to buy this property.");
 								}
-							} 
+							}
+							// if player does not have any properties to mortgage
 							else {
 								System.out.println(player + " cannot afford to buy this property.");
 							}
 						}
-						// if player does not have any properties to mortgage
-						else {
-							System.out.println(player + " cannot afford to buy this property.");
-						}
 					}
-				}
-				// if player does not want to buy
-				else {
-					System.out.println(player + " has chosen not to buy this property.");
+					// if player does not want to buy
+					else {
+						System.out.println(player + " has chosen not to buy this property.");
+					}
+				} catch (InterruptedException e) {
+					e.printStackTrace();
 				}
 			}
 		}
@@ -217,7 +170,6 @@ public class Game {
 			// if property is mortgaged, no rent must be paid. else, pay rent
 			if (landedProperty.getMortgageStatus()) {
 				System.out.println("This property is mortgaged and no rent must be paid.");
-				System.out.println(player + " has $" + player.getBalance());
 			} 
 			else {
 				payRent(player, landedProperty, diceRoll);
@@ -227,90 +179,81 @@ public class Game {
 		// if property is owned by the player
 		else {
 			System.out.println(player + " owns this property and nothing happens to the player.");
-			System.out.println(player + " has $" + player.getBalance());
 		}
 	}
 
 	public void buyProperty(Player player, Property landedProperty) {
 		System.out.println(player + " has bought " + landedProperty + " for $" + landedProperty.getBuyCost());
-		player.setBalance(player.getBalance() - landedProperty.getBuyCost());
+		player.subtractMoney(landedProperty.getBuyCost());
 		System.out.println(player + " has $" + player.getBalance() + " left.");
 		landedProperty.setPropertyOwner(player);
 		player.addToPropertiesOwnedList(landedProperty);
-		// TODO: Why not check new monopolies here instead of in multiple places
-		// above?
+		
+		if (isPropertyPartOfMonopoly(player, landedProperty)) {
+			addMonopoly(player, landedProperty);
+		}
 	}
 
 	public void payRent(Player player, Property landedProperty, int diceRoll) {
 		// prints statement of what's happening; deducts rent from player's
-		// balance; prints out his new balance; adds rent to other player's
-		// balance
+		// balance; prints out his new balance; adds rent to other player's balance
 		System.out.println(player + " has paid $" + landedProperty.getRentCost(diceRoll) + " in rent to "
 				+ landedProperty.getPropertyOwner() + " for landing on " + landedProperty);
-		player.setBalance(player.getBalance() - landedProperty.getRentCost(diceRoll));
+		player.subtractMoney(landedProperty.getRentCost(diceRoll)); 
 		System.out.println(player + " has $" + player.getBalance() + " left.");
-		// TODO: Sounds like you really need a Player .addmoney function
-		landedProperty.getPropertyOwner()
-				.setBalance(landedProperty.getPropertyOwner().getBalance() + landedProperty.getRentCost(diceRoll));
+		landedProperty.getPropertyOwner().addMoney(landedProperty.getRentCost(diceRoll));
 	}
 
-	public void checkMonopolies(Player player) throws InterruptedException { // TODO:
-																				// Don't
-																				// bubble
-																				// this
-																				// exception
-																				// up
-		// stop asking the below prompt if the "generate" list is null (either
-		// because houses have been maxed out or player does not have enough
-		// money
-		// TODO: getBuyableHouseLocations()
-		if (generatingListOfPropsWherePlayerCanBuyHouse(player, player.getHousableSetList()).size() > 0) {
+	public void checkMonopolies(Player player) { 
+		// don't ask the below prompt if the "generate" list is null (either
+		// because houses have been maxed out or player does not have enough money)
+		if (getBuyableHouseLocations(player, player.getHousableSetList()).size() > 0) {
 
 			String prompt = "Player has completed a monopoly and is eligible to buy houses. Would you like to buy any houses? (y/n)";
-			if (player.doYouWantToDoThis(prompt)) {
-				// TODO: The GUI should really jsut display how much money you
-				// have at all times, so this is just useful for ConsolePlayer
-				System.out.println(player + " has $" + player.getBalance());
+			try {
+				if (player.chooseYesOrNo(prompt)) {
 
-				if (player.getPropertiesOwned().size() > player.getMortgagedProperties().size()) {
+					if (player.getPropertiesOwned().size() > player.getMortgagedProperties().size()) {
 
-					String promptB = "Would you like to mortgage some properties first? (y/n)";
+						String promptB = "Would you like to mortgage some properties first? (y/n)";
 
-					if (player.doYouWantToDoThis(promptB)) {
-						mortgagePropertiesA(player);
-					} 
-					else {
-						System.out.println(player + " has chosen not to mortgage any properties.");
+						if (player.chooseYesOrNo(promptB)) {
+							mortgageProperties(player);
+						} 
+						else {
+							System.out.println(player + " has chosen not to mortgage any properties.");
+						}
 					}
+					buyHouse(player);
+				} 
+				else {
+					System.out.println(player + " has chosen not to buy any houses.");
 				}
-				buyHouseA(player);
-			} 
-			else {
-				System.out.println(player + " has chosen not to buy any houses.");
+			} catch (InterruptedException e) {
+				e.printStackTrace();
 			}
 		}
 	}
 
-	// TODO: buyHouse()
-	public void buyHouseA(Player player) throws InterruptedException {
-		Property houseBought;
-
-		// TODO: You could make this loop simpler by changing it to a normal
-		// while loop, and doing if (houseBought == null) break; Change the
-		// while to while(true) and move houseBought to being declared inside
-		// the loop.
-		do {
-			// TODO: player.choosePropertyForHouse()
-			houseBought = player
-					.buyHouseB(generatingListOfPropsWherePlayerCanBuyHouse(player, player.getHousableSetList()));
-
-			if (houseBought != null) {
-				// TODO: I'm assuming I said something about renaming this
-				// somewhere else.
-				player.whatHappensWhenYouBuyHouse(houseBought);
+	public void buyHouse(Player player) {
+	
+		while (true) {
+			Property houseToBuy = null;
+			
+			try {
+				houseToBuy = player.selectWhereToBuyHouse(getBuyableHouseLocations(player, player.getHousableSetList()));
+			} catch (InterruptedException e) {
+				e.printStackTrace();
 			}
-		} 
-		while (houseBought != null);
+			
+			if (houseToBuy != null) {
+				player.handleHouseBuying(houseToBuy);
+			}
+			else {
+				System.out.println(player + " does not want to buy any more houses.");
+				break;
+			}
+		}
 	}
 
 	/**
@@ -319,8 +262,7 @@ public class Game {
 	 * where he can buy houses the method does not check whether he has enough
 	 * money to
 	 */
-	// TODO: How about isPropertyPartOfMonopoly()
-	public boolean isPropertyPartOfHousableSet(Player player, Property landedProperty) {
+	public boolean isPropertyPartOfMonopoly(Player player, Property landedProperty) {
 		Set<Property> color = map.get(landedProperty);
 
 		// cannot call a method on a null object
@@ -334,121 +276,106 @@ public class Game {
 		return true;
 	}
 
-	// TODO: How about addMonpoly?
-	public void addToHousableSetList(Player player, Property landedProperty) {
+	public void addMonopoly(Player player, Property landedProperty) {
 		System.out.println(player + " has achieved a monopoly for " + map.get(landedProperty));
 		Set<Property> color = map.get(landedProperty);
 		player.addToHousableSets(color);
 	}
 
-	// TODO: houseableSetsA -> monopolies
-	public ArrayList<Property> generatingListOfPropsWherePlayerCanBuyHouse(Player player,
-			ArrayList<Set<Property>> housableSetsA) {
-		// TODO: housablePropertiesToPassToPlayer -> buildableProperties? Or
-		// since this is what we are returning just "properties" since we don't
-		// have to distingusih from any other thing called properties in this
-		// function.
-		ArrayList<Property> housablePropertiesToPassToPlayer = new ArrayList<>();
+	public ArrayList<Property> getBuyableHouseLocations(Player player, ArrayList<Set<Property>> monopolies) {
+		
+		ArrayList<Property> houseableProperties = new ArrayList<>();
 
 		// loop through the list of all sets to pick out each individual set
-		for (int i = 0; i < housableSetsA.size(); i++) {
-			// TODO: propertSetB -> monopoly
-			Set<Property> propertySetB = housableSetsA.get(i);
+		for (int i = 0; i < monopolies.size(); i++) {
+			Set<Property> monopoly = monopolies.get(i);
 
 			// for each set, return minimum house number across the properties
 			// for that set
-			int minHouseCountPerSet = findMinimumHouseNumber(propertySetB);
+			int minHouseCountPerSet = findMinimumHouseNumber(monopoly);
 
 			// looping through every property in a set
-			// TODO: housablePropertyC -> property
-			for (Property housablePropertyC : propertySetB) {
+			for (Property property : monopoly) {
 				// if player can afford a house there, if the houses are being
 				// built evenly, if there aren't already the max number of
-				// houses
-				// then add that property to the list we present to the player
-				if (player.getBalance() > housablePropertyC.getHouseCost()
-						&& housablePropertyC.getNumberOfHouses() == minHouseCountPerSet
-						&& housablePropertyC.getNumberOfHouses() < 5) {
-					housablePropertiesToPassToPlayer.add(housablePropertyC);
+				// houses then add that property to the list we present to the player
+				if (player.getBalance() > property.getHouseCost() && property.getNumberOfHouses() == minHouseCountPerSet && property.getNumberOfHouses() < 5) {
+					houseableProperties.add(property);
 				}
 			}
 		}
-		return housablePropertiesToPassToPlayer;
+		return houseableProperties;
 	}
 
-	// TODO: propertySetB -> monopoly
-	public int findMinimumHouseNumber(Set<Property> propertySetB) {
-		// TODO: minHouseCountPerSet -> minimum or just min will work.
-		int minHouseCountPerSet = 100;
+	public int findMinimumHouseNumber(Set<Property> monopoly) {
+		
+		int minHouseCount = 100;
 
-		// loop through each property in the set to find the minimum house
-		// number
-		// TODO: housablePropertyC -> property
-		for (Property housablePropertyC : propertySetB) {
-			if (housablePropertyC.getNumberOfHouses() < minHouseCountPerSet) {
-				minHouseCountPerSet = housablePropertyC.getNumberOfHouses();
+		// loop through each property in the set to find the minimum house number
+		for (Property property : monopoly) {
+			if (property.getNumberOfHouses() < minHouseCount) {
+				minHouseCount = property.getNumberOfHouses();
 			}
 		}
-		return minHouseCountPerSet;
+		return minHouseCount;
 	}
 
-	// TODO: How about just mortgageProperties
-	public void mortgagePropertiesA(Player player) throws InterruptedException {
-		// TODO: mortgageableProperties or just properties
-		ArrayList<Property> propertiesToPassForMortgage = new ArrayList<Property>();
+	
+	public void mortgageProperties(Player player) {
 
-		// TODO: Instead, use a foreach loop: for (Property p :
-		// player.getPropertiesOwned()) { ...
-		for (int i = 0; i < player.getPropertiesOwned().size(); i++) {
-			if (!player.getPropertiesOwned().get(i).getMortgageStatus()) {
-				propertiesToPassForMortgage.add(player.getPropertiesOwned().get(i));
+		ArrayList<Property> mortgageableProperties = new ArrayList<Property>();
+
+		for (Property property: player.getPropertiesOwned()) {
+			if (!property.getMortgageStatus()) {
+				mortgageableProperties.add(property);
 			}
 		}
-
-		// TODO: I would probably term this "chosen" or "toMortgage" since it
-		// hasn't been mortgaged yet.
-		// TODO: Switch to a normal while loop like mentioned above
-		Property mortgaged;
-		do {
-			// TODO: mortgagePropertiesB -> choosePropertyToMortgage
-			mortgaged = player.mortgagePropertiesB(propertiesToPassForMortgage);
-
-			if (mortgaged != null) {
-				// TODO: Something like handleMortgage
-				player.whatHappensWhenYouMortgage(mortgaged);
+		
+		while (true) {
+			Property toMortgage = null;
+			
+			try {
+				toMortgage = player.selectWhatToMortgage(mortgageableProperties);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
 			}
-		} 
-		while (mortgaged != null);
+			
+			if (toMortgage != null) {
+				player.handleMortgaging(toMortgage);
+			}
+			else {
+				System.out.println(player + " does not want to mortgage any more properties.");
+				break;
+			}
+		}
 	}
 
-	// TODO: unmortgageProperties
-	public void unmortgageA(Player player) throws InterruptedException {
+	public void unmortgageProperties(Player player) {
 
 		String prompt = "You have mortgaged properties. Would you like to unmortgage them? (y/n)";
-
-		if (player.doYouWantToDoThis(prompt)) {
-			// TODO: again chosen or toUnmortgage
-			Property unmortgaged;
-			// TODO: Switch to normal while loop. Do/whiles are rare and thus
-			// more confusing
-			do {
-				// TODO: player.choosePropertyToUnmortgage
-				unmortgaged = player.unmortgageB(player.getMortgagedProperties());
-
-				if (unmortgaged != null) {
-					// TODO: Something like handleUnmortgage
-					player.whatHappensWhenYouUnmortgage(unmortgaged);
+		
+		try {
+			if (player.chooseYesOrNo(prompt)) {
+				while (true) {
+					Property toUnmortgage;
+					
+					toUnmortgage = player.selectWhatToUnmortgage(player.getMortgagedProperties());
+					
+					if (toUnmortgage != null) {
+						player.handleUnmortgaging(toUnmortgage);
+					}
+					else {
+						System.out.println(player + " does not want to unmortgage any more properties.");
+						break;
+					}
 				}
-			} 
-			while (unmortgaged != null);
+			}
+		} catch (InterruptedException e) {
+			e.printStackTrace();
 		}
 	}
 
-	// TODO: Don't bubble up this exception. Methods should only throw an
-	// exception that makes sense logically. It doesn't make sense that checking
-	// someones balance could be interrupted. It might make sense if checking
-	// someones balalnce resulted in an OutOfMoneyExceptoin or something.
-	public boolean checkBalance(Player player, Player otherPlayer) throws InterruptedException {
+	public boolean checkBalance(Player player, Player otherPlayer) {
 		if (player.getBalance() < 0) {
 
 			// as long as player has properties, they should mortgage them to
@@ -456,7 +383,7 @@ public class Game {
 			if (player.getPropertiesOwned().size() > player.getMortgagedProperties().size()) {
 
 				System.out.println("Player is out of money and must mortgage properties.");
-				mortgagePropertiesA(player);
+				mortgageProperties(player);
 
 				if (player.getBalance() < 0) {
 					System.out.println(otherPlayer.getToken() + " has won the game!");
@@ -471,104 +398,76 @@ public class Game {
 		return false;
 	}
 
-	// TODO: these exceptions shouldn't be bubbling up
-	public void specialProperties(Player player, Player otherPlayer, Property property)
-			throws IOException, InterruptedException {
+	public void specialProperties(Player player, Property property) {
 
-		int locationIndex = property.getLocationIndex(boardProperties);
-		// TODO: It would be a lot cleaner if there was an enum in the property
-		// that was GO, JAIL, FREE_PARKING etc. instead of relying on an index
-		// like this.
-		switch (locationIndex) {
-		case 0: // Go -- collecting $200 cannot be done here because you collect
-				// that every time you PASS go
-			System.out.print(""); // TODO: Why are you printing nothing?
+		SpecialType type = property.getSpecialType();
+		
+		switch (type) {
+		// Go -- collecting $200 cannot be done here because you collect that every time you PASS go
+		case GO: 
 			break;
-		case 10: // Jail
-			// TODO: Stuff like this should really be passed to the player.log
-			// method you should create.
+		case JAIL: 
 			System.out.println("Passing through jail! Enjoy visiting!");
 			break;
-		case 20: // Free Parking
+		case FREE_PARKING: 
 			System.out.println("Chill on Free Parking. Nothing happens.");
 			break;
 
-		case 4: // Income Tax (pay $200 or 10%)
-			if ((player.getBalance() * 10) < 200) { // TODO: Balance TIMES 10?
-													// Shouldn't it be divided?
-				System.out.println("Pay 10% of your balance on income tax."); // TODO:
-																				// This
-																				// line
-																				// is
-																				// unnecessary
-				System.out.println(player + " has paid $" + (player.getBalance() * 10) + " to Income Tax.");
-				subtractMoney(player, (player.getBalance() * 10));
+		case INCOME_TAX: 
+			if ((player.getBalance() / 10) < 200) { 
+				System.out.println(player + " has paid $" + (player.getBalance() / 10) + " to Income Tax.");
+				player.subtractMoney(player.getBalance() / 10);
 			} 
 			else {
-				System.out.println("Pay $200 to Income Tax."); // TODO: This
-																// line is
-																// unnecesary
 				System.out.println(player + " has paid $200 to Income Tax.");
-				subtractMoney(player, 200);
+				player.subtractMoney(200);
 			}
 			break;
-		case 38: // Luxury Tax
-			System.out.println("Pay $75 to Luxury Tax."); // TODO: This line is
-															// unnecssary
+		case LUXURY_TAX:
 			System.out.println(player + " has paid $75 to Luxury Tax.");
-			subtractMoney(player, 75);
+			player.subtractMoney(75);
 			break;
 
-		case 30: // Go To Jail
+		case GO_TO_JAIL: 
 			System.out.println("Oh no! " + player + " is going to jail.");
 			player.setLocation(boardProperties.get(10));
-			addJailTime(player);
+			player.addJailTime();
 			break;
 
-		case 2: 
-		case 17:
-		case 33:
-			communityChest(player, otherPlayer);
+		case COMMUNITY_CHEST:
+			communityChest(player);
 			break;
 
-		case 7: 
-		case 22:
-		case 36:
-			chance(player, otherPlayer);
+		case CHANCE:
+			chance(player);
 			break;
 		}
 	}
 
-	public void communityChest(Player player, Player otherPlayer) throws IOException, InterruptedException {
+	public void communityChest(Player player) {
 		int rand = random.nextInt(8);
 
 		switch (rand) {
 		case 0:
 			System.out.println("Community Chest: Collect $50 from every player.");
-			addMoney(player, 50);
-			// TODO: You don't really need the other player reference here, you
-			// can figure it out. That'll save you from having to pass it down
-			// through a bunch of methods.
-			subtractMoney(otherPlayer, 50);
+			player.addMoney(50);
+			
+			// use this to refer to OtherPlayer rather than passing it down through a bunch of methods 
+			referToOtherPlayer(player).subtractMoney(50);
 			break;
 		case 1:
 			System.out.println("Community Chest: Collect for services $25.");
-			addMoney(player, 25);
+			player.addMoney(25);
 			break;
 		case 2:
 			System.out.println("Community Chest: Advance to Go. Collect $200.");
 			player.setLocation(boardProperties.get(0));
-			addMoney(player, 200);
-			// TODO: Noooooo this is really bad. There are a bunch of side
-			// effects of this function, you can't just call it like this. Also,
-			// when you return from the current method it will go there and do
-			// all the stuff you want anyway.
-			// This is sort of like a solider telling a general to do something.
-			twoPlayerGamePtTwo(player, otherPlayer, 0);
+			player.addMoney(200);
+			afterLanding(player, boardProperties.get(0), 0);
 			break;
 		case 3:
 			System.out.println("Community Chest: Pay hospital $100.");
-			subtractMoney(player, 100);
+			player.subtractMoney(100);
 			break;
 		case 4:
 			System.out.println("Community Chest: Get out of jail free.");
@@ -577,73 +476,60 @@ public class Game {
 		case 5:
 			System.out.println("Community Chest: Go directly to Jail. Do not pass Go, do not collect $200.");
 			player.setLocation(boardProperties.get(10));
-			addJailTime(player);
+			player.addJailTime();
 			break;
 		case 6:
-			System.out.println(
-					"Community Chest: You are assessed for street repairs. Pay $85 per house, $115 per hotel.");
-
-			int houseCount = 0;
-			int hotelCount = 0;
-
-			for (int i = 0; i < player.getPropertiesOwned().size(); i++) {
-				houseCount += player.getPropertiesOwned().get(i).getNumberOfHouses();
-
-				if (player.getPropertiesOwned().get(i).getNumberOfHouses() == 5) {
-					hotelCount += 1;
-					houseCount -= 5;
-				}
-			}
-
-			System.out.println(player + " owns " + houseCount + " houses and " + hotelCount + " hotels.");
-			System.out.println(
-					player + " will pay $" + houseCount * 85 + " for houses and $" + hotelCount * 115 + " for hotels.");
-			subtractMoney(player, (houseCount * 85 + hotelCount * 115));
+			System.out.println("Community Chest: You are assessed for street repairs. Pay $85 per house, $115 per hotel.");
+			generalRepairHelper(player, 85, 115);
 			break;
 
 		case 7:
 			System.out.println("Community Chest: From sale of stock, collect $45.");
-			addMoney(player, 45);
+			player.addMoney(45);
 			break;
 		}
 	}
 
-	public void chance(Player player, Player otherPlayer) throws IOException, InterruptedException {
+	public void chance(Player player) {
 		int rand = random.nextInt(12);
 
 		switch (rand) {
 		case 0:
 			System.out.println("Chance: Advance to Go, collect $200");
 			player.setLocation(boardProperties.get(0));
-			addMoney(player, 200);
-			twoPlayerGamePtTwo(player, otherPlayer, 0); // TODO: again
-														// nooooooooo
+			player.addMoney(200);
+			afterLanding(player, boardProperties.get(0), 0);
 			break;
 		case 1:
 			System.out.println("Chance: Bank pays you dividend of $50.");
-			addMoney(player, 50);
+			player.addMoney(50);
 			break;
 		case 2:
 			System.out.println("Chance: Go back 3 spaces.");
 			int index = player.getLocation().getLocationIndex(boardProperties);
-			player.setLocation(boardProperties.get(index - 3)); // TODO: What if
-																// they are at
-																// property 0?
-			twoPlayerGamePtTwo(player, otherPlayer, 0); // TODO: Stahp
+			
+			if (index < 3) {
+				index = index + 40;
+			}
+			index -= 3;
+			
+			System.out.println(player + " has landed on " + boardProperties.get(index));
+			player.setLocation(boardProperties.get(index)); 
+			afterLanding(player, boardProperties.get(index), 0);
 			break;
 		case 3:
 			System.out.println("Chance: Go directly to Jail. Do not pass Go, do not collect $200");
 			player.setLocation(boardProperties.get(10));
-			addJailTime(player);
+			player.addJailTime();
 			break;
 		case 4:
 			System.out.println("Chance: Pay poor tax of $15");
-			subtractMoney(player, 15);
+			player.subtractMoney(15);
 			break;
 		case 5:
 			System.out.println("You have been elected chairman of the board. Pay each player $50");
-			subtractMoney(player, 50);
-			addMoney(otherPlayer, 50);
+			player.subtractMoney(50);
+			referToOtherPlayer(player).addMoney(50);
 			break;
 		case 6:
 			System.out.println("Advance to Reading Railroad. If you pass Go, collect $200");
@@ -651,69 +537,60 @@ public class Game {
 
 			if (indexB > 5) {
 				System.out.println("Collect $200 for passing Go.");
-				addMoney(player, 200);
+				player.addMoney(200);
 			}
 
 			player.setLocation(boardProperties.get(5));
-			twoPlayerGamePtTwo(player, otherPlayer, 0); // TODO: Plz stahp
+			afterLanding(player, boardProperties.get(5), 0);
 
 			break;
 		case 7:
 			System.out.println("Advance to Boardwalk.");
 			player.setLocation(boardProperties.get(39));
-			twoPlayerGamePtTwo(player, otherPlayer, 0); // TODO: Y u do dis
+			afterLanding(player, boardProperties.get(39), 0); 
 			break;
 		case 8:
 			System.out.println("Your building and loan matures. Collect $150.");
-			addMoney(player, 150);
+			player.addMoney(150);
 			break;
 		case 9:
 			System.out.println("Advance to Illinois Ave.");
 			player.setLocation(boardProperties.get(24));
-			twoPlayerGamePtTwo(player, otherPlayer, 0); // TODO: nope
+			afterLanding(player, boardProperties.get(24), 0);
 			break;
 		case 10:
 			System.out.println("Get out of jail free.");
 			player.setGetOutOfJailFreeCard(true);
 			break;
 		case 11:
-			System.out.println(
-					"Make general repairs on your properties. For each house pay $25. For each hotel pay $100");
-			// TODO: Since you do this in two places, instead make a helper
-			// function that returns number of houses & hotels (or two helper
-			// functions one for each)
-			int houseCount = 0;
-			int hotelCount = 0;
-
-			for (int i = 0; i < player.getPropertiesOwned().size(); i++) {
-				houseCount += player.getPropertiesOwned().get(i).getNumberOfHouses();
-
-				if (player.getPropertiesOwned().get(i).getNumberOfHouses() == 5) {
-					hotelCount += 1;
-					houseCount -= 5;
-				}
-			}
-
-			System.out.println(player + " owns " + houseCount + " houses and " + hotelCount + " hotels.");
-			System.out.println(
-					player + " will pay $" + houseCount * 25 + " for houses and $" + hotelCount * 100 + " for hotels.");
-			subtractMoney(player, (houseCount * 25 + hotelCount * 100));
+			System.out.println("Make general repairs on your properties. For each house pay $25. For each hotel pay $100");
+			generalRepairHelper(player, 25, 100);
 			break;
 		}
+	}	
+	public void generalRepairHelper(Player player, int houseCost, int hotelCost) {
+
+		int houseCount = 0;
+		int hotelCount = 0;
+
+		for (int i = 0; i < player.getPropertiesOwned().size(); i++) {
+			houseCount += player.getPropertiesOwned().get(i).getNumberOfHouses();
+
+			if (player.getPropertiesOwned().get(i).getNumberOfHouses() == 5) {
+				hotelCount += 1;
+				houseCount -= 5;
+			}
+		}
+
+		System.out.println(player + " owns " + houseCount + " houses and " + hotelCount + " hotels.");
+		System.out.println(player + " will pay $" + houseCount * houseCost + " for houses and $" + hotelCount * hotelCost + " for hotels.");
+		player.subtractMoney(houseCount * houseCost + hotelCount * hotelCost);
 	}
 
-	// TODO: Since this is solely affecting a variable in the player class, this
-	// should probably just be in Player
-	public void addJailTime(Player player) {
-		player.setJailTime(player.getJailTime() + 1);
-	}
-
-	public void beingInJail(Player player, Player otherPlayer) throws IOException, InterruptedException {
-		// TODO: Two stars /** means javadoc. That is only for methods and
-		// classes. You want /* here for just a normal multiline comment.
-		/**
+	public void beingInJail(Player player) {
+		/*
 		 * In JAIL, player status JailTime = -1 if player is not in jail (or has
-		 * just gotten out of jail) 0 if player has just landed in jail and 0-1
+		 * just gotten out of jail) 0 if player has just landed in jail and 1-3
 		 * for the subsequent rolls player tries to make to get out of jail
 		 */
 
@@ -724,66 +601,60 @@ public class Game {
 		System.out.println(player + " rolls a " + diceOne + " and a " + diceTwo);
 
 		if (diceOne == diceTwo) {
-			System.out.println("Player has rolled out of jail!");
+			System.out.println(player + " has rolled out of jail!");
 			player.setJailTime(-1);
-			twoPlayerGamePtTwo(player, otherPlayer, diceOne + diceTwo); // TODO:
-																		// oh
-																		// god
-																		// why
-		} else {
-			addJailTime(player);
+			
+			// 10 is the locationIndex of jail, aka where the player is starting from 
+			int index = 10 + diceOne + diceTwo; 
+			System.out.println(player + " has landed on " + boardProperties.get(index));
+			player.setLocation(boardProperties.get(index));
+			afterLanding(player, boardProperties.get(index), diceOne + diceTwo);
+		} 
+		else {
+			player.addJailTime();
 			System.out.println("Player is still in jail and has rolled " + player.getJailTime() + " times.");
 
-			// if player has get out of jail free card, use it, get out jail, do
-			// not move until next turn
-			// TODO: WHat if a player wants to use a get out of jail free card
-			// immediately?
+			// if player has get out of jail free card, use it, get out jail, do not move until next turn
 			if (player.getOutOfJailFreeCard) {
 				System.out.println(player + " has used a get-out-of-jail-free card.");
 				player.setGetOutOfJailFreeCard(false);
 				player.setJailTime(-1);
-				System.out.println("----------------");
 			} 
 			else if (player.getJailTime() == 3) {
 				System.out.println(player + " has rolled 3 times and now must pay $50 to get out of jail.");
-				System.out.println(player + " has paid $50 to get out of jail.");
-				subtractMoney(player, 50);
-				player.setJailTime(-1);
-				System.out.println("----------------");
-				checkBalance(player, otherPlayer);
+				payToLeaveJail(player);
+				checkBalance(player, referToOtherPlayer(player));
 			} 
 			else {
 				String prompt = "Do you want to pay $50 to get out of jail? (y/n)";
-				if (player.doYouWantToDoThis(prompt)) {
-					System.out.println(player + " has paid $50 to get out of jail.");
-					subtractMoney(player, 50);
-					player.setJailTime(-1);
-					System.out.println("----------------");
-				} 
-				else { // TODO: All of these prints really only help the
-							// console player so really, they should only be in
-							// the console player. And maybe the random player
-							// for debugging random vs random.
-					System.out.println(player + " has decided not to pay to leave jail.");
-					System.out.println("----------------");
+				try {
+					if (player.chooseYesOrNo(prompt)) {
+						payToLeaveJail(player);
+					} 
+					else { 
+						System.out.println(player + " has decided not to pay to leave jail.");
+					}
+				} catch (InterruptedException e) {
+					e.printStackTrace();
 				}
 			}
 		}
-	}
-
-	// TODO: Put these functions in Player. They are setters for Player
-	// variables with no other side effects.
-	public void addMoney(Player player, int money) {
-		player.setBalance(player.getBalance() + money);
-	}
-
-	public void subtractMoney(Player player, int money) {
-		player.setBalance(player.getBalance() - money);
-	}
+	}	
 	
 	public ArrayList<Property> getBoardProperties() {
 		return boardProperties;
 	}
-	
-	
+	public Player referToOtherPlayer (Player player) {
+		if (player == playerOne) {
+			return playerTwo;
+		}
+		else {
+			return playerOne;
+		}
+	}
+	public void payToLeaveJail(Player player) {
+		System.out.println(player + " has paid $50 to get out of jail.");
+		player.subtractMoney(50);
+		player.setJailTime(-1);
+	}
 }
