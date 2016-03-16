@@ -127,7 +127,7 @@ public class Game {
 					// if player does not have the money
 					else {
 						// if player has properties to mortgage
-						if (player.getPropertiesOwned().size() > player.getMortgagedProperties().size()) {
+						if (player.getUnmortgagedProperties().size() > 0) {
 
 							prompt = "Player cannot afford to buy this property. Would you like to mortgage some properties? (y/n)";
 							if (player.chooseYesOrNo(prompt)) {
@@ -175,30 +175,38 @@ public class Game {
 		}
 	}
 	public boolean checkBalance(Player player, Player otherPlayer) {
-		if (player.getBalance() < 0) {
+		while (player.getBalance() < 0 && player.doesPlayerOwnThings()) {
+			
 			// as long as player has properties, they should mortgage them to save the game. otherwise, they lose the game.
-			if (player.getPropertiesOwned().size() > player.getMortgagedProperties().size()) {
+			if (player.getUnmortgagedProperties().size() > 0) {
 				System.out.println("Player is out of money and must mortgage properties.");
 				mortgageProperties(player);
+				
+				if (player.getBalance() > 0) {
+					break;
+				}
 			} 
 			// if player still has no money and can sell houses
-			if (player.getBalance() < 0) {
-				if (player.getHousesPlayerOwns() > 0 || player.getHotelsPlayerOwns() > 0) {
-					System.out.println("Player is out of money and must sell houses/hotels.");
-					sellHouses(player);
-				}
+			if (player.getHousesPlayerOwns() > 0 || player.getHotelsPlayerOwns() > 0) {
+				System.out.println("Player is out of money and must sell houses/hotels.");
+				sellHouses(player);
 				
-				// if the player still has no money and wants to mortgage the properties they just sold houses off
-				if (player.getBalance() < 0) {
-					if (player.getPropertiesOwned().size() > player.getMortgagedProperties().size()) {
-						System.out.println("Player is out of money and must mortgage properties.");
-						mortgageProperties(player);
-					}
-					else {
-						System.out.println(otherPlayer.getToken() + " has won the game!");
-						return true;
-					}
+				if (player.getBalance() > 0) {
+					break;
 				}
+			}
+			// if the player still has no money and wants to mortgage the properties they just sold houses off
+			if (player.getUnmortgagedProperties().size() > 0) {
+				System.out.println("Player is out of money and must mortgage properties.");
+				mortgageProperties(player);
+				
+				if (player.getBalance() > 0) {
+					break;
+				}
+			}
+			else {
+				System.out.println(otherPlayer.getToken() + " has won the game!");
+				return true;
 			}
 		}
 		return false;
@@ -290,7 +298,7 @@ public class Game {
 			String prompt = "Player has completed a monopoly and is eligible to buy houses. Would you like to buy any houses? (y/n)";
 			if (player.chooseYesOrNo(prompt)) {
 
-				if (player.getPropertiesOwned().size() > player.getMortgagedProperties().size()) {
+				if (player.getUnmortgagedProperties().size() > 0) {
 
 					String promptB = "Would you like to mortgage some properties first? (y/n)";
 
