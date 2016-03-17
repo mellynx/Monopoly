@@ -12,7 +12,6 @@ public abstract class Player {
 	ArrayList<Set<Property>> monopoliesList; 
 	ArrayList<Property> propertiesOwned;
 	ArrayList<Property> mortgagedProperties = new ArrayList<>();
-	ArrayList<Property> unmortgagedProperties = new ArrayList<>();
 	
 	public Player(String playerToken) {
 		this.playerToken = playerToken;
@@ -73,7 +72,7 @@ public abstract class Player {
 	public boolean getGetOutOfJailFreeCard() {
 		return getOutOfJailFreeCard;
 	}
-	public ArrayList<Set<Property>> getHousableSetList() {
+	public ArrayList<Set<Property>> getMonopoliesList() {
 		return monopoliesList;
 	}
 	public ArrayList<Property> getPropertiesOwned() {
@@ -81,11 +80,6 @@ public abstract class Player {
 	}
 	public ArrayList<Property> getMortgagedProperties() {
 		return mortgagedProperties;
-	}
-	public ArrayList<Property> getUnmortgagedProperties() {
-		unmortgagedProperties.addAll(mortgagedProperties);
-		unmortgagedProperties.removeAll(mortgagedProperties);
-		return unmortgagedProperties;
 	}
 	public int getHousesPlayerOwns() {
 		int houseCount = 0; 
@@ -106,21 +100,23 @@ public abstract class Player {
 		}
 		return hotelCount;
 	}
+	public int getNetWorth() {
+		int worth = 0;
+		
+		worth += this.getBalance();
+		
+		for (int i = 0; i < propertiesOwned.size(); i++) {
+			worth += propertiesOwned.get(i).getBuyCost();
+			
+			if (propertiesOwned.get(i).getNumberOfHouses() > 0) {
+				worth += propertiesOwned.get(i).getHouseCost();
+			}
+		}
+		return worth;
+	}
 	
 	public String toString() {
 		return getToken().toString();
-	}
-	public boolean doesPlayerOwnThings() {
-		if (getUnmortgagedProperties().size() > 0) {
-			return true;
-		}
-		if (getHousesPlayerOwns() > 0) {
-			return true;
-		}
-		if (getHotelsPlayerOwns() > 0) {
-			return true;
-		}
-		return false;
 	}
 	
 	public void handleHouseBuying(Property property) {

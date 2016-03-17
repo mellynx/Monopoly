@@ -58,7 +58,7 @@ public class Game {
 			afterLanding(thisPlayer, landed, dice);
 		}
 
-		if (thisPlayer.getHousableSetList().size() > 0) {
+		if (thisPlayer.getMonopoliesList().size() > 0) {
 			checkMonopolies(thisPlayer);
 		}
 
@@ -113,7 +113,7 @@ public class Game {
 					// if player does not have the money
 					else {
 						// if player has properties to mortgage
-						if (player.getUnmortgagedProperties().size() > 0) {
+						if (getMortgageableProperties(player).size() > 0) {
 
 							prompt = "Player cannot afford to buy this property. Would you like to mortgage some properties? (y/n)";
 							if (player.chooseYesOrNo(prompt)) {
@@ -161,10 +161,10 @@ public class Game {
 		}
 	}
 	public boolean checkBalance(Player player, Player otherPlayer) {
-		while (player.getBalance() < 0 && player.doesPlayerOwnThings()) {
+		while (player.getBalance() < 0 && doesPlayerOwnThings(player)) {
 			
 			// as long as player has properties, they should mortgage them to save the game. otherwise, they lose the game.
-			if (player.getUnmortgagedProperties().size() > 0) {
+			if (getMortgageableProperties(player).size() > 0) {
 				System.out.println("Player is out of money and must mortgage properties.");
 				mortgageProperties(player);
 				
@@ -182,7 +182,7 @@ public class Game {
 				}
 			}
 			// if the player still has no money and wants to mortgage the properties they just sold houses off
-			if (player.getUnmortgagedProperties().size() > 0) {
+			if (getMortgageableProperties(player).size() > 0) {
 				System.out.println("Player is out of money and must mortgage properties.");
 				mortgageProperties(player);
 				
@@ -190,10 +190,10 @@ public class Game {
 					break;
 				}
 			}
-			else {
-				System.out.println(otherPlayer.getToken() + " has won the game!");
-				return true;
-			}
+		}
+		if (player.getBalance() < 0) {
+			System.out.println(otherPlayer.getToken() + " has won the game!");
+			return true;
 		}
 		return false;
 	}
@@ -224,7 +224,7 @@ public class Game {
 		while (true) {
 			Property houseToBuy = null;
 			
-			houseToBuy = player.selectWhereToBuyHouse(getBuyableHouseLocations(player, player.getHousableSetList()));
+			houseToBuy = player.selectWhereToBuyHouse(getBuyableHouseLocations(player, player.getMonopoliesList()));
 			
 			if (houseToBuy != null) {
 				player.handleHouseBuying(houseToBuy);
@@ -240,7 +240,7 @@ public class Game {
 		while (true) {
 			Property houseToSell = null;
 			
-			houseToSell = player.selectWhereToSellHouse(getSellableHouseLocations(player, player.getHousableSetList()));
+			houseToSell = player.selectWhereToSellHouse(getSellableHouseLocations(player, player.getMonopoliesList()));
 			
 			if (houseToSell != null) {
 				player.handleHouseSelling(houseToSell);
@@ -273,12 +273,12 @@ public class Game {
 	}
 	public void checkMonopolies(Player player) { 
 
-		if (getBuyableHouseLocations(player, player.getHousableSetList()).size() > 0) {
+		if (getBuyableHouseLocations(player, player.getMonopoliesList()).size() > 0) {
 
 			String prompt = "Player has completed a monopoly and is eligible to buy houses. Would you like to buy any houses? (y/n)";
 			if (player.chooseYesOrNo(prompt)) {
 
-				if (player.getUnmortgagedProperties().size() > 0) {
+				if (getMortgageableProperties(player).size() > 0) {
 
 					String promptB = "Would you like to mortgage some properties first? (y/n)";
 
@@ -366,7 +366,7 @@ public class Game {
 			
 			ArrayList<Property> mortgageableProperties = new ArrayList<Property>();
 			Property toMortgage = null;
-
+			
 			for (Property property: player.getPropertiesOwned()) {
 				// property must not already be mortgaged and no houses must exist on any property of that color
 				if (!property.getMortgageStatus() && !doesMonopolyHaveHouses(property)) {
@@ -471,9 +471,9 @@ public class Game {
 			break;
 
 		case INCOME_TAX: 
-			if ((player.getBalance() / 10) < 200) { 
-				System.out.println(player + " has paid $" + (player.getBalance() / 10) + " to Income Tax.");
-				player.subtractMoney(player.getBalance() / 10);
+			if ((player.getNetWorth() / 10 < 200)) { 
+				System.out.println(player + " has paid $" + (player.getNetWorth() / 10) + " to Income Tax.");
+				player.subtractMoney(player.getNetWorth() / 10);
 			} 
 			else {
 				System.out.println(player + " has paid $200 to Income Tax.");
@@ -651,7 +651,7 @@ public class Game {
 		Set<Property> monopoly = map.get(property);
 		
 		for (Property a : monopoly) {
-			if (a.numberOfHouses > 0) {
+			if (a.getNumberOfHouses() > 0) {
 				return true;
 			}
 		}
@@ -664,6 +664,33 @@ public class Game {
 			if (a.getMortgageStatus()) {
 				return true;
 			}
+		}
+		return false;
+	}
+	public ArrayList<Property> getMortgageableProperties(Player player) {
+		
+		ArrayList<Property> mortgageableProps = new ArrayList<>();
+		
+		for (Property property: player.getPropertiesOwned()) {
+			// if property is not already mortgaged
+			if (!property.getMortgageStatus()) {
+				// if that set has no houses on it 
+				if(!doesMonopolyHaveHouses(property)) {
+					mortgageableProps.add(property);
+				}
+			}
+		}
+		return mortgageableProps;
+	}
+	public boolean doesPlayerOwnThings(Player player) {
+		if (getMortgageableProperties(player).size() > 0) {
+			return true;
+		}
+		if (player.getHousesPlayerOwns() > 0) {
+			return true;
+		}
+		if (player.getHotelsPlayerOwns() > 0) {
+			return true;
 		}
 		return false;
 	}
