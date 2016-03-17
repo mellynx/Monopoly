@@ -364,17 +364,9 @@ public class Game {
 
 		while (true) {
 			
-			ArrayList<Property> mortgageableProperties = new ArrayList<Property>();
 			Property toMortgage = null;
 			
-			for (Property property: player.getPropertiesOwned()) {
-				// property must not already be mortgaged and no houses must exist on any property of that color
-				if (!property.getMortgageStatus() && !doesMonopolyHaveHouses(property)) {
-					mortgageableProperties.add(property);
-				}
-			}
-			
-			toMortgage = player.selectWhatToMortgage(mortgageableProperties);
+			toMortgage = player.selectWhatToMortgage(getMortgageableProperties(player));
 			
 			if (toMortgage != null) {
 				player.handleMortgaging(toMortgage);
@@ -384,6 +376,21 @@ public class Game {
 				break;
 			}
 		}
+	}
+	public ArrayList<Property> getMortgageableProperties(Player player) {
+		
+		ArrayList<Property> mortgageableProps = new ArrayList<>();
+		
+		for (Property property: player.getPropertiesOwned()) {
+			// if property is not already mortgaged
+			if (!property.getMortgageStatus()) {
+				// if that set has no houses on it 
+				if(!doesMonopolyHaveHouses(property)) {
+					mortgageableProps.add(property);
+				}
+			}
+		}
+		return mortgageableProps;
 	}
 	public void unmortgageProperties(Player player) {
 
@@ -666,21 +673,6 @@ public class Game {
 			}
 		}
 		return false;
-	}
-	public ArrayList<Property> getMortgageableProperties(Player player) {
-		
-		ArrayList<Property> mortgageableProps = new ArrayList<>();
-		
-		for (Property property: player.getPropertiesOwned()) {
-			// if property is not already mortgaged
-			if (!property.getMortgageStatus()) {
-				// if that set has no houses on it 
-				if(!doesMonopolyHaveHouses(property)) {
-					mortgageableProps.add(property);
-				}
-			}
-		}
-		return mortgageableProps;
 	}
 	public boolean doesPlayerOwnThings(Player player) {
 		if (getMortgageableProperties(player).size() > 0) {
